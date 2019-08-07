@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 namespace Espo\Modules\Crm\Controllers;
 
@@ -33,4 +33,11 @@ class CaseObj extends \Espo\Core\Controllers\Record
 {
     protected $name = 'Case';
 
+    public function getActionEmailAddressList($params, $data, $request)
+    {
+        if (!$request->get('id')) throw new BadRequest();
+        if (!$this->getAcl()->checkScope($this->name, 'read')) throw new Forbidden();
+
+        return $this->getRecordService()->getEmailAddressList($request->get('id'));
+    }
 }

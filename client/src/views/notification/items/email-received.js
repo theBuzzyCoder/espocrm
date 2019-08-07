@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,19 +46,18 @@ Espo.define('views/notification/items/email-received', 'views/notification/items
 
             this.userId = data.userId;
 
-            this.messageData['entityType'] = Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase());
+            this.messageData['entityType'] = this.getHelper().escapeString(Espo.Utils.upperCaseFirst((this.translate(data.entityType, 'scopeNames') || '').toLowerCase()));
             if (data.personEntityId) {
-                this.messageData['from'] = '<a href="#' + data.personEntityType + '/view/' + data.personEntityId + '">' + data.personEntityName + '</a>';
+                this.messageData['from'] = '<a href="#' + this.getHelper().escapeString(data.personEntityType) + '/view/' + this.getHelper().escapeString(data.personEntityId) + '">' + this.getHelper().escapeString(data.personEntityName) + '</a>';
             } else {
-                this.messageData['from'] = data.fromString || this.translate('empty address');
+                this.messageData['from'] = this.getHelper().escapeString(data.fromString || this.translate('empty address'));
             }
 
-            this.emailId = data.emailId;
-            this.emailName = data.emailName;
+            this.emailId = this.getHelper().escapeString(data.emailId);
+            this.emailName = this.getHelper().escapeString(data.emailName);
 
             this.createMessage();
         }
 
     });
 });
-

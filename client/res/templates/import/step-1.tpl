@@ -130,6 +130,12 @@
                             <input type="checkbox" id="skip-duplicate-checking">
                         </div>
                     </div>
+                    <div class="col-sm-4 form-group cell">
+                        <label class="control-label">{{translate 'Silent Mode' scope='Import'}}</label>
+                        <div>
+                            <input type="checkbox" id="import-silent-mode">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -145,6 +151,8 @@
     </div>
 
     <div style="padding-bottom: 10px;" class="clearfix">
+        {{#if entityList.length}}
         <button class="btn btn-primary pull-right hidden" data-action="next">{{translate 'Next' scope='Import'}}</button>
+        {{/if}}
     </div>
 

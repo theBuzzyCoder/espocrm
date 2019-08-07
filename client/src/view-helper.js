@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,17 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('view-helper', [], function () {
+define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
     var ViewHelper = function (options) {
         this.urlRegex = /(^|[^\(])(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
         this._registerHandlebarsHelpers();
 
         this.mdBeforeList = [
-            {
-                regex: /\["?(.*?)"?\]\((.*?)\)/g,
-                value: '<a href="$2">$1</a>'
-            },
             {
                 regex: /\&\#x60;\&\#x60;\&\#x60;\n?([\s\S]*?)\&\#x60;\&\#x60;\&\#x60;/g,
                 value: function (s, string) {
@@ -79,6 +75,10 @@ Espo.define('view-helper', [], function () {
                 return text.replace(/<\/?[^>]+(>|$)/g, '');
             }
             return text;
+        },
+
+        escapeString: function (text) {
+            return Handlebars.Utils.escapeExpression(text);
         },
 
         getAvatarHtml: function (id, size, width, additionalClassName) {
@@ -186,7 +186,7 @@ Espo.define('view-helper', [], function () {
                 var scope = options.hash.scope || null;
                 var label = options.hash.label || name;
 
-                var html = options.hash.label.html || self.language.translate(label, 'labels', scope);
+                var html = options.hash.html || options.hash.text || self.language.translate(label, 'labels', scope);
                 return new Handlebars.SafeString('<button class="btn btn-'+style+' action'+ (options.hash.hidden ? ' hidden' : '')+'" data-action="'+name+'" type="button">'+html+'</button>');
             });
 
@@ -204,21 +204,8 @@ Espo.define('view-helper', [], function () {
                 return new Handlebars.SafeString(text);
             });
 
-            Handlebars.registerHelper('complexText', function (text) {
-                text = text || ''
-
-                text = text.replace(this.urlRegex, '$1[$2]($2)');
-
-                text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
-
-                this.mdBeforeList.forEach(function (item) {
-                    text = text.replace(item.regex, item.value);
-                });
-
-                text = marked(text);
-
-                text = text.replace('[#see-more-text]', ' <a href="javascript:" data-action="seeMoreText">' + self.language.translate('See more')) + '</a>';
-                return new Handlebars.SafeString(text);
+            Handlebars.registerHelper('complexText', function (text, options) {
+                return this.transfromMarkdownText(text, options.hash);
             }.bind(this));
 
             Handlebars.registerHelper('translateOption', function (name, options) {
@@ -291,6 +278,34 @@ Espo.define('view-helper', [], function () {
             });
         },
 
+        transfromMarkdownInlineText: function (text) {
+            return this.transfromMarkdownText(text, {inline: true});
+        },
+
+        transfromMarkdownText: function (text, options) {
+            text = text || '';
+
+            text = text.replace(this.urlRegex, '$1[$2]($2)');
+
+            text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
+
+            this.mdBeforeList.forEach(function (item) {
+                text = text.replace(item.regex, item.value);
+            });
+
+            if (options.inline) {
+                text = marked.inlineLexer(text, []);
+            } else {
+                text = marked(text);
+            }
+
+            text = DOMPurify.sanitize(text);
+
+            text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
+
+            return new Handlebars.SafeString(text);
+        },
+
         getScopeColorIconHtml: function (scope, noWhiteSpace, additionalClassName) {
             if (this.config.get('scopeColorsDisabled') || this.preferences.get('scopeColorsDisabled')) {
                 return '';
@@ -300,7 +315,7 @@ Espo.define('view-helper', [], function () {
             var html = '';
 
             if (color) {
-                var $span = $('<span class="color-icon glyphicon glyphicon-stop">');
+                var $span = $('<span class="color-icon fas fa-square-full">');
                 $span.css('color', color);
                 if (additionalClassName) {
                     $span.addClass(additionalClassName);
@@ -309,13 +324,87 @@ Espo.define('view-helper', [], function () {
             }
 
             if (!noWhiteSpace) {
-                if (html) html += ' ';
+                if (html) html += '&nbsp;';
             }
 
             return html;
-        }
+        },
+
+        sanitizeHtml: function (text, options) {
+            return DOMPurify.sanitize(text, options);
+        },
+
+        moderateSanitizeHtml: function (value) {
+            value = value || '';
+            value = value.replace(/<[\/]{0,1}(base)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(object)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(embed)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(applet)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(iframe)[^><]*>/gi, '');
+            value = value.replace(/<[\/]{0,1}(script)[^><]*>/gi, '');
+            value = value.replace(/<[^><]*([^a-z]{1}on[a-z]+)=[^><]*>/gi, function (match) {
+                return match.replace(/[^a-z]{1}on[a-z]+=/gi, ' data-handler-stripped=');
+            });
+
+            value = this.stripEventHandlersInHtml(value);
+
+            value = value.replace(/href=" *javascript\:(.*?)"/gi, function(m, $1) {
+                return 'removed=""';
+            });
+            value = value.replace(/href=' *javascript\:(.*?)'/gi, function(m, $1) {
+                return 'removed=""';
+            });
+            value = value.replace(/src=" *javascript\:(.*?)"/gi, function(m, $1) {
+                return 'removed=""';
+            });
+            value = value.replace(/src=' *javascript\:(.*?)'/gi, function(m, $1) {
+                return 'removed=""';
+            });
+
+            return value;
+        },
+
+        stripEventHandlersInHtml: function (html) {
+            function stripHTML(){
+                html = html.slice(0, strip) + html.slice(j);
+                j = strip;
+                strip = false;
+            }
+            function isValidTagChar(str) {
+                return str.match(/[a-z?\\\/!]/i);
+            }
+            var strip = false;
+            var lastQuote = false;
+            for (var i = 0; i<html.length; i++){
+                if (html[i] === "<" && html[i+1] && isValidTagChar(html[i+1])) {
+                    i++;
+                    for (var j = i; j<html.length; j++){
+                        if (!lastQuote && html[j] === ">"){
+                            if (strip) {
+                                stripHTML();
+                            }
+                            i = j;
+                            break;
+                        }
+                        if (lastQuote === html[j]){
+                            lastQuote = false;
+                            continue;
+                        }
+                        if (!lastQuote && html[j-1] === "=" && (html[j] === "'" || html[j] === '"')){
+                            lastQuote = html[j];
+                        }
+                        if (!lastQuote && html[j-2] === " " && html[j-1] === "o" && html[j] === "n"){
+                            strip = j-2;
+                        }
+                        if (strip && html[j] === " " && !lastQuote){
+                            stripHTML();
+                        }
+                    }
+                }
+            }
+            return html;
+        },
     });
 
     return ViewHelper;
-
 });

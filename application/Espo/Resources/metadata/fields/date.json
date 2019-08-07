@@ -49,6 +49,10 @@
          "type":"varchar"
       },
       {
+         "type": "bool",
+         "name":"useNumericFormat"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },
@@ -56,6 +60,9 @@
          "name":"readOnly",
          "type":"bool"
       }
+   ],
+   "validationList": [
+      "required"
    ],
    "filter": true,
    "fieldDefs":{

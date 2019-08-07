@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,23 +25,30 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/import', 'controllers/record', function (Dep) {
+
+define('controllers/import', 'controllers/record', function (Dep) {
 
     return Dep.extend({
 
         defaultAction: 'index',
 
-        checkAccess: function () {
-            if (this.getUser().isAdmin()) {
+        checkAccessGlobal: function () {
+            if (this.getAcl().checkScope('Import')) {
                 return true;
             }
             return false;
         },
 
-        index: function () {
-            this.main('Import.Index', null);
+        checkAccess: function () {
+            if (this.getAcl().checkScope('Import')) {
+                return true;
+            }
+            return false;
+        },
+
+        actionIndex: function () {
+            this.main('views/import/index', null);
         }
 
     });
-
 });

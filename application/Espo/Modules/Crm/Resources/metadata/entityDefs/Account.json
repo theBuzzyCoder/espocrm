@@ -7,7 +7,8 @@
             "trim": true
         },
         "website": {
-            "type": "url"
+            "type": "url",
+            "strip": true
         },
         "emailAddress": {
             "type": "email",
@@ -90,7 +91,8 @@
         "contactRole": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "maxLength": 100
         },
         "contactIsInactive": {
             "type": "bool",
@@ -198,7 +200,8 @@
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutFiltersDisabled": true,
-            "entity": "TargetList"
+            "entity": "TargetList",
+            "directAccessDisabled": true
         },
         "originalLead": {
             "type": "link",
@@ -332,8 +335,8 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
-        "asc": false,
+        "orderBy": "createdAt",
+        "order": "desc",
         "textFilterFields": ["name", "emailAddress"]
     },
     "indexes": {

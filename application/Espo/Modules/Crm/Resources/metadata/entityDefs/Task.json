@@ -8,7 +8,6 @@
         "status": {
             "type": "enum",
             "options": ["Not Started", "Started", "Completed", "Canceled", "Deferred"],
-            "view": "views/fields/enum-styled",
             "style": {
                 "Completed": "success"
             },
@@ -19,6 +18,11 @@
             "type": "enum",
             "options": ["Low", "Normal", "High", "Urgent"],
             "default": "Normal",
+            "displayAsLabel": true,
+            "style": {
+                "High": "warning",
+                "Urgent": "danger"
+            },
             "audited": true
         },
         "dateStart": {
@@ -99,8 +103,7 @@
         },
         "attachments": {
             "type": "attachmentMultiple",
-            "sourceList": ["Document"],
-            "layoutListDisabled": true
+            "sourceList": ["Document"]
         }
     },
     "links": {
@@ -137,8 +140,8 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
-        "asc": false
+        "orderBy": "createdAt",
+        "order": "desc"
     },
     "indexes": {
         "dateStartStatus": {

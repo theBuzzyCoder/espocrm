@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,9 +34,14 @@ use Espo\Core\Utils\Config;
 class Installer
 {
     protected $app = null;
+
     protected $language = null;
 
     protected $systemHelper = null;
+
+    protected $databaseHelper = null;
+
+    protected $installerConfig;
 
     protected $isAuth = false;
 
@@ -68,12 +73,17 @@ class Installer
         $user = $this->getEntityManager()->getEntity('User');
         $this->app->getContainer()->setUser($user);
 
+        require_once('install/core/InstallerConfig.php');
+        $this->installerConfig = new InstallerConfig();
+
         require_once('install/core/SystemHelper.php');
         $this->systemHelper = new SystemHelper();
 
         $configPath = $this->getConfig()->getConfigPath();
         $this->permissionMap = $this->getConfig()->get('permissionMap');
         $this->permissionMap['writable'][] = $configPath;
+
+        $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->getConfig());
     }
 
     protected function initialize()
@@ -117,6 +127,16 @@ class Installer
         return $this->systemHelper;
     }
 
+    protected function getDatabaseHelper()
+    {
+        return $this->databaseHelper;
+    }
+
+    protected function getInstallerConfig()
+    {
+        return $this->installerConfig;
+    }
+
     protected function getFileManager()
     {
         return $this->app->getContainer()->get('fileManager');
@@ -151,6 +171,12 @@ class Installer
 
     public function isInstalled()
     {
+        $installerConfig = $this->getInstallerConfig();
+
+        if ($installerConfig->get('isInstalled')) {
+            return true;
+        }
+
         return $this->app->isInstalled();
     }
 
@@ -172,6 +198,40 @@ class Installer
         $translated = $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
 
         return $translated;
+    }
+
+    public function getInstallerConfigData()
+    {
+        return $this->getInstallerConfig()->getAllData();
+    }
+
+    public function getSystemRequirementList($type, $requiredOnly = false, array $additionalData = null)
+    {
+         $systemRequirementManager = new \Espo\Core\Utils\SystemRequirements($this->app->getContainer());
+         return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
+    }
+
+    public function checkDatabaseConnection(array $params, $isCreateDatabase = false)
+    {
+        $databaseHelper = $this->getDatabaseHelper();
+
+        try {
+            $pdo = $this->getDatabaseHelper()->createPdoConnection($params);
+        } catch (\Exception $e) {
+            if ($isCreateDatabase && $e->getCode() == '1049') {
+                $modParams = $params;
+                unset($modParams['dbname']);
+
+                $pdo = $this->getDatabaseHelper()->createPdoConnection($modParams);
+                $pdo->query("CREATE DATABASE IF NOT EXISTS `". $params['dbname'] ."`");
+
+                return $this->checkDatabaseConnection($params, false);
+            }
+
+            throw $e;
+        }
+
+        return true;
     }
 
     /**
@@ -326,7 +386,7 @@ class Installer
             'userName' => $userName,
             'password' => $this->getPasswordHash()->hash($password),
             'lastName' => 'Admin',
-            'isAdmin' => '1',
+            'type' => 'admin',
         );
 
         $result = $this->createRecord('User', $user);
@@ -379,6 +439,10 @@ class Installer
         $result = $this->createRecords();
         $result &= $this->executeQueries();
         /** END: afterInstall scripts */
+
+        $installerConfig = $this->getInstallerConfig();
+        $installerConfig->set('isInstalled', true);
+        $installerConfig->save();
 
         $config = $this->app->getContainer()->get('config');
         $config->set('isInstalled', true);
@@ -454,7 +518,13 @@ class Installer
 
         foreach ($queries as $query) {
             $sth = $pdo->prepare($query);
-            $result =& $sth->execute();
+
+            try {
+                $result &= $sth->execute();
+            } catch (\Exception $e) {
+                $GLOBALS['log']->warning('Error executing the query: ' . $query);
+            }
+
         }
 
         return $result;

@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
+define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridstack) {
 
     return Dep.extend({
 
@@ -65,19 +65,25 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
 
                         (data.dashboardTabList).forEach(function (name) {
                             var layout = [];
+                            var id = null;
                             this.dashboardLayout.forEach(function (d) {
                                 if (d.name == name) {
                                     layout = d.layout;
+                                    id = d.id;
                                 }
                             }, this);
 
                             if (name in data.renameMap) {
                                 name = data.renameMap[name];
                             }
-                            dashboardLayout.push({
+                            var o = {
                                 name: name,
-                                layout: layout
-                            });
+                                layout: layout,
+                            };
+                            if (id) {
+                                o.id = id;
+                            }
+                            dashboardLayout.push(o);
                         }, this);
 
                         this.dashletIdList.forEach(function (item) {
@@ -107,6 +113,10 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             };
         },
 
+        generateId: function () {
+            return (Math.floor(Math.random() * 10000001)).toString();
+        },
+
         setupCurrentTabLayout: function () {
             if (!this.dashboardLayout) {
                 var defaultLayout = [
@@ -115,7 +125,11 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         "layout": []
                     }
                 ];
-                if (this.getUser().get('portalId')) {
+
+
+                if (this.getConfig().get('forcedDashboardLayout')) {
+                    this.dashboardLayout = this.getConfig().get('forcedDashboardLayout') || [];
+                } else if (this.getUser().get('portalId')) {
                     this.dashboardLayout = this.getConfig().get('dashboardLayout') || [];
                 } else {
                     this.dashboardLayout = this.getPreferences().get('dashboardLayout') || defaultLayout;
@@ -169,6 +183,14 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             if (this.getUser().get('portalId')) {
                 this.layoutReadOnly = true;
                 this.dashletsReadOnly = true;
+            } else {
+                var forbiddenPreferencesFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+                if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
+                    this.layoutReadOnly = true;
+                }
+                if (~forbiddenPreferencesFieldList.indexOf('dashletsOptions')) {
+                    this.dashletsReadOnly = true;
+                }
             }
 
             this.once('remove', function () {
@@ -178,15 +200,95 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                         gridStack.destroy();
                     }
                 }
+
+                if (this.fallbackModeTimeout) {
+                    clearTimeout(this.fallbackModeTimeout);
+                }
+
+                $(window).off('resize.dashboard');
+
             }, this);
         },
 
         afterRender: function () {
-            this.initGridstack();
+            this.$dashboard = this.$el.find('> .dashlets');
+
+            if (window.innerWidth >= this.getThemeManager().getParam('screenWidthXs')) {
+                this.initGridstack();
+            } else {
+                this.initFallbackMode();
+            }
+
+            $(window).off('resize.dashboard');
+            $(window).on('resize.dashboard', this.onResize.bind(this));
+        },
+
+        onResize: function () {
+            if (this.isFallbackMode() && window.innerWidth >= this.getThemeManager().getParam('screenWidthXs')) {
+                this.initGridstack();
+            }
+        },
+
+        isFallbackMode: function () {
+            return this.$dashboard.hasClass('fallback');
+        },
+
+        initFallbackMode: function () {
+            this.$dashboard.empty();
+
+            var $dashboard = this.$dashboard;
+            $dashboard.addClass('fallback');
+
+            this.currentTabLayout.forEach(function (o) {
+                var $item = this.prepareFallbackItem(o);
+                $dashboard.append($item);
+            }, this);
+
+            this.currentTabLayout.forEach(function (o) {
+                if (!o.id || !o.name) return;
+                this.createDashletView(o.id, o.name);
+            }, this);
+
+            if (this.fallbackModeTimeout) {
+                clearTimeout(this.fallbackModeTimeout);
+            }
+
+            this.$dashboard.css('height', '');
+
+            this.fallbackControlHeights();
+        },
+
+        fallbackControlHeights: function () {
+            this.currentTabLayout.forEach(function (o) {
+                var $container = this.$dashboard.find('.dashlet-container[data-id="'+o.id+'"]');
+                var headerHeight = $container.find('.panel-heading').outerHeight();
+                var $body = $container.find('.dashlet-body');
+
+                var bodyEl = $body.get(0);
+                if (!bodyEl) return;
+
+                if (bodyEl.scrollHeight > bodyEl.offsetHeight) {
+                    var height = bodyEl.scrollHeight + headerHeight;
+                    $container.css('height', height + 'px');
+                }
+
+            }, this);
+
+            this.fallbackModeTimeout = setTimeout(function () {
+                this.fallbackControlHeights();
+            }.bind(this), 300);
         },
 
         initGridstack: function () {
-            var $gridstack = this.$gridstack = this.$el.find('> .dashlets');
+            this.$dashboard.empty();
+
+            var $gridstack = this.$gridstack = this.$dashboard;
+
+            $gridstack.removeClass('fallback');
+
+            if (this.fallbackModeTimeout) {
+                clearTimeout(this.fallbackModeTimeout);
+            }
 
             var draggable = false;
             var resizable = false;
@@ -273,6 +375,26 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             return $item;
         },
 
+        prepareFallbackItem: function (o) {
+            var $item = $('<div></div>');
+            var $container = $('<div class="dashlet-container"></div>');
+
+            $container.attr('data-id', o.id);
+            $container.attr('data-name', o.name);
+            $container.attr('data-x', o.x);
+            $container.attr('data-y', o.y);
+            $container.attr('data-height', o.height);
+            $container.attr('data-width', o.width);
+            $container.css('height', (o.height * this.getThemeManager().getParam('dashboardCellHeight')) + 'px');
+
+            $item.attr('data-id', o.id);
+            $item.attr('data-name', o.name);
+
+            $item.append($container);
+
+            return $item;
+        },
+
         saveLayout: function () {
             if (this.layoutReadOnly) return;
 
@@ -283,6 +405,13 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
         },
 
         removeDashlet: function (id) {
+            var revertToFallback = false;
+            if (this.isFallbackMode()) {
+                this.initGridstack();
+                revertToFallback = true;
+            }
+
+
             var grid = this.$gridstack.data('gridstack');
             var $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
             grid.removeWidget($item, true);
@@ -311,19 +440,40 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             }
 
             this.clearView('dashlet-' + id);
+
+            this.setupCurrentTabLayout();
+
+            if (revertToFallback) {
+                this.initFallbackMode();
+            }
         },
 
         addDashlet: function (name) {
+            var revertToFallback = false;
+            if (this.isFallbackMode()) {
+                this.initGridstack();
+                revertToFallback = true;
+            }
+
             var id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
 
             var $item = this.prepareGridstackItem(id, name);
-
             var grid = this.$gridstack.data('gridstack');
             grid.addWidget($item, 0, 0, 2, 2);
 
-            this.createDashletView(id, name, name, function () {
+            this.createDashletView(id, name, name, function (view) {
                 this.fetchLayout();
                 this.saveLayout();
+
+                this.setupCurrentTabLayout();
+
+                if (view.getView('body') && view.getView('body').afterAdding) {
+                    view.getView('body').afterAdding.call(view.getView('body'));
+                }
+
+                if (revertToFallback) {
+                    this.initFallbackMode();
+                }
             }, this);
         },
 
@@ -337,7 +487,8 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
             if (label) {
                 o.label = label;
             }
-            this.createView('dashlet-' + id, 'views/dashlet', {
+
+            return this.createView('dashlet-' + id, 'views/dashlet', {
                 label: name,
                 name: name,
                 id: id,
@@ -362,7 +513,6 @@ Espo.define('views/dashboard', ['view', 'lib!gridstack'], function (Dep, Gridsta
                     callback.call(this, view);
                 }
             }, this);
-        }
+        },
     });
 });
-

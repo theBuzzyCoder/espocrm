@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,20 +35,29 @@ class Attachments extends HasChildren
     {
         $parentRelation = parent::load($linkName, $entityName);
 
-        $relation = array(
-            $entityName => array (
-                'fields' => array(
-                    $linkName.'Types' => array(
+        $relation = [
+            $entityName => [
+                'fields' => [
+                    $linkName.'Types' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
-                    ),
-                ),
-            ),
-        );
+                    ],
+                ],
+                'relations' => [
+                    $linkName => [
+                        'conditions' => [
+                            'OR' => [
+                                ['field' => null],
+                                ['field' => $linkName],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
 
         $relation = \Espo\Core\Utils\Util::merge($parentRelation, $relation);
 
         return $relation;
     }
 }
-

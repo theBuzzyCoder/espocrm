@@ -1,32 +1,43 @@
 {
     "controller": "controllers/import",
+    "acl": "acl/import",
     "recordViews": {
-        "list":"Import.Record.List",
-        "detail": "Import.Record.Detail"
+        "list": "views/import/record/list",
+        "detail": "views/import/record/detail"
     },
     "views": {
-    	"list": "Import.List",
-    	"detail": "Import.Detail"
+    	"list": "views/import/list",
+    	"detail": "views/import/detail"
     },
     "bottomPanels": {
     	"detail": [
 	    	{
 	    		"name": "imported",
 	    		"label": "Imported",
-	    		"view": "views/import/record/panels/imported"
+	    		"view": "views/import/record/panels/imported",
+                "createDisabled": true,
+                "selectDisabled": true,
+                "unlinkDisabled": true
 	    	},
 	    	{
 	    		"name": "duplicates",
 	    		"label": "Duplicates",
 	    		"view": "views/import/record/panels/duplicates",
-                "rowActionsView": "views/import/record/row-actions/duplicates"
+                "rowActionsView": "views/import/record/row-actions/duplicates",
+                "createDisabled": true,
+                "selectDisabled": true,
+                "unlinkDisabled": true
 	    	},
 	    	{
 	    		"name": "updated",
 	    		"label": "Updated",
-	    		"view": "views/import/record/panels/updated"
+	    		"view": "views/import/record/panels/updated",
+                "createDisabled": true,
+                "selectDisabled": true,
+                "unlinkDisabled": true
 	    	}
 	    ]
     },
-    "searchPanelDisabled": true
+    "searchPanelDisabled": true,
+    "iconClass": "fas fa-file-import"
 }

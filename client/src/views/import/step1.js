@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             },
 
             'change #import-field-delimiter': function (e) {
-                this.formData.fieldDelimiter = e.currentTarget.value;
+                this.formData.delimiter = e.currentTarget.value;
                 this.preview();
             },
 
@@ -61,18 +61,22 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             var scopes = this.getMetadata().get('scopes');
             for (var scopeName in scopes) {
                 if (scopes[scopeName].importable) {
+                    if (!this.getAcl().checkScope(scopeName, 'create')) continue;
                     list.push(scopeName);
                 }
             }
             list.sort(function (v1, v2) {
                  return this.translate(v1, 'scopeNamesPlural').localeCompare(this.translate(v2, 'scopeNamesPlural'));
             }.bind(this));
+
             return list;
         },
 
         data: function () {
+            var entityList = this.getEntityList();
+
             return {
-                entityList: this.getEntityList(),
+                entityList: entityList,
                 currencyList: this.getConfig().get('currencyList'),
                 dateFormatDataList: [
                     {key: "YYYY-MM-DD", value: '2017-12-27'},
@@ -85,12 +89,16 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                     {key: "YYYY.MM.DD", value: '2017.12.27'}
                 ],
                 timeFormatDataList: [
-                    {key: "HH:mm", value: '23:00'},
                     {key: "HH:mm:ss", value: '23:00:00'},
+                    {key: "HH:mm", value: '23:00'},
                     {key: "hh:mm a", value: '11:00 pm'},
                     {key: "hh:mma", value: '11:00pm'},
                     {key: "hh:mm A", value: '11:00 PM'},
-                    {key: "hh:mmA", value: '11:00PM'}
+                    {key: "hh:mmA", value: '11:00PM'},
+                    {key: "hh:mm:ss a", value: '11:00:00 pm'},
+                    {key: "hh:mm:ssa", value: '11:00:00pm'},
+                    {key: "hh:mm:ss A", value: '11:00:00 PM'},
+                    {key: "hh:mm:ssA", value: '11:00:00PM'},
                 ],
                 timezoneList: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'])
             };
@@ -100,10 +108,10 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             this.formData = this.options.formData || {
                 entityType: this.options.entityType || false,
                 headerRow: true,
-                fieldDelimiter: ',',
+                delimiter: ',',
                 textQualifier: '"',
                 dateFormat: 'YYYY-MM-DD',
-                timeFormat: 'HH:mm',
+                timeFormat: 'HH:mm:ss',
                 timezone: 'UTC',
                 decimalMark: '.',
                 personNameFormat: 'f l',
@@ -122,7 +130,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             this.formData.headerRow = $('#import-header-row').get(0).checked;
             this.formData.entityType = $('#import-entity-type').val();
             this.formData.action = $('#import-action').val();
-            this.formData.fieldDelimiter = $('#import-field-delimiter').val();
+            this.formData.delimiter = $('#import-field-delimiter').val();
             this.formData.textQualifier = $('#import-text-qualifier').val();
             this.formData.dateFormat = $('#import-date-format').val();
             this.formData.timeFormat = $('#import-time-format').val();
@@ -132,6 +140,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             this.formData.personNameFormat = $('#import-person-name-format').val();
             this.formData.skipDuplicateChecking = $('#skip-duplicate-checking').get(0).checked;
             this.formData.idleMode = $('#import-idle-mode').get(0).checked;
+            this.formData.silentMode = $('#import-silent-mode').get(0).checked;
 
             this.getParentView().formData = this.formData;
             this.getParentView().changeStep(2);
@@ -142,6 +151,8 @@ Espo.define('views/import/step1', 'view', function (Dep) {
 
             $('#import-idle-mode').get(0).checked = this.formData.idleMode || false;
 
+            $('#import-silent-mode').get(0).checked = this.formData.silentMode || false;
+
             $('#skip-duplicate-checking').get(0).checked = this.formData.skipDuplicateChecking || false;
 
             if (this.formData.entityType) {
@@ -151,7 +162,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                 $('#import-action').val(this.formData.action);
             }
 
-            $('#import-field-delimiter').val(this.formData.fieldDelimiter);
+            $('#import-field-delimiter').val(this.formData.delimiter);
             $('#import-text-qualifier').val(this.formData.textQualifier);
             $('#import-date-format').val(this.formData.dateFormat);
             $('#import-time-format').val(this.formData.timeFormat);
@@ -196,7 +207,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             if (!this.formData.previewString) {
                 return;
             }
-            var arr = this.csvToArray(this.formData.previewString, this.formData.fieldDelimiter, this.formData.textQualifier);
+            var arr = this.csvToArray(this.formData.previewString, this.formData.delimiter, this.formData.textQualifier);
 
             this.formData.previewArray = arr;
 

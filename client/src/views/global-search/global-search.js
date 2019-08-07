@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,14 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/global-search/global-search', 'view', function (Dep) {
+define('views/global-search/global-search', 'view', function (Dep) {
 
     return Dep.extend({
 
         template: 'global-search/global-search',
 
         events: {
-            'keypress #global-search-input': function (e) {
+            'keypress input.global-search-input': function (e) {
                 if (e.keyCode == 13) {
                     this.runSearch();
                 }
@@ -41,13 +41,12 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
             'click [data-action="search"]': function () {
                 this.runSearch();
             },
-            'focus #global-search-input': function (e) {
+            'focus input.global-search-input': function (e) {
                 e.currentTarget.select();
-            }
+            },
         },
 
         setup: function () {
-
             this.wait(true);
             this.getCollectionFactory().create('GlobalSearch', function (collection) {
                 this.collection = collection;
@@ -58,10 +57,10 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
         },
 
         afterRender: function () {
-            this.$input = this.$el.find('#global-search-input');
+            this.$input = this.$el.find('input.global-search-input');
         },
 
-        runSearch: function (text) {
+        runSearch: function () {
             var text = this.$input.val().trim();
             if (text != '' && text.length >= 2) {
                 text = text;
@@ -87,19 +86,27 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
                 collection: this.collection,
             }, function (view) {
                 view.render();
-            }.bind(this));
+
+                this.listenToOnce(view, 'close', this.closePanel);
+            });
 
             $document = $(document);
             $document.on('mouseup.global-search', function (e) {
                 if (e.which !== 1) return;
-                if (e.target.tagName == 'A' && $(e.target).data('action') != 'showMore') {
+                if (!$container.is(e.target) && $container.has(e.target).length === 0) {
+                    this.closePanel();
+                }
+            }.bind(this));
+            $document.on('click.global-search', function (e) {
+                if (
+                    e.target.tagName == 'A' &&
+                    $(e.target).data('action') != 'showMore' &&
+                    !$(e.target).hasClass('global-search-button')
+                ) {
                     setTimeout(function () {
                         this.closePanel();
                     }.bind(this), 100);
                     return;
-                }
-                if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                    this.closePanel();
                 }
             }.bind(this));
         },
@@ -112,11 +119,10 @@ Espo.define('views/global-search/global-search', 'view', function (Dep) {
             if (this.hasView('panel')) {
                 this.getView('panel').remove();
             };
-             $document.off('mouseup.global-search');
-               $container.remove();
+            $document.off('mouseup.global-search');
+            $document.off('click.global-search');
+            $container.remove();
         },
 
     });
-
 });
-

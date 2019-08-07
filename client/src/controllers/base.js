@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,17 +25,60 @@
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
-Espo.define('controllers/base', 'controller', function (Dep) {
+
+define('controllers/base', 'controller', function (Dep) {
 
     return Dep.extend({
 
         login: function () {
-            this.entire('views/login', {}, function (login) {
-                login.render();
-                login.on('login', function (data) {
-                    this.trigger('login', data);
-                }.bind(this));
+            var viewName = this.getConfig().get('loginView') || 'views/login';
+
+            this.entire(viewName, {}, function (loginView) {
+                loginView.render();
+
+                loginView.on('login', function (userName, data) {
+                    this.trigger('login', this.normalizeLoginData(userName, data));
+                }, this);
+
+                loginView.once('redirect', function (viewName, userName, password, data) {
+                    loginView.remove();
+                    this.entire(viewName, {
+                        loginData: data,
+                        userName: userName,
+                        password: password,
+                    }, function (secondStepView) {
+                        secondStepView.render();
+
+                        secondStepView.once('login', function (userName, data) {
+                            this.trigger('login', this.normalizeLoginData(userName, data));
+                        }, this);
+
+                        secondStepView.once('back', function () {
+                            secondStepView.remove();
+
+                            this.login();
+                        }, this);
+                    }.bind(this));
+                }, this);
             }.bind(this));
+        },
+
+        normalizeLoginData: function (userName, data) {
+            return {
+                auth: {
+                    userName: userName,
+                    token: data.token,
+                },
+                user: data.user,
+                preferences: data.preferences,
+                acl: data.acl,
+                settings: data.settings,
+                appParams: data.appParams,
+            };
+        },
+
+        actionLogin: function () {
+            this.login();
         },
 
         logout: function () {
@@ -44,7 +87,15 @@ Espo.define('controllers/base', 'controller', function (Dep) {
             this.trigger('logout');
         },
 
-        clearCache: function (options) {
+        actionLogout: function () {
+            this.logout();
+        },
+
+        actionClearCache: function () {
+            this.clearCache();
+        },
+
+        clearCache: function () {
             this.entire('views/clear-cache', {
                 cache: this.getCache()
             }, function (view) {
@@ -66,4 +117,3 @@ Espo.define('controllers/base', 'controller', function (Dep) {
 
     });
 });
-

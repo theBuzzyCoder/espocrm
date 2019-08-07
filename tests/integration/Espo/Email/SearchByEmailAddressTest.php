@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,6 +53,32 @@ class SearchByEmailAddressTest extends \tests\integration\Core\BaseTestCase
             )
         ));
 
+        $this->assertArrayHasKey('collection', $result);
+        $this->assertEquals(1, count($result['collection']));
+    }
+
+    public function testTextSearch()
+    {
+        $entityManager = $this->getContainer()->get('entityManager');
+
+        $email = $entityManager->getEntity('Email');
+        $email->set('from', 'test@test.com');
+        $email->set('status', 'Archived');
+        $email->set('name', 'Improvements to our Privacy Policy');
+        $email->set('body', 'name abc test');
+        $entityManager->saveEntity($email);
+
+        $emailService = $this->getApplication()->getContainer()->get('serviceFactory')->create('Email');
+
+        $result = $emailService->findEntities([
+            'textFilter' => 'name abc'
+        ]);
+        $this->assertArrayHasKey('collection', $result);
+        $this->assertEquals(1, count($result['collection']));
+
+        $result = $emailService->findEntities([
+            'textFilter' => 'Improvements to our Privacy Policy'
+        ]);
         $this->assertArrayHasKey('collection', $result);
         $this->assertEquals(1, count($result['collection']));
     }

@@ -12,6 +12,11 @@
             "index": true,
             "readOnly": true
         },
+        "secret": {
+            "type": "varchar",
+            "maxLength": "36",
+            "readOnly": true
+        },
         "userId": {
             "type": "varchar",
             "maxLength": "36",
@@ -36,11 +41,13 @@
         },
         "lastAccess": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "hasSeconds": true
         },
         "createdAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "hasSeconds": true
         },
         "modifiedAt": {
             "type": "datetime",
@@ -63,8 +70,8 @@
         }
     },
     "collection": {
-        "sortBy": "lastAccess",
-        "asc": false,
+        "orderBy": "lastAccess",
+        "order": "desc",
         "textFilterFields": ["ipAddress", "userName"]
     },
     "indexes": {

@@ -13,7 +13,6 @@
             "type": "enum",
             "options": ["New", "Assigned", "Pending", "Closed", "Rejected", "Duplicate"],
             "default": "New",
-            "view": "views/fields/enum-styled",
             "style": {
                 "Closed": "success",
                 "Duplicate": "danger",
@@ -25,6 +24,11 @@
             "type": "enum",
             "options": ["Low", "Normal", "High", "Urgent"],
             "default": "Normal",
+            "displayAsLabel": true,
+            "style": {
+                "High": "warning",
+                "Urgent": "danger"
+            },
             "audited": true
         },
         "type": {
@@ -82,8 +86,7 @@
             "view": "views/fields/teams"
         },
         "attachments": {
-            "type": "attachmentMultiple",
-            "layoutListDisabled": true
+            "type": "attachmentMultiple"
         }
     },
     "links": {
@@ -165,8 +168,8 @@
         }
     },
     "collection": {
-        "sortBy": "number",
-        "asc": false,
+        "orderBy": "number",
+        "order": "desc",
         "textFilterFields": ["name", "number"]
     },
     "indexes": {

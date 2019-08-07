@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,12 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('email-helper', [], function () {
+define('email-helper', [], function () {
 
-    var EmailHelper = function (language, user, dateTime) {
+    var EmailHelper = function (language, user, dateTime, acl) {
         this.language = language;
         this.user = user;
         this.dateTime = dateTime;
+        this.acl = acl;
 
         this.erasedPlaceholder = 'ERASED:';
     }
@@ -165,10 +166,14 @@ Espo.define('email-helper', [], function () {
                 attributes.teamsIds = Espo.Utils.clone(model.get('teamsIds'));
                 attributes.teamsNames = Espo.Utils.clone(model.get('teamsNames') || {});
 
-                if (this.user.get('defaultTeamId')) {
+                var defaultTeamId = this.user.get('defaultTeamId');
+                if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
                     attributes.teamsIds.push(this.user.get('defaultTeamId'));
                     attributes.teamsNames[this.user.get('defaultTeamId')] = this.user.get('defaultTeamName');
                 }
+                attributes.teamsIds = attributes.teamsIds.filter(function (teamId) {
+                    return this.acl.checkTeamAssignmentPermission(teamId);
+                }, this);
             }
 
             attributes.nameHash = nameHash;
@@ -177,7 +182,7 @@ Espo.define('email-helper', [], function () {
 
             attributes.inReplyTo = model.get('messageId');
 
-            this.addReplyBodyAttrbutes(model, attributes);
+            this.addReplyBodyAttributes(model, attributes);
 
             return attributes;
         },
@@ -305,7 +310,7 @@ Espo.define('email-helper', [], function () {
             return address;
         },
 
-        addReplyBodyAttrbutes: function (model, attributes) {
+        addReplyBodyAttributes: function (model, attributes) {
             var format = this.getDateTime().getReadableShortDateTimeFormat();
             var dateSent = model.get('dateSent');
 
@@ -423,5 +428,4 @@ Espo.define('email-helper', [], function () {
     });
 
     return EmailHelper;
-
 });

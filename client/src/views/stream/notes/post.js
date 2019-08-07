@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,9 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
         setup: function () {
 
             this.createField('post', null, null, 'views/stream/fields/post');
-            this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
+            this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
+                previewSize: this.options.isNotification ? 'small' : 'medium'
+            });
 
             this.isInternal = this.model.get('isInternal');
 
@@ -83,7 +85,7 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
                         teamIdList.forEach(function (teamId) {
                             var teamName = teamNameHash[teamId];
                             if (teamName) {
-                                teamHtmlList.push('<a href="#Team/view/' + teamId + '">' + teamName + '</a>');
+                                teamHtmlList.push('<a href="#Team/view/' + this.getHelper().escapeString(teamId) + '">' + this.getHelper().escapeString(teamName) + '</a>');
                             }
                         }, this);
 
@@ -101,7 +103,7 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
                         portalIdList.forEach(function (portalId) {
                             var portalName = portalNameHash[portalId];
                             if (portalName) {
-                                portalHtmlList.push('<a href="#Portal/view/' + portalId + '">' + portalName + '</a>');
+                                portalHtmlList.push('<a href="#Portal/view/' + this.getHelper().escapeString(portalId) + '">' + this.getHelper().escapeString(portalName) + '</a>');
                             }
                         }, this);
 
@@ -133,7 +135,7 @@ Espo.define('views/stream/notes/post', 'views/stream/note', function (Dep) {
                                     } else {
                                         var userName = userNameHash[userId];
                                         if (userName) {
-                                            userHtmlList.push('<a href="#User/view/' + userId + '">' + userName + '</a>');
+                                            userHtmlList.push('<a href="#User/view/' + this.getHelper().escapeString(userId) + '">' + this.getHelper().escapeString(userName) + '</a>');
                                         }
                                     }
                                 }

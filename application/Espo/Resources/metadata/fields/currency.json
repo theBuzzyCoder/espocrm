@@ -6,6 +6,10 @@
          "default":false
       },
       {
+         "name": "default",
+         "type": "float"
+      },
+      {
          "name":"min",
          "type":"float"
       },
@@ -28,14 +32,31 @@
    ],
    "fields":{
       "currency":{
-         "type":"varchar",
-         "disabled": true
+         "type": "enum",
+         "view": "views/fields/currency-list",
+         "layoutDetailDisabled": true,
+         "layoutListDisabled": true,
+         "layoutMassUpdateDisabled": true,
+         "customizationRequiredDisabled": true,
+         "customizationOptionsDisabled": true,
+         "customizationIsSortedDisabled": true,
+         "customizationDisplayAsLabelDisabled": true,
+         "customizationAuditedDisabled": true,
+         "customizationReadOnlyDisabled": true,
+         "customizationDefaultView": "views/admin/field-manager/fields/currency-default",
+         "maxLength": 6
       },
       "converted":{
          "type":"currencyConverted",
-         "readOnly": true
+         "readOnly": true,
+         "importDisabled": true
       }
    },
+   "validationList": [
+      "required",
+      "min",
+      "max"
+   ],
    "filter": true,
    "personalData": true
 }

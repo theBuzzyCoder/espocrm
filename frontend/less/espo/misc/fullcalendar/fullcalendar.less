@@ -10,6 +10,10 @@
     text-decoration: line-through !important;
 }
 
+.fc th {
+    font-weight: normal;
+}
+
 .fc-content > .user > .avatar {
     position: relative;
     top: -1px;
@@ -53,4 +57,10 @@
 
 .fc-ltr .fc-basic-view .fc-day-top {
     text-align: right !important;
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    .fc-view-container {
+        font-size: 85%;
+    }
 }

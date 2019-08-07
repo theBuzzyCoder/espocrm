@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ class Parser
         ['*', '/', '%']
     ];
 
-    protected $operatorMap = array(
+    protected $operatorMap = [
         '=' => 'assign',
         '||' => 'logical\\or',
         '&&' => 'logical\\and',
@@ -56,7 +56,7 @@ class Parser
         '<' => 'comparison\\lessThan',
         '>=' => 'comparison\\greaterThanOrEquals',
         '<=' => 'comparison\\lessThanOrEquals'
-    );
+    ];
 
     public function parse($expression)
     {
@@ -176,6 +176,8 @@ class Parser
 
         $this->processStrings($expression, $modifiedExpression, $splitterIndexList, true);
 
+        $expressionOutOfBraceList = [];
+
         for ($i = 0; $i < strlen($modifiedExpression); $i++) {
             if ($modifiedExpression[$i] === '(') {
                 $braceCounter++;
@@ -185,6 +187,11 @@ class Parser
             }
             if ($braceCounter === 0 && $i < strlen($modifiedExpression) - 1) {
                 $hasExcessBraces = false;
+            }
+            if ($braceCounter === 0) {
+                $expressionOutOfBraceList[] = true;
+            } else {
+                $expressionOutOfBraceList[] = false;
             }
         }
         if ($braceCounter !== 0) {
@@ -226,7 +233,13 @@ class Parser
 
         foreach ($this->priorityList as $operationList) {
             foreach ($operationList as $operator) {
-                $index = strpos($expression, $operator, 1);
+                $startFrom = 1;
+                while (true) {
+                    $index = strpos($expression, $operator, $startFrom);
+                    if ($index === false) break;
+                    if ($expressionOutOfBraceList[$index]) break;
+                    $startFrom = $index + 1;
+                }
                 if ($index !== false) {
                     $possibleRightOperator = null;
                     if (strlen($operator) === 1) {
@@ -452,4 +465,3 @@ class Parser
         return $argumentList;
     }
 }
-

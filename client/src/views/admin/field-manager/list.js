@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -45,40 +45,25 @@ Espo.define('views/admin/field-manager/list', 'view', function (Dep) {
                 var field = $(e.currentTarget).data('name');
 
                 this.confirm(this.translate('confirmation', 'messages'), function () {
-                    this.notify('Removing...');
-                    $.ajax({
-                        url: 'Admin/fieldManager/' + this.scope + '/' + field,
-                        type: 'DELETE',
-                        success: function () {
-                            this.notify('Removed', 'success');
-                            var data = this.getMetadata().data;
-                            delete data['entityDefs'][this.scope]['fields'][field];
+                    Espo.Ui.notify(this.translate('Removing...'));
+                    Espo.Ajax.request('Admin/fieldManager/' + this.scope + '/' + field, 'delete').then(function () {
+                        Espo.Ui.success(this.translate('Removed'));
+
+                        $(e.currentTarget).closest('tr').remove();
+                        var data = this.getMetadata().data;
+
+                        delete data['entityDefs'][this.scope]['fields'][field];
+
+                        this.getMetadata().load(function () {
                             this.getMetadata().storeToCache();
-                            $(e.currentTarget).closest('tr').remove();
-                        }.bind(this),
-                    });
-                }, this);
+                        }.bind(this), true);
+                    }.bind(this));
+                }.bind(this));
             }
         },
 
         setup: function () {
             this.scope = this.options.scope;
-
-            this.typeList = [];
-
-            var fieldDefs = this.getMetadata().get('fields');
-
-            Object.keys(this.getMetadata().get('fields')).forEach(function (type) {
-                if (type in fieldDefs) {
-                    if (!fieldDefs[type].notCreatable) {
-                        this.typeList.push(type);
-                    }
-                }
-            }, this);
-
-            this.typeList.sort(function (v1, v2) {
-                return this.translate(v1, 'fieldTypes', 'Admin').localeCompare(this.translate(v2, 'fieldTypes', 'Admin'));
-            }.bind(this));
 
             this.wait(true);
             this.getModelFactory().create(this.scope, function (model) {

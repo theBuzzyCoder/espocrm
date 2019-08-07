@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,11 +50,12 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
     {
         if ($entity->get('customUrl')) {
             $entity->set('url', $entity->get('customUrl'));
-            return;
         }
+
         $siteUrl = $this->getConfig()->get('siteUrl');
         $siteUrl = rtrim($siteUrl , '/') . '/';
         $url = $siteUrl . 'portal/';
+
         if ($entity->id === $this->getConfig()->get('defaultPortalId')) {
             $entity->set('isDefault', true);
             $entity->setFetched('isDefault', true);
@@ -64,9 +65,13 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
             } else {
                 $url .= $entity->id . '/';
             }
+            $entity->set('isDefault', false);
             $entity->setFetched('isDefault', false);
         }
-        $entity->set('url', $url);
+
+        if (!$entity->get('customUrl')) {
+            $entity->set('url', $url);
+        }
     }
 
     protected function afterSave(Entity $entity, array $options = array())
@@ -86,4 +91,3 @@ class Portal extends \Espo\Core\ORM\Repositories\RDB
         }
     }
 }
-

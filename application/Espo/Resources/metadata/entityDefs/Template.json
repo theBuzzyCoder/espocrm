@@ -6,16 +6,16 @@
             "trim": true
         },
         "body": {
-            "type": "text",
-            "view": "views/fields/wysiwyg"
+            "type": "wysiwyg",
+            "view": "views/template/fields/body"
         },
         "header": {
-            "type": "text",
-            "view": "views/fields/wysiwyg"
+            "type": "wysiwyg",
+            "view": "views/template/fields/body"
         },
         "footer": {
-            "type": "text",
-            "view": "views/fields/wysiwyg",
+            "type": "wysiwyg",
+            "view": "views/template/fields/body",
             "tooltip": true
         },
         "entityType": {
@@ -78,8 +78,51 @@
         },
         "pageFormat": {
             "type": "enum",
-            "options": ["A3", "A4", "A5", "A6", "A7"],
+            "options": ["A3", "A4", "A5", "A6", "A7", "Custom"],
             "default": "A4"
+        },
+        "pageWidth": {
+            "type": "float",
+            "min": 1
+        },
+        "pageHeight": {
+            "type": "float",
+            "min": 1
+        },
+        "fontFace": {
+            "type": "enum",
+            "options": [
+                "",
+                "aealarabiya",
+                "aefurat",
+                "cid0cs",
+                "cid0ct",
+                "cid0jp",
+                "cid0kr",
+                "courier",
+                "dejavusans",
+                "dejavusanscondensed",
+                "dejavusansextralight",
+                "dejavusansmono",
+                "dejavuserif",
+                "dejavuserifcondensed",
+                "freemono",
+                "freesans",
+                "freeserif",
+                "helvetica",
+                "hysmyeongjostdmedium",
+                "kozgopromedium",
+                "kozminproregular",
+                "msungstdlight",
+                "pdfacourier",
+                "pdfahelvetica",
+                "pdfasymbol",
+                "pdfatimes",
+                "stsongstdlight",
+                "symbol",
+                "times"
+            ],
+            "default": ""
         }
     },
     "links": {
@@ -98,7 +141,7 @@
         }
     },
     "collection": {
-        "sortBy": "name",
-        "asc": true
+        "orderBy": "name",
+        "order": "asc"
     }
 }

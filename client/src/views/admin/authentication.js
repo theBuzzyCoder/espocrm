@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,92 +26,67 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/authentication', 'views/settings/record/edit', function (Dep) {
+define('views/admin/authentication', 'views/settings/record/edit', function (Dep) {
 
     return Dep.extend({
 
         layoutName: 'authentication',
 
-        dependencyDefs: {
-            'ldapAuth': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['ldapUsername', 'ldapPassword', 'testConnection']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['ldapUsername', 'ldapPassword', 'testConnection']
-                    }
-                ]
-            },
-            'ldapAccountCanonicalForm': {
-                map: {
-                    'Backslash': [
-                        {
-                            action: 'show',
-                            fields: ['ldapAccountDomainName', 'ldapAccountDomainNameShort']
-                        }
-                    ],
-                    'Principal': [
-                        {
-                            action: 'show',
-                            fields: ['ldapAccountDomainName', 'ldapAccountDomainNameShort']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['ldapAccountDomainName', 'ldapAccountDomainNameShort']
-                    }
-                ]
-            },
-            'ldapCreateEspoUser': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['ldapUserTitleAttribute', 'ldapUserFirstNameAttribute', 'ldapUserLastNameAttribute', 'ldapUserEmailAddressAttribute', 'ldapUserPhoneNumberAttribute', 'ldapUserTeams', 'ldapUserDefaultTeam']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['ldapUserTitleAttribute', 'ldapUserFirstNameAttribute', 'ldapUserLastNameAttribute', 'ldapUserEmailAddressAttribute', 'ldapUserPhoneNumberAttribute', 'ldapUserTeams', 'ldapUserDefaultTeam']
-                    }
-                ]
-            },
-        },
-
         setup: function () {
+            this.methodList = [];
+
+            var defs = this.getMetadata().get(['authenticationMethods']) || {};
+            for (var method in defs) {
+                if (defs[method].settings && defs[method].settings.isAvailable) {
+                    this.methodList.push(method);
+                }
+            }
+
+            this.authFields = {};
+
             Dep.prototype.setup.call(this);
 
-            this.methodList = this.getMetadata().get('entityDefs.Settings.fields.authenticationMethod.options') || [];
-
-            this.authFields = {
-                'LDAP': [
-                    'ldapHost', 'ldapPort', 'ldapAuth', 'ldapSecurity',
-                    'ldapUsername', 'ldapPassword', 'ldapBindRequiresDn',
-                    'ldapUserLoginFilter', 'ldapBaseDn', 'ldapAccountCanonicalForm',
-                    'ldapAccountDomainName', 'ldapAccountDomainNameShort', 'ldapAccountDomainName',
-                    'ldapAccountDomainNameShort', 'ldapTryUsernameSplit', 'ldapOptReferrals',
-                    'ldapCreateEspoUser'
-                ]
-            };
-
             this.handlePanelsVisibility();
-        },
-
-
-        afterRender: function () {
             this.listenTo(this.model, 'change:authenticationMethod', function () {
                 this.handlePanelsVisibility();
+            }, this);
+
+            this.manage2FAFields();
+            this.listenTo(this.model, 'change:auth2FA', function () {
+                this.manage2FAFields();
+            }, this);
+        },
+
+        setupBeforeFinal: function () {
+            this.dynamicLogicDefs = {
+                fields: {},
+                panels: {},
+            };
+
+            this.methodList.forEach(function (method) {
+                var fieldList = this.getMetadata().get(['authenticationMethods', method, 'settings', 'fieldList']);
+                if (fieldList) {
+                    this.authFields[method] = fieldList;
+                }
+                var mDynamicLogicFieldsDefs = this.getMetadata().get(['authenticationMethods', method, 'settings', 'dynamicLogic', 'fields']);
+                if (mDynamicLogicFieldsDefs) {
+                    for (var f in mDynamicLogicFieldsDefs) {
+                        this.dynamicLogicDefs.fields[f] = Espo.Utils.cloneDeep(mDynamicLogicFieldsDefs[f]);
+                    }
+                }
+            }, this);
+
+            Dep.prototype.setupBeforeFinal.call(this);
+        },
+
+        modifyDetailLayout: function (layout) {
+            this.methodList.forEach(function (method) {
+                var mLayout = this.getMetadata().get(['authenticationMethods', method, 'settings', 'layout']);
+                if (mLayout) {
+                    mLayout = Espo.Utils.cloneDeep(mLayout);
+                    mLayout.name = method;
+                    layout.push(mLayout);
+                }
             }, this);
         },
 
@@ -119,28 +94,35 @@ Espo.define('views/admin/authentication', 'views/settings/record/edit', function
             var authenticationMethod = this.model.get('authenticationMethod');
 
             this.methodList.forEach(function (method) {
-                var list = (this.authFields[method] || []);
+                var fieldList = (this.authFields[method] || []);
+
                 if (method != authenticationMethod) {
                     this.hidePanel(method);
-                    list.forEach(function (field) {
+
+                    fieldList.forEach(function (field) {
                         this.hideField(field);
                     }, this);
                 } else {
                     this.showPanel(method);
 
-                    list.forEach(function (field) {
+                    fieldList.forEach(function (field) {
                         this.showField(field);
                     }, this);
-                    Object.keys(this.dependencyDefs || {}).forEach(function (attr) {
-                        if (~list.indexOf(attr)) {
-                            this._handleDependencyAttribute(attr);
-                        }
-                    }, this);
+
+                    this.processDynamicLogic();
                 }
             }, this);
         },
 
+        manage2FAFields: function () {
+            if (this.model.get('auth2FA')) {
+                this.showField('auth2FAMethodList');
+                this.setFieldRequired('auth2FAMethodList');
+            } else {
+                this.hideField('auth2FAMethodList');
+                this.setFieldNotRequired('auth2FAMethodList');
+            }
+        },
+
     });
-
 });
-

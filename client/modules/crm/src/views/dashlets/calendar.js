@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,12 +53,15 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     });
                 }, this);
 
-                this.createView('calendar', 'crm:views/calendar/timeline', {
+                var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) || 'crm:views/calendar/timeline';
+
+                this.createView('calendar', viewName, {
                     el: this.options.el + ' > .calendar-container',
                     header: false,
                     calendarType: 'shared',
                     userList: userList,
-                    enabledScopeList: this.getOption('enabledScopeList')
+                    enabledScopeList: this.getOption('enabledScopeList'),
+                    noFetchLoadingMessage: true,
                 }, function (view) {
                     view.render();
                 }, this);
@@ -69,7 +72,9 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
                     teamIdList = this.getOption('teamsIds');
                 }
 
-                this.createView('calendar', 'crm:views/calendar/calendar', {
+                var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) || 'crm:views/calendar/calendar';
+
+                this.createView('calendar', viewName, {
                     mode: mode,
                     el: this.options.el + ' > .calendar-container',
                     header: false,
@@ -100,7 +105,8 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
             this.actionList.unshift({
                 name: 'viewCalendar',
                 html: this.translate('View Calendar', 'labels', 'Calendar'),
-                url: '#Calendar'
+                url: '#Calendar',
+                iconHtml: '<span class="far fa-calendar-alt"></span>'
             });
         },
 
@@ -108,11 +114,11 @@ Espo.define('crm:views/dashlets/calendar', 'views/dashlets/abstract/base', funct
             if (this.getOption('mode') !== 'timeline') {
                 this.buttonList.push({
                     name: 'previous',
-                    html: '<span class="glyphicon glyphicon-chevron-left"></span>',
+                    html: '<span class="fas fa-chevron-left"></span>',
                 });
                 this.buttonList.push({
                     name: 'next',
-                    html: '<span class="glyphicon glyphicon-chevron-right"></span>',
+                    html: '<span class="fas fa-chevron-right"></span>',
                 });
             }
         },

@@ -1,8 +1,8 @@
 {
   "fields": {
-    "post": "Entrada",
+    "post": "Guardar",
     "attachments": "Adjuntos",
-    "targetType": "Objetivo",
+    "targetType": "Interés",
     "teams": "Equipos",
     "users": "Usuarios",
     "portals": "Portales",

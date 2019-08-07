@@ -66,7 +66,9 @@
                 "doNotFillAssignedUserIfNotRequired": false,
                 "useCustomTabList": false,
                 "tabList": false,
-                "emailUseExternalClient": false
+                "emailUseExternalClient": false,
+                "dashletsOptions": false,
+                "dashboardLayout": false
             },
             "Call": {
                 "reminders": false
@@ -86,7 +88,14 @@
                 "emailAccounts": false
             },
             "User": {
+                "dashboardTemplate": false,
+                "password": false,
+                "authMethod": false,
+                "apiKey": false,
+                "secretKey": false,
+                "token": false,
                 "isAdmin": false,
+                "type": false,
                 "contact": false,
                 "accounts": false,
                 "portalRoles": false,
@@ -133,10 +142,12 @@
         }
     },
     "valuePermissionList": [
-        "exportPermission"
+        "exportPermission",
+        "massUpdatePermission"
     ],
     "permissionsStrictDefaults": {
-        "exportPermission": "no"
+        "exportPermission": "no",
+        "massUpdatePermission": "no"
     },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,

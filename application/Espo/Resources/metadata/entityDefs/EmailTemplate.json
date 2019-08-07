@@ -9,8 +9,8 @@
             "type": "varchar"
         },
         "body": {
-            "type": "text",
-            "view": "views/fields/wysiwyg",
+            "type": "wysiwyg",
+            "view": "views/email-template/fields/body",
             "useIframe": true
         },
         "isHtml": {
@@ -84,7 +84,8 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
-        "asc": false
+        "orderBy": "createdAt",
+        "order": "desc",
+        "textFilterFields": ["name", "bodyPlain", "body", "subject"]
     }
 }

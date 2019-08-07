@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,39 +40,50 @@ class LastViewed extends \Espo\Core\Services\Base
         $this->addDependency('metadata');
     }
 
-    public function get()
+    public function getList($params)
     {
-        $entityManager = $this->getInjection('entityManager');
-
-        $maxSize = $this->getConfig()->get('lastViewedCount', 20);
+        $repository = $this->getEntityManager()->getRepository('ActionHistoryRecord');
 
         $actionHistoryRecordService = $this->getInjection('serviceFactory')->create('ActionHistoryRecord');
 
         $scopes = $this->getInjection('metadata')->get('scopes');
 
         $targetTypeList = array_filter(array_keys($scopes), function ($item) use ($scopes) {
-            return !empty($scopes[$item]['object']);
+            return !empty($scopes[$item]['object']) || !empty($scopes[$item]['lastViewed']);
         });
 
-        $collection = $this->getEntityManager()->getRepository('ActionHistoryRecord')->where(array(
-            'userId' => $this->getUser()->id,
-            'action' => 'read',
-            'targetType' => $targetTypeList
-        ))->order(3, true)->limit(0, $maxSize)->select([
-            'targetId', 'targetType', 'MAX:number'
-        ])->groupBy([
-            'targetId', 'targetType'
-        ])->find();
+        $offset = $params['offset'];
+        $maxSize = $params['maxSize'];
+
+        $selectParams = [
+            'whereClause' => [
+                'userId' => $this->getUser()->id,
+                'action' => 'read',
+                'targetType' => $targetTypeList
+            ],
+            'orderBy' => [[4, true]],
+            'select' => ['targetId', 'targetType', 'MAX:number', ['MAX:createdAt', 'createdAt']],
+            'groupBy' => ['targetId', 'targetType']
+        ];
+
+        $collection = $repository->limit($offset, $params['maxSize'] + 1)->find($selectParams);
 
         foreach ($collection as $i => $entity) {
             $actionHistoryRecordService->loadParentNameFields($entity);
-            $entity->id = $i;
+            $entity->set('id', \Espo\Core\Utils\Util::generateId());
         }
 
-        return array(
-            'total' => count($collection),
+        if ($maxSize && count($collection) > $maxSize) {
+            $total = -1;
+            unset($collection[count($collection) - 1]);
+        } else {
+            $total = -2;
+        }
+
+        return (object) [
+            'total' => $total,
             'collection' => $collection
-        );
+        ];
     }
 }
 

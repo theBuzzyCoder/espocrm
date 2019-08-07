@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,8 +38,6 @@ class Auth
 {
     protected $container;
 
-    protected $authentication;
-
     protected $allowAnyAccess;
 
     const ACCESS_CRM_ONLY = 0;
@@ -54,15 +52,15 @@ class Auth
 
     private $portal;
 
+    const STATUS_SUCCESS = 'success';
+
+    const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
+
     public function __construct(\Espo\Core\Container $container, $allowAnyAccess = false)
     {
         $this->container = $container;
 
         $this->allowAnyAccess = $allowAnyAccess;
-
-        $authenticationMethod = $this->getConfig()->get('authenticationMethod', 'Espo');
-        $authenticationClassName = "\\Espo\\Core\\Utils\\Authentication\\" . $authenticationMethod;
-        $this->authentication = new $authenticationClassName($this->getConfig(), $this->getEntityManager(), $this);
 
         $this->request = $container->get('slim')->request();
     }
@@ -70,6 +68,47 @@ class Auth
     protected function getContainer()
     {
         return $this->container;
+    }
+
+    protected function getDefaultAuthenticationMethod()
+    {
+        return $this->getConfig()->get('authenticationMethod', 'Espo');
+    }
+
+    protected function getAuthenticationImpl(string $method) : \Espo\Core\Utils\Authentication\Base
+    {
+        $className = $this->getMetadata()->get([
+            'authenticationMethods', $method, 'implementationClassName'
+        ]);
+
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+
+            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "\\Espo\\Core\\Utils\\Authentication\\" . $sanitizedName;
+            }
+        }
+
+        return new $className($this->getConfig(), $this->getEntityManager(), $this, $this->getContainer());
+    }
+
+    protected function get2FAImpl(string $method) : \Espo\Core\Utils\Authentication\TwoFA\Base
+    {
+        $className = $this->getMetadata()->get([
+            'app', 'auth2FAMethods', $method, 'implementationClassName'
+        ]);
+
+        if (!$className) {
+            $sanitizedName = preg_replace('/[^a-zA-Z0-9]+/', '', $method);
+
+            $className = "\\Espo\\Custom\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
+            if (!class_exists($className)) {
+                $className = "\\Espo\\Core\\Utils\\Authentication\\TwoFA\\" . $sanitizedName;
+            }
+        }
+
+        return $this->getContainer()->get('injectableFactory')->createByClassName($className);
     }
 
     protected function setPortal(Portal $portal)
@@ -103,6 +142,11 @@ class Auth
         return $this->getContainer()->get('entityManager');
     }
 
+    protected function getMetadata()
+    {
+        return $this->getContainer()->get('metadata');
+    }
+
     public function useNoAuth()
     {
         $entityManager = $this->getContainer()->get('entityManager');
@@ -119,22 +163,39 @@ class Auth
         $this->getContainer()->setUser($user);
     }
 
-    public function login($username, $password)
+    public function login($username, $password = null, $authenticationMethod = null)
     {
         $isByTokenOnly = false;
-        if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION_BY_TOKEN') === 'true') {
-            $isByTokenOnly = true;
+
+        if (!$authenticationMethod) {
+            if ($this->request->headers->get('Http-Espo-Authorization-By-Token') === 'true') {
+                $isByTokenOnly = true;
+            }
         }
+
+        $createTokenSecret = $this->request->headers->get('Espo-Authorization-Create-Token-Secret') === 'true';
 
         if (!$isByTokenOnly) {
             $this->checkFailedAttemptsLimit($username);
         }
 
-        $authToken = $this->getEntityManager()->getRepository('AuthToken')->where([
-            'token' => $password
-        ])->findOne();
-
+        $authToken = null;
         $authTokenIsFound = false;
+
+        if (!$authenticationMethod) {
+            $authToken = $this->getEntityManager()->getRepository('AuthToken')->where([
+                'token' => $password
+            ])->findOne();
+
+            if ($authToken) {
+                if ($authToken->get('secret')) {
+                    $sentSecret = $_COOKIE['auth-token-secret'] ?? null;
+                    if ($sentSecret !== $authToken->get('secret')) {
+                        $authToken = null;
+                    }
+                }
+            }
+        }
 
         if ($authToken) {
             $authTokenIsFound = true;
@@ -168,16 +229,32 @@ class Auth
             return;
         }
 
-        $user = $this->authentication->login($username, $password, $authToken);
+        if (!$authenticationMethod) {
+            $authenticationMethod = $this->getDefaultAuthenticationMethod();
+        }
+
+        $authenticationImpl = $this->getAuthenticationImpl($authenticationMethod);
+
+        $params = [
+            'isPortal' => $this->isPortal(),
+        ];
+
+        $loginResultData = [];
+
+        $user = $authenticationImpl->login($username, $password, $authToken, $params, $this->request, $loginResultData);
 
         $authLogRecord = null;
 
         if (!$authTokenIsFound) {
-            $authLogRecord = $this->createAuthLogRecord($username, $user);
+            $authLogRecord = $this->createAuthLogRecord($username, $user, $authenticationMethod);
         }
 
         if (!$user) {
             return;
+        }
+
+        if (!$user->isAdmin() && $this->getConfig()->get('maintenanceMode')) {
+            throw new \Espo\Core\Exceptions\ServiceUnavailable("Application is in maintenance mode.");
         }
 
         if (!$user->isActive()) {
@@ -186,20 +263,20 @@ class Auth
             return;
         }
 
-        if (!$user->isAdmin() && !$this->isPortal() && $user->get('isPortalUser')) {
+        if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to crm as a portal user '".$user->get('userName')."'.");
             $this->logDenied($authLogRecord, 'IS_PORTAL_USER');
             return;
         }
 
-        if (!$user->isAdmin() && $this->isPortal() && !$user->get('isPortalUser')) {
+        if ($this->isPortal() && !$user->isPortal()) {
             $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is not portal user.");
             $this->logDenied($authLogRecord, 'IS_NOT_PORTAL_USER');
             return;
         }
 
         if ($this->isPortal()) {
-            if (!$user->isAdmin() && !$this->getEntityManager()->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
+            if (!$this->getEntityManager()->getRepository('Portal')->isRelated($this->getPortal(), 'users', $user)) {
                 $GLOBALS['log']->info("AUTH: Trying to login to portal as user '".$user->get('userName')."' which is portal user but does not belongs to portal.");
                 $this->logDenied($authLogRecord, 'USER_IS_NOT_IN_PORTAL');
                 return;
@@ -214,7 +291,31 @@ class Auth
         $this->getEntityManager()->setUser($user);
         $this->getContainer()->setUser($user);
 
-        if ($this->request->headers->get('HTTP_ESPO_AUTHORIZATION')) {
+        $secondStepRequired = false;
+
+        if (!$authToken && $this->getConfig()->get('auth2FA')) {
+            $twoFAMethod = $this->getUser2FAMethod($user);
+            if ($twoFAMethod) {
+                $twoFAImpl = $this->get2FAImpl($twoFAMethod);
+
+                $twoFACode = $this->request->headers->get('Espo-Authorization-Code');
+
+                if ($twoFACode) {
+                    if (!$twoFAImpl->verifyCode($user, $twoFACode)) {
+                        return;
+                    }
+                } else {
+                    $loginResultData = $twoFAImpl->getLoginData($user);
+                    $secondStepRequired = true;
+                }
+            }
+        }
+
+        if (!$secondStepRequired) {
+            $secondStepRequired = $loginResultData['secondStepRequired'] ?? false;
+        }
+
+        if (!$secondStepRequired && $this->request->headers->get('Http-Espo-Authorization')) {
             if (!$authToken) {
                 $authToken = $this->getEntityManager()->getEntity('AuthToken');
                 $token = $this->generateToken();
@@ -222,6 +323,14 @@ class Auth
                 $authToken->set('hash', $user->get('password'));
                 $authToken->set('ipAddress', $_SERVER['REMOTE_ADDR']);
                 $authToken->set('userId', $user->id);
+
+                if ($createTokenSecret) {
+                    $secret = $this->generateToken();
+                    $authToken->set('secret', $secret);
+
+                    setcookie('auth-token-secret', $secret, strtotime('+1000 days'), '/; samesite=lax', '', false, true);
+                }
+
                 if ($this->isPortal()) {
                     $authToken->set('portalId', $this->getPortal()->id);
                 }
@@ -229,7 +338,7 @@ class Auth
                 if ($this->getConfig()->get('authTokenPreventConcurrent')) {
                     $concurrentAuthTokenList = $this->getEntityManager()->getRepository('AuthToken')->select(['id'])->where([
                         'userId' => $user->id,
-                        'isActive' => true
+                        'isActive' => true,
                     ])->find();
                     foreach ($concurrentAuthTokenList as $concurrentAuthToken) {
                         $concurrentAuthToken->set('isActive', false);
@@ -262,7 +371,32 @@ class Auth
             $user->set('authLogRecordId', $authLogRecord->id);
         }
 
-        return true;
+        if ($secondStepRequired) {
+            return [
+                'status' => self::STATUS_SECOND_STEP_REQUIRED,
+                'message' => $loginResultData['message'] ?? null,
+                'token' => $loginResultData['token'] ?? null,
+                'view' => $loginResultData['view'] ?? null,
+            ];
+        }
+
+        return [
+            'status' => self::STATUS_SUCCESS,
+        ];
+    }
+
+    protected function getUser2FAMethod(\Espo\Entities\User $user) : ?string
+    {
+        $userData = $this->getEntityManager()->getRepository('UserData')->getByUserId($user->id);
+        if (!$userData) return null;
+        if (!$userData->get('auth2FA')) return null;
+
+        $method = $userData->get('auth2FAMethod');
+
+        if (!$method) return null;
+        if (!in_array($method, $this->getConfig()->get('auth2FAMethodList', []))) return null;
+
+        return $method;
     }
 
     protected function checkFailedAttemptsLimit($username = null)
@@ -309,7 +443,7 @@ class Auth
         }
     }
 
-    protected function createAuthLogRecord($username, $user)
+    protected function createAuthLogRecord($username, $user, $authenticationMethod = null)
     {
         if ($username === '**logout') return;
 
@@ -320,7 +454,8 @@ class Auth
             'ipAddress' => $_SERVER['REMOTE_ADDR'],
             'requestTime' => $_SERVER['REQUEST_TIME_FLOAT'],
             'requestMethod' => $this->request->getMethod(),
-            'requestUrl' => $this->request->getUrl() . $this->request->getPath()
+            'requestUrl' => $this->request->getUrl() . $this->request->getPath(),
+            'authenticationMethod' => $authenticationMethod
         ]);
 
         if ($this->isPortal()) {

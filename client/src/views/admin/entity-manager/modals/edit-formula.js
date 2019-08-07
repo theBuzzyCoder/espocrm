@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,7 +52,7 @@ Espo.define('views/admin/entity-manager/modals/edit-formula', ['views/modal', 'm
 
             var scope = this.scope = this.options.scope || false;
 
-            this.header = this.translate('Formula', 'labels', 'EntityManager') + ': ' + this.translate(scope, 'scopeName');
+            this.header = this.translate('Formula', 'labels', 'EntityManager') + ': ' + this.translate(scope, 'scopeNames');
 
             var model = this.model = new Model();
             model.name = 'EntityManager';

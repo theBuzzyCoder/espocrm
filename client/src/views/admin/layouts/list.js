@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,11 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
 
         dataAttributesDefs: {
             link: {type: 'bool'},
-            width: {type: 'float'},
+            width: {
+                type: 'float',
+                min: 0,
+                max: 100
+            },
             notSortable: {type: 'bool'},
             align: {
                 type: 'enum',
@@ -127,10 +131,18 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
                         duplicateLabelList.push(label);
                     }
                     labelList.push(label);
-                    this.disabledFields.push({
-                        name: allFields[i],
+                    var fieldName = allFields[i];
+                    var o = {
+                        name: fieldName,
                         label: label
-                    });
+                    };
+                    var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
+                    if (fieldType) {
+                        if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
+                            o.notSortable = true;
+                        }
+                    }
+                    this.disabledFields.push(o);
                 }
             }
 
@@ -155,13 +167,13 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
                     }
                 }, this);
                 this.rowLayout[i].label = label;
+
+                this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);
             }
         },
 
         checkFieldType: function (type) {
-            if (['linkMultiple'].indexOf(type) != -1) {
-                return false;
-            }
+
             return true;
         },
 
@@ -172,10 +184,12 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
             if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) != -1) {
                 return false;
             }
+
+            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+            if (layoutList && !~layoutList.indexOf(this.type)) return;
+
             return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutListDisabled');
         }
 
     });
 });
-
-

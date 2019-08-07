@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -95,7 +95,13 @@ class AdminNotificationManager
             $extensionsNeedingUpgrade = $this->getExtensionsNeedingUpgrade();
             if (!empty($extensionsNeedingUpgrade)) {
                 foreach ($extensionsNeedingUpgrade as $extensionName => $extensionDetails) {
-                    $message = $this->getLanguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
+                    $label = 'new' . Util::toCamelCase($extensionName, ' ', true) .'VersionIsAvailable';
+
+                    $message = $this->getLanguage()->get(['Admin', 'messages', $label]);
+                    if (!$message) {
+                        $message = $this->getLanguage()->translate('newExtensionVersionIsAvailable', 'messages', 'Admin');
+                    }
+
                     $notificationList[] = array(
                         'id' => 'newExtensionVersionIsAvailable' . Util::toCamelCase($extensionName, ' ', true),
                         'type' => 'newExtensionVersionIsAvailable',

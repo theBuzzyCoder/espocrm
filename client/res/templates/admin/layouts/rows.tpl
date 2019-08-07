@@ -16,13 +16,13 @@
     #layout ul li {
         list-style: none;
         border: 1px solid #CCC;
-        margin: 5px;
+        margin: 5px 0;
         padding: 5px;
         height: 32px;
     }
 
     #layout header {
-        font-weight: bold;
+        font-weight: 600;
     }
 
     #layout ul > li .left {
@@ -68,12 +68,12 @@
             <header>{{translate 'Enabled' scope='Admin'}}</header>
             <ul class="enabled connected">
                 {{#each layout}}
-                    <li draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
-                        <div class="left">
-                            <label>{{label}}</label>
+                    <li class="cell" draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
+                        <div class="left" style="width: calc(100% - 17px);">
+                            <span>{{label}}</span>
                         </div>
                         {{#if ../editable}}
-                        <div class="right"><a href="javascript:" data-action="editField" class="edit-field"><i class="glyphicon glyphicon-pencil"></i></a></div>
+                        <div class="right" style="width: 17px;"><a href="javascript:" data-action="editItem" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
                         {{/if}}
                     </li>
                 {{/each}}
@@ -85,12 +85,12 @@
             <header>{{translate 'Disabled' scope='Admin'}}</header>
             <ul class="disabled connected">
                 {{#each disabledFields}}
-                    <li draggable="true" data-name="{{name}}">
-                        <div class="left">
-                            <label>{{label}}</label>
+                    <li class="cell" draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
+                        <div class="left" style="width: calc(100% - 17px);">
+                            <span>{{label}}</span>
                         </div>
                         {{#if ../editable}}
-                        <div class="right"><a href="javascript:" data-action="editField" class="edit-field"><i class="glyphicon glyphicon-pencil"></i></a></div>
+                        <div class="right" style="width: 17px;"><a href="javascript:" data-action="editItem" class="edit-field"><i class="fas fa-pencil-alt fa-sm"></i></a></div>
                         {{/if}}
                     </li>
                 {{/each}}

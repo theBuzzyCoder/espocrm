@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,6 +27,8 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
 
         detailTemplate: 'fields/map/detail',
 
+        listTemplate: 'fields/map/detail',
+
         addressField: null,
 
         provider: null,
@@ -35,6 +37,7 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
 
         data: function () {
             var data = Dep.prototype.data.call(this);
+            data.hasAddress = this.hasAddress();
             return data;
         },
 
@@ -72,7 +75,7 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
         },
 
         hasAddress: function () {
-            return this.addressData.city || this.addressData.postalCode;
+            return !!this.model.get(this.addressField + 'City') || !!this.model.get(this.addressField + 'PostalCode');
         },
 
         afterRender: function () {
@@ -95,6 +98,12 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
         afterRenderGoogle: function () {
             if (window.google && window.google.maps) {
                 this.initMapGoogle();
+            } else if (typeof window.mapapiloaded === 'function') {
+                var mapapiloaded = window.mapapiloaded;
+                window.mapapiloaded = function() {
+                  this.initMapGoogle();
+                  mapapiloaded();
+                }.bind(this);
             } else {
                 window.mapapiloaded = function () {
                     this.initMapGoogle();
@@ -175,9 +184,6 @@ Espo.define('views/fields/map', 'views/fields/base', function (Dep) {
                     });
                 }
             }.bind(this));
-
         }
-
     });
-
 });

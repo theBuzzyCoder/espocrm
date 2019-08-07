@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], function (Dep, ViewRecordHelper, DynamicLogic) {
+define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic'], function (Dep, ViewRecordHelper, DynamicLogic) {
 
     return Dep.extend({
 
@@ -317,6 +317,10 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.initDynamicLogic();
         },
 
+        setInitalAttributeValue: function (attribute, value) {
+            this.attributes[attribute] = value;
+        },
+
         checkAttributeIsChanged: function (name) {
             return !_.isEqual(this.attributes[name], this.model.get(name));
         },
@@ -330,6 +334,15 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             }
 
             this.model.set(this.attributes);
+        },
+
+        setModelAttributes: function (setAttributes, options) {
+            for (var item in this.model.attributes) {
+                if (!(item in setAttributes)) {
+                    this.model.unset(item);
+                }
+            }
+            this.model.set(setAttributes, options || {});
         },
 
         initDynamicLogic: function () {
@@ -423,7 +436,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.notify('Not valid', 'error');
         },
 
-        save: function (callback, skipExit) {
+        save: function (callback, skipExit, errorCallback) {
             this.beforeBeforeSave();
 
             var data = this.fetch();
@@ -437,25 +450,25 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
             data = _.extend(Espo.Utils.cloneDeep(beforeSaveAttributes), data);
 
-            var attrs = false;
+            var setAttributes = false;
             if (model.isNew()) {
-                attrs = data;
+                setAttributes = data;
             } else {
                 for (var name in data) {
                     if (_.isEqual(initialAttributes[name], data[name])) {
                         continue;
                     }
-                    (attrs || (attrs = {}))[name] = data[name];
+                    (setAttributes || (setAttributes = {}))[name] = data[name];
                 }
             }
 
-            if (!attrs) {
+            if (!setAttributes) {
                 this.trigger('cancel:save');
                 this.afterNotModified();
                 return true;
             }
 
-            model.set(attrs, {silent: true});
+            model.set(setAttributes, {silent: true});
 
             if (this.validate()) {
                 model.attributes = beforeSaveAttributes;
@@ -469,7 +482,7 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
             this.trigger('before:save');
             model.trigger('before:save');
 
-            model.save(attrs, {
+            model.save(setAttributes, {
                 success: function () {
                     this.afterSave();
                     var isNew = self.isNew;
@@ -506,12 +519,6 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
                         }
                     }
 
-                    if (xhr.status == 400) {
-                        if (!this.isNew) {
-                            this.resetModelChanges();
-                        }
-                    }
-
                     if (response && response.reason) {
                         var methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(response.reason.toString());
                         if (methodName in this) {
@@ -522,9 +529,13 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
                     this.afterSaveError();
 
-                    model.attributes = beforeSaveAttributes;
+                    this.setModelAttributes(beforeSaveAttributes);
+
                     self.trigger('cancel:save');
 
+                    if (errorCallback) {
+                        errorCallback.call(this, xhr);
+                    }
                 }.bind(this),
                 patch: !model.isNew()
             });
@@ -533,14 +544,23 @@ Espo.define('views/record/base', ['view', 'view-record-helper', 'dynamic-logic']
 
         fetch: function () {
             var data = {};
-            var fields = this.getFieldViews();
-            for (var i in fields) {
-                if (fields[i].mode == 'edit') {
-                    if (!fields[i].disabled && !fields[i].readOnly) {
-                        _.extend(data, fields[i].fetch());
+            var fieldViews = this.getFieldViews();
+            for (var i in fieldViews) {
+                var view = fieldViews[i];
+                if (view.mode == 'edit') {
+                    if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
+                        _.extend(data, view.fetch());
                     }
                 }
             };
+            return data;
+        },
+
+        processFetch: function () {
+            var data = this.fetch();
+            this.model.set(data);
+            if (this.validate()) return;
+
             return data;
         },
 

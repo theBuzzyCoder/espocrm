@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,17 +47,27 @@ class ExternalAccount extends \Espo\Core\Controllers\Record
     public function actionList($params, $data, $request)
     {
         $integrations = $this->getEntityManager()->getRepository('Integration')->find();
-        $arr = array();
+
+        $list = [];
         foreach ($integrations as $entity) {
             if ($entity->get('enabled') && $this->getMetadata()->get('integrations.' . $entity->id .'.allowUserAccounts')) {
-                $arr[] = array(
+
+                $userAccountAclScope = $this->getMetadata()->get(['integrations', $entity->id, 'userAccountAclScope']);
+
+                if ($userAccountAclScope) {
+                    if (!$this->getAcl()->checkScope($userAccountAclScope)) {
+                        continue;
+                    }
+                }
+
+                $list[] = [
                     'id' => $entity->id
-                );
+                ];
             }
         }
-        return array(
-            'list' => $arr
-        );
+        return [
+            'list' => $list
+        ];
     }
 
     public function actionGetOAuth2Info($params, $data, $request)

@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,15 +50,19 @@ Espo.define('views/modals/select-records-with-categories', ['views/modals/select
             this.scope = this.entityType = this.options.scope || this.scope;
             this.categoryScope = this.categoryScope || this.scope + 'Category';
 
-            Dep.prototype.setup.call(this);
-
             this.categoriesDisabled = this.categoriesDisabled ||
                                    this.getMetadata().get('scopes.' + this.categoryScope + '.disabled') ||
                                    !this.getAcl().checkScope(this.categoryScope);
+
+            Dep.prototype.setup.call(this);
+
+
         },
 
         loadList: function () {
-            this.loadCategories();
+            if (!this.categoriesDisabled) {
+                this.loadCategories();
+            }
             Dep.prototype.loadList.call(this);
         },
 
@@ -77,7 +81,8 @@ Espo.define('views/modals/select-records-with-categories', ['views/modals/select
                         showRoot: true,
                         rootName: this.translate(this.scope, 'scopeNamesPlural'),
                         buttonsDisabled: true,
-                        checkboxes: false
+                        checkboxes: false,
+                        isExpanded: this.isExpanded
                     }, function (view) {
                         if (this.isRendered()) {
                             view.render();

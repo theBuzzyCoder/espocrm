@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,31 +61,16 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         calendarTypeList: ['single', 'shared'],
 
         data: function () {
-            var scopeFilterList = Espo.Utils.clone(this.scopeList);
-            scopeFilterList.unshift('all');
-
-            var scopeFilterDataList = [];
-            this.scopeList.forEach(function (scope) {
-                var o = {scope: scope};
-                if (!~this.enabledScopeList.indexOf(scope)) {
-                    o.disabled = true;
-                }
-                scopeFilterDataList.push(o);
-            }, this);
-
             var calendarTypeDataList = this.getCalendarTypeDataList();
 
             return {
                 mode: this.mode,
-                modeDataList: this.getModeDataList(),
                 header: this.header,
                 calendarType: this.calendarType,
-                scopeFilterDataList: scopeFilterDataList,
                 calendarTypeDataList: calendarTypeDataList,
                 calendarTypeSelectEnabled: calendarTypeDataList.length > 1,
                 calendarTypeLabel: this.getCalendarTypeLabel(this.calendarType),
                 isCustomViewAvailable: this.isCustomViewAvailable,
-                viewDataList: this.getViewDataList()
             };
         },
 
@@ -186,12 +171,12 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             }
 
             if (this.options.calendarType) {
-                this.calendarType = 'shared';
+                this.calendarType = this.options.calendarType;
             } else {
                 if (this.options.userId) {
                     this.calendarType = 'single';
                 } else {
-                    this.calendarType = this.getStorage().get('calendar', 'timelineType') || 'single';
+                    this.calendarType = this.getStorage().get('calendar', 'timelineType') || 'shared';
                 }
             }
 
@@ -204,17 +189,77 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (!~this.calendarTypeList.indexOf(this.calendarType)) {
                 this.calendarType = 'single';
             }
+
+            if (this.header) {
+                this.createView('modeButtons', 'crm:views/calendar/mode-buttons', {
+                    el: this.getSelector() + ' .mode-buttons',
+                    isCustomViewAvailable: this.isCustomViewAvailable,
+                    modeList: this.modeList,
+                    scopeList: this.scopeList,
+                    mode: this.mode,
+                });
+            }
         },
 
         getModeDataList: function () {
             var list = [];
-            this.modeList.forEach(function (name) {
+
+            this.modeList.forEach(function (name, i) {
                 var o = {
-                    name: name,
-                    labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2)
+                    mode: name,
+                    label: this.translate(name, 'modes', 'Calendar'),
+                    labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2),
                 };
                 list.push(o);
             }, this);
+
+            if (this.isCustomViewAvailable) {
+                (this.getPreferences().get('calendarViewDataList') || []).forEach(function (item) {
+                    var item = Espo.Utils.clone(item);
+                    item.mode = 'view-' + item.id;
+                    item.label = item.name;
+                    item.labelShort = (item.name || '').substr(0, 2);
+                    list.push(item);
+                }, this);
+            }
+
+            var currentIndex = -1;
+            list.forEach(function (item, i) {
+                if (item.mode === this.mode) {
+                    currentIndex = i;
+                }
+            }, this);
+
+            if (currentIndex >= this.visibleModeListCount) {
+                var tmp = list[this.visibleModeListCount - 1];
+                list[this.visibleModeListCount - 1] = list[currentIndex];
+                list[currentIndex] = tmp;
+            }
+
+            return list;
+        },
+
+        getVisibleModeDataList: function () {
+            var fullList =  this.getModeDataList();
+
+            var list = [];
+            fullList.forEach(function (o, i) {
+                if (i >= this.visibleModeListCount) return;
+                list.push(o);
+            }, this);
+
+            return list;
+        },
+
+        getHiddenModeDataList: function () {
+            var fullList =  this.getModeDataList();
+
+            var list = [];
+            fullList.forEach(function (o, i) {
+                if (i < this.visibleModeListCount) return;
+                list.push(o);
+            }, this);
+
             return list;
         },
 
@@ -253,6 +298,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 } else {
                     label = this.getUser().get('name');
                 }
+                label = this.getHelper().escapeString(label);
                 return label;
             }
 
@@ -311,24 +357,38 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             if (this.options.userId && this.options.userName) {
                 title += ' (' + this.options.userName + ')';
             }
+
+            title = this.getHelper().escapeString(title);
+
             return title;
         },
 
         convertEvent: function (o) {
             var userId = o.userId || this.userList[0].id || this.getUser().id;
 
-            var event = {
-                content: o.name,
-                title: o.name,
-                id: userId + '-' + o.scope + '-' + o.id,
-                group: userId,
-                'record-id': o.id,
-                scope: o.scope,
-                status: o.status,
-                'date-start': o.dateStart,
-                'date-end': o.dateEnd,
-                type: 'range'
-            };
+            var event;
+            if (o.isBusyRange) {
+                var event = {
+                    className: 'busy',
+                    group: userId,
+                    'date-start': o.dateStart,
+                    'date-end': o.dateEnd,
+                    type: 'background'
+                };
+            } else {
+                event = {
+                    content: this.getHelper().escapeString(o.name),
+                    title: this.getHelper().escapeString(o.name),
+                    id: userId + '-' + o.scope + '-' + o.id,
+                    group: userId,
+                    'record-id': o.id,
+                    scope: o.scope,
+                    status: o.status,
+                    'date-start': o.dateStart,
+                    'date-end': o.dateEnd,
+                    type: 'range'
+                };
+            }
 
             this.eventAttributes.forEach(function (attr) {
                 event[attr] = o[attr];
@@ -346,6 +406,14 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 } else {
                     event.end = moment.tz(o.dateEndDate, this.getDateTime().getTimeZone());
                 }
+            }
+
+            if (o.dateStartDate && !~this.allDayScopeList.indexOf(o.scope)) {
+                event.end = event.end.clone().add(1, 'days');
+            }
+
+            if (o.isBusyRange) {
+                return event;
             }
 
             if (~this.allDayScopeList.indexOf(o.scope)) {
@@ -405,8 +473,8 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
         convertEventList: function (list) {
             var resultList = [];
-            list.forEach(function (o) {
-                var event = this.convertEvent(o);
+            list.forEach(function (iten) {
+                var event = this.convertEvent(iten);
                 if (!event) return;
                 resultList.push(event);
             }, this);
@@ -609,7 +677,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                 if (!this.userList.length) {
                     this.userList.push({
                         id: this.getUser().id,
-                        name: this.getUser().get('name')
+                        name: this.getUser().get('name'),
                     });
                 }
             } else {
@@ -624,7 +692,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
                     } else {
                         this.userList.push({
                             id: this.getUser().id,
-                            name: this.getUser().get('name')
+                            name: this.getUser().get('name'),
                         });
                     }
                 }
@@ -741,6 +809,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         getGroupContent: function (id, name) {
+            if (name) {
+                name = this.getHelper().escapeString(name);
+            }
             if (this.calendarType === 'single') {
                 return name;
             }
@@ -770,7 +841,9 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
         },
 
         fetchEvents: function (from, to, callback) {
-            Espo.Ui.notify(this.translate('Loading...'));
+            if (!this.options.noFetchLoadingMessage) {
+                Espo.Ui.notify(this.translate('loading', 'messages'));
+            }
 
             from = from.clone().add((-1) * this.leftMargin, 'seconds');
             to = to.clone().add(this.rightMargin, 'seconds');
@@ -778,7 +851,7 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             var fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
             var toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
 
-            var url = 'Activities?from=' + fromString + '&to=' + toString;
+            var url = 'Timeline?from=' + fromString + '&to=' + toString;
             var userIdList = this.userList.map(function (user) {
                 return user.id
             }, this);
@@ -794,9 +867,27 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
             this.ajaxGetRequest(url).then(function (data) {
                 this.fetchedStart = from.clone();
                 this.fetchedEnd = to.clone();
+                var eventList = [];
 
-                var eventList = this.convertEventList(data);
-                callback(eventList);
+                for (var userId in data) {
+                    var userEventList = data[userId].eventList;
+                    userEventList.forEach(function (item) {
+                        item.userId = userId;
+                        eventList.push(item);
+                    }, this);
+
+                    if (userId == this.getUser().id && !this.isBusyRangesMode) continue;
+
+                    var userBusyRangeList = data[userId].busyRangeList;
+                    userBusyRangeList.forEach(function (item) {
+                        item.userId = userId;
+                        item.isBusyRange = true;
+                        eventList.push(item);
+                    }, this);
+                }
+
+                var convertedEventList = this.convertEventList(eventList);
+                callback(convertedEventList);
                 this.notify(false);
             }.bind(this));
         },
@@ -881,15 +972,6 @@ Espo.define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, V
 
             return this.colors[scope];
         },
-
-        getViewDataList: function () {
-            var dataList = this.getPreferences().get('calendarViewDataList') || [];
-            dataList = Espo.Utils.cloneDeep(dataList);
-            dataList.forEach(function (item) {
-                item.mode = 'view-' + item.id;
-            }, this);
-            return dataList;
-        }
 
     });
 });

@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,20 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/integrations/oauth2', 'views/admin/integrations/edit', function (Dep) {
+define('views/admin/integrations/oauth2', 'views/admin/integrations/edit', function (Dep) {
 
     return Dep.extend({
 
         template: 'admin/integrations/oauth2',
 
         data: function () {
+            var redirectUri = this.redirectUri || (this.getConfig().get('siteUrl') + '?entryPoint=oauthCallback');
 
             return _.extend({
-                // TODO fetch from server
-                redirectUri: this.getConfig().get('siteUrl') + '?entryPoint=oauthCallback'
+                redirectUri: redirectUri,
             }, Dep.prototype.data.call(this));
         },
 
     });
-
 });

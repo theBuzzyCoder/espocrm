@@ -12,14 +12,15 @@
             [{"name": "assignmentEmailNotifications"}, {"name": "mentionEmailNotifications"}],
             [{"name": "assignmentEmailNotificationsEntityList"}, false],
             [{"name": "streamEmailNotifications"}, {"name": "portalStreamEmailNotifications"}],
-            [{"name": "streamEmailNotificationsEntityList"}, {"name": "streamEmailNotificationsTypeList"}]
+            [{"name": "streamEmailNotificationsEntityList"}, {"name": "streamEmailNotificationsTypeList"}],
+            [{"name": "emailNotificationsDelay"}, false]
         ]
     },
     {
         "label": "Admin Notifications",
         "rows": [
             [{"name": "adminNotifications"}, false],
-            [{"name": "adminNotificationsNewVersion"}, false]
+            [{"name": "adminNotificationsNewVersion"}, {"name": "adminNotificationsNewExtensionVersion"}]
         ]
     }
 ]

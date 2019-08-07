@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -71,11 +71,18 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
 
             this.hideField('passwordPreview');
             this.listenTo(this.model, 'change:passwordPreview', function (model, value) {
+                value = value || '';
                 if (value.length) {
                     this.showField('passwordPreview');
                 } else {
                     this.hideField('passwordPreview');
                 }
+            }, this);
+
+
+            this.listenTo(this.model, 'after:save', function () {
+                this.model.unset('password', {silent: true});
+                this.model.unset('passwordConfirm', {silent: true});
             }, this);
         },
 
@@ -95,9 +102,9 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     "label": "Teams and Access Control",
                     "name": "accessControl",
                     "rows": [
-                        [{"name":"isActive"}, {"name":"isAdmin"}],
-                        [{"name":"teams"}, {"name":"isPortalUser"}],
-                        [{"name":"roles"}, {"name":"defaultTeam"}]
+                        [{"name":"type"}, {"name":"isActive"}],
+                        [{"name":"teams"}, {"name":"defaultTeam"}],
+                        [{"name":"roles"}, false]
                     ]
                 });
                 layout.push({
@@ -108,8 +115,17 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                         [{"name":"portalRoles"}, {"name":"accounts"}]
                     ]
                 });
+                if (this.getUser().isAdmin() && this.model.isPortal()) {
+                    layout.push({
+                        "label": "Misc",
+                        "name": "portalMisc",
+                        "rows": [
+                            [{"name":"dashboardTemplate"}, false]
+                        ]
+                    });
+                }
 
-                if (this.type == 'edit' && this.getUser().isAdmin()) {
+                if (this.type == 'edit' && this.getUser().isAdmin() && !this.model.isApi()) {
                     layout.push({
                         label: 'Password',
                         rows: [
@@ -160,6 +176,15 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
                     });
                 }
 
+                if (this.getUser().isAdmin() && this.model.isApi()) {
+                    layout.push({
+                        "name": "auth",
+                        "rows": [
+                            [{"name":"authMethod"}, false]
+                        ]
+                    });
+                }
+
                 var gridLayout = {
                     type: 'record',
                     layout: this.convertDetailLayout(layout),
@@ -173,7 +198,10 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
             if (this.getConfig().get('smtpServer') && this.getConfig().get('smtpServer') !== '') {
                 return '';
             }
-            return this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/outboundEmails');
+            var msg = this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/outboundEmails');
+
+            msg = this.getHelper().transfromMarkdownInlineText(msg);
+            return msg;
         },
 
         fetch: function () {
@@ -198,5 +226,4 @@ Espo.define('views/user/record/edit', ['views/record/edit', 'views/user/record/d
         }
 
     });
-
 });

@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,12 +62,6 @@ class Metadata
     );
 
     private $moduleList = null;
-
-    protected $frontendHiddenPathList = [
-        ['app', 'formula', 'functionClassNameMap'],
-        ['app', 'fileStorage', 'implementationClassNameMap'],
-        ['app', 'emailNotifications', 'handlerClassNameMap']
-    ];
 
     /**
      * Default module order
@@ -275,31 +269,45 @@ class Metadata
     {
         $data = $this->getAllObjects();
 
-        foreach ($this->frontendHiddenPathList as $row) {
-            $p =& $data;
-            $path = [&$p];
-            foreach ($row as $i => $item) {
-                if (is_array($item)) break;
-                if (!property_exists($p, $item)) break;
-                if ($i == count($row) - 1) {
-                    unset($p->$item);
-                    $o =& $p;
-                    for ($j = $i - 1; $j > 0; $j--) {
-                        if (is_object($o) && !count(get_object_vars($o))) {
-                            $o =& $path[$j];
-                            $k = $row[$j];
-                            unset($o->$k);
-                        } else {
-                            break;
-                        }
-                    }
-                } else {
-                    $p =& $p->$item;
-                    $path[] = &$p;
-                }
-            }
+        $frontendHiddenPathList = $this->get(['app', 'metadata', 'frontendHiddenPathList'], []);
+
+        foreach ($frontendHiddenPathList as $row) {
+            $this->removeDataByPath($row, $data);
         }
         return $data;
+    }
+
+    private function removeDataByPath($row, &$data)
+    {
+        $p = &$data;
+        $path = [&$p];
+
+        foreach ($row as $i => $item) {
+            if (is_array($item)) break;
+            if ($item === '__ANY__') {
+                foreach (get_object_vars($p) as &$v) {
+                    $this->removeDataByPath(array_slice($row, $i + 1), $v);
+                }
+                return;
+            }
+            if (!property_exists($p, $item)) break;
+            if ($i == count($row) - 1) {
+                unset($p->$item);
+                $o = &$p;
+                for ($j = $i - 1; $j > 0; $j--) {
+                    if (is_object($o) && !count(get_object_vars($o))) {
+                        $o = &$path[$j];
+                        $k = $row[$j];
+                        unset($o->$k);
+                    } else {
+                        break;
+                    }
+                }
+            } else {
+                $p = &$p->$item;
+                $path[] = &$p;
+            }
+        }
     }
 
     protected function addAdditionalFieldsObj($data)
@@ -309,6 +317,24 @@ class Metadata
         $fieldDefinitionList = Util::objectToArray($data->fields);
 
         foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
+
+            if (isset($data->entityDefs->$entityType->collection)) {
+
+                $collectionItem = $data->entityDefs->$entityType->collection;
+
+                if (isset($collectionItem->orderBy)) {
+                    $collectionItem->sortBy = $collectionItem->orderBy;
+                } else if (isset($collectionItem->sortBy)) {
+                    $collectionItem->orderBy = $collectionItem->sortBy;
+                }
+
+                if (isset($collectionItem->order)) {
+                     $collectionItem->asc = $collectionItem->order === 'asc' ? true : false;
+                } else if (isset($collectionItem->asc)) {
+                    $collectionItem->order = $collectionItem->asc === true ? 'asc' : 'desc';
+                }
+            }
+
             if (!isset($entityDefsItem->fields)) continue;
             foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
                 $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($field, Util::objectToArray($fieldDefsItem), $fieldDefinitionList);
@@ -358,6 +384,14 @@ class Metadata
      */
     public function saveCustom($key1, $key2, $data)
     {
+        if (is_object($data)) {
+            foreach ($data as $key => $item) {
+                if ($item == new \stdClass()) {
+                    unset($data->$key);
+                }
+            }
+        }
+
         $filePath = array($this->paths['customPath'], $key1, $key2.'.json');
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
@@ -380,6 +414,14 @@ class Metadata
     */
     public function set($key1, $key2, $data)
     {
+        if (is_array($data)) {
+            foreach ($data as $key => $item) {
+                if (is_array($item) && empty($item)) {
+                    unset($data[$key]);
+                }
+            }
+        }
+
         $newData = array(
             $key1 => array(
                 $key2 => $data,
@@ -418,7 +460,7 @@ class Metadata
                         $fieldName = $matches[1];
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 
-                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath), $fieldDefinitionList);
+                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList($fieldName, $this->get($fieldPath, []), $fieldDefinitionList);
                         if (is_array($additionalFields)) {
                             foreach ($additionalFields as $additionalFieldName => $additionalFieldParams) {
                                 $unsets[] = 'fields.' . $additionalFieldName;

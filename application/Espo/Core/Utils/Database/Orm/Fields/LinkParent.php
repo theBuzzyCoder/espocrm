@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,32 +33,39 @@ class LinkParent extends Base
 {
     protected function load($fieldName, $entityName)
     {
-        $data = array(
-            $entityName => array (
-                'fields' => array(
-                    $fieldName.'Id' => array(
+        $data = [
+            $entityName => [
+                'fields' => [
+                    $fieldName.'Id' => [
                         'type' => 'foreignId',
-                        'index' => $fieldName
-                    ),
-                    $fieldName.'Type' => array(
+                        'index' => $fieldName,
+                        'attributeRole' => 'id',
+                        'fieldType' => 'linkParent',
+                    ],
+                    $fieldName.'Type' => [
                         'type' => 'foreignType',
                         'notNull' => false,
-                        'index' => $fieldName
-                    ),
-                    $fieldName.'Name' => array(
+                        'index' => $fieldName,
+                        'len' => 100,
+                        'attributeRole' => 'type',
+                        'fieldType' => 'linkParent',
+                    ],
+                    $fieldName.'Name' => [
                         'type' => 'varchar',
                         'notStorable' => true,
                         'relation' => $fieldName,
-                        'isParentName' => true
-                    )
-                )
-            ),
-            'unset' => array(
-                $entityName => array(
+                        'isParentName' => true,
+                        'attributeRole' => 'name',
+                        'fieldType' => 'linkParent',
+                    ]
+                ]
+            ],
+            'unset' => [
+                $entityName => [
                     'fields.'.$fieldName
-                )
-            )
-        );
+                ]
+            ]
+        ];
 
         $fieldParams = $this->getFieldParams();
 

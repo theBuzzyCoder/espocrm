@@ -19,6 +19,9 @@
             "type": "bool",
             "default": false
         },
+        "checkVersionUrl": {
+            "type": "url"
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -35,7 +38,7 @@
         }
     },
     "collection": {
-        "sortBy": "createdAt",
-        "asc": false
+        "orderBy": "createdAt",
+        "order": "desc"
     }
 }

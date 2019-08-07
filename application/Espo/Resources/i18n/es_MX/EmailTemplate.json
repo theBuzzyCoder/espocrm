@@ -7,7 +7,8 @@
     "subject": "Asunto",
     "attachments": "Adjuntos",
     "insertField": "Insertar Campo",
-    "oneOff": "Único"
+    "oneOff": "Único",
+    "category": "Categoría"
   },
   "labels": {
     "Create EmailTemplate": "Crear Plantilla de Correo",
@@ -25,6 +26,9 @@
   },
   "placeholderTexts": {
     "optOutUrl": "Dirección URL para deslistarse",
-    "optOutLink": "una liga para deslistarse"
+    "optOutLink": "una liga para deslistarse",
+    "today": "Fecha de hoy",
+    "now": "Fecha y hora actual",
+    "currentYear": "Año actual"
   }
 }

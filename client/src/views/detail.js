@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/detail', 'views/main', function (Dep) {
+define('views/detail', 'views/main', function (Dep) {
 
     return Dep.extend({
 
@@ -60,8 +60,7 @@ Espo.define('views/detail', 'views/main', function (Dep) {
                 name: 'follow',
                 label: 'Follow',
                 style: 'default',
-                icon: 'glyphicon glyphicon-share-alt',
-                html: '<span class="glyphicon glyphicon-share-alt"></span> ' + this.translate('Follow'),
+                html: '<span class="fas fa-rss fa-sm"></span> ' + this.translate('Follow'),
                 action: 'follow'
             }, true);
         },
@@ -90,14 +89,16 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             this.createView('header', this.headerView, {
                 model: this.model,
                 el: '#main > .header',
-                scope: this.scope
+                scope: this.scope,
+                fontSizeFlexible: true,
             });
 
             this.listenTo(this.model, 'sync', function (model) {
-                if (model.hasChanged('name')) {
+                if (model && model.hasChanged('name')) {
                     if (this.getView('header')) {
                         this.getView('header').reRender();
                     }
+                    this.updatePageTitle();
                 }
             }, this);
         },
@@ -114,7 +115,10 @@ Espo.define('views/detail', 'views/main', function (Dep) {
             if (this.options.params && this.options.params.rootUrl) {
                 o.rootUrl = this.options.params.rootUrl;
             }
-            this.createView('record', this.getRecordViewName(), o);
+            if (this.model.get('deleted')) {
+                o.readOnly = true;
+            }
+            return this.createView('record', this.getRecordViewName(), o);
         },
 
         getRecordViewName: function () {
@@ -169,6 +173,12 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
             if (name === '') {
                 name = this.model.id;
+            }
+
+            name = '<span class="font-size-flexible title">' + name + '</span>';
+
+            if (this.model.get('deleted')) {
+                name = '<span style="text-decoration: line-through;">' + name + '</span>';
             }
 
             var rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
@@ -245,19 +255,13 @@ Espo.define('views/detail', 'views/main', function (Dep) {
         actionSelectRelated: function (data) {
             var link = data.link;
 
-            if (!this.model.defs['links'][link]) {
+            if (!data.foreignEntityType && !this.model.defs['links'][link]) {
                 throw new Error('Link ' + link + ' does not exist.');
             }
-            var scope = this.model.defs['links'][link].entity;
-            var foreign = this.model.defs['links'][link].foreign;
 
-            var massRelateEnabled = false;
-            if (foreign) {
-                var foreignType = this.getMetadata().get('entityDefs.' + scope + '.links.' + foreign + '.type');
-                if (foreignType == 'hasMany') {
-                    massRelateEnabled = true;
-                }
-            }
+            var scope = data.foreignEntityType || this.model.defs['links'][link].entity;
+
+            var massRelateEnabled = data.massSelect;
 
             var self = this;
             var attributes = {};
@@ -357,4 +361,3 @@ Espo.define('views/detail', 'views/main', function (Dep) {
 
     });
 });
-

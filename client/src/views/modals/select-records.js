@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,8 +50,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
 
         data: function () {
             return {
-                createButton: this.createButton && this.getAcl().check(this.scope, 'create'),
-                createText: this.translate('Create ' + this.scope, 'labels', this.scope) 
+                createButton: this.createButton,
+                createText: this.translate('Create ' + this.scope, 'labels', this.scope)
             };
         },
 
@@ -118,23 +118,37 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                 this.createButton = false;
             }
 
-            this.header = '';
+            if (this.createButton) {
+                if (
+                    !this.getAcl().check(this.scope, 'create')
+                    ||
+                    this.getMetadata().get(['clientDefs', this.scope, 'createDisabled'])
+                ) {
+                    this.createButton = false;
+                }
+            }
+
+            this.headerHtml = '';
             var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
-            this.header += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
-            this.header = iconHtml + this.header;
+            this.headerHtml += this.translate('Select') + ': ';
+            this.headerHtml += this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+            this.headerHtml = iconHtml + this.headerHtml;
 
             this.waitForView('list');
+            if (this.searchPanel) {
+                this.waitForView('search');
+            }
 
             this.getCollectionFactory().create(this.scope, function (collection) {
                 collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
                 this.collection = collection;
 
-                this.defaultSortBy = collection.sortBy;
-                this.defaultAsc = collection.asc;
+                this.defaultOrderBy = collection.orderBy;
+                this.defaultOrder = collection.defaultOrder;
 
                 this.loadSearch();
+                this.wait(true);
                 this.loadList();
-                collection.fetch();
             }, this);
 
         },
@@ -169,8 +183,8 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                     disableSavePreset: true,
                 }, function (view) {
                     this.listenTo(view, 'reset', function () {
-                        this.collection.sortBy = this.defaultSortBy;
-                        this.collection.asc = this.defaultAsc;
+                        this.collection.orderBy = this.defaultOrderBy;
+                        this.collection.order = this.defaultOrder;
                     }, this);
                 });
             }
@@ -207,14 +221,38 @@ Espo.define('views/modals/select-records', ['views/modal', 'search-manager'], fu
                             this.disableButton('select');
                         }
                     }, this);
+                    this.listenTo(view, 'select-all-results', function () {
+                        this.enableButton('select');
+                    }, this);
                 }
 
-                view.getSelectAttributeList(function (selectAttributeList) {
-                    if (selectAttributeList) {
-                        this.collection.data.select = selectAttributeList.join(',');
-                    }
+                if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
+                    this.listenToOnce(view, 'after:build-rows', function () {
+                        this.wait(false);
+                    }, this);
                     this.collection.fetch();
-                }.bind(this));
+                } else {
+                    view.getSelectAttributeList(function (selectAttributeList) {
+                        if (!~selectAttributeList.indexOf('name')) {
+                            selectAttributeList.push('name');
+                        }
+
+                        var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || [];
+                        mandatorySelectAttributeList.forEach(function (attribute) {
+                            if (!~selectAttributeList.indexOf(attribute)) {
+                                selectAttributeList.push(attribute);
+                            }
+                        }, this);
+
+                        if (selectAttributeList) {
+                            this.collection.data.select = selectAttributeList.join(',');
+                        }
+                        this.listenToOnce(view, 'after:build-rows', function () {
+                            this.wait(false);
+                        }, this);
+                        this.collection.fetch();
+                    }.bind(this));
+                }
             });
         },
 

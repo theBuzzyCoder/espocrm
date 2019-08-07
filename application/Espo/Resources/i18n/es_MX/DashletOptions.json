@@ -19,7 +19,7 @@
   },
   "options": {
     "mode": {
-      "agendaWeek": "Semana (orden del día)",
+      "agendaWeek": "Semana (agenda)",
       "basicWeek": "Semana",
       "month": "Mes",
       "basicDay": "Día",
@@ -28,6 +28,6 @@
     }
   },
   "messages": {
-    "selectEntityType": "Seleccionar el Tipo de Entidad en las opciones del tablero."
+    "selectEntityType": "Seleccionar el Tipo de Entidad en las opciones del panel."
   }
 }

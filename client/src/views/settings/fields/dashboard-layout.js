@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,6 +33,8 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
         detailTemplate: 'settings/fields/dashboard-layout/detail',
 
         editTemplate: 'settings/fields/dashboard-layout/edit',
+
+        validationElementSelector: 'button[data-action="addDashlet"]',
 
         events: {
             'click button[data-action="selectTab"]': function (e) {
@@ -81,7 +83,9 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                 }
                 if (this.model.hasChanged(this.name)) {
                     if (this.dashboardLayout.length) {
-                        this.selectTab(0);
+                        if (this.isDetailMode()) {
+                            this.selectTab(0);
+                        }
                     }
                 }
             }, this);
@@ -119,13 +123,19 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
             grid.addWidget($item, 0, 0, 2, 2);
         },
 
+
+        generateId: function () {
+            return (Math.floor(Math.random() * 10000001)).toString();
+        },
+
         addDashlet: function (name) {
             var id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
 
             if (!~this.currentTab) {
                 this.dashboardLayout.push({
                     name: 'My Espo',
-                    layout: []
+                    layout: [],
+                    id: this.generateId(),
                 });
                 this.currentTab = 0;
                 this.setupCurrentTabLayout();
@@ -177,9 +187,11 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
 
                     (data.dashboardTabList).forEach(function (name) {
                         var layout = [];
+                        var id = this.generateId();
                         this.dashboardLayout.forEach(function (d) {
                             if (d.name == name) {
                                 layout = d.layout;
+                                id = d.id;
                             }
                         }, this);
                         if (name in data.renameMap) {
@@ -187,7 +199,8 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                         }
                         dashboardLayout.push({
                             name: name,
-                            layout: layout
+                            layout: layout,
+                            id: id,
                         });
                     }, this);
 
@@ -241,7 +254,11 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
                     this.dashletsOptions[id] = attributes;
                     view.close();
                     if ('title' in attributes) {
-                        this.$el.find('[data-id="'+id+'"] .panel-title').text(attributes.title);
+                        var title = attributes.title;
+                        if (!title) {
+                            title = this.translate(name, 'dashlets');
+                        }
+                        this.$el.find('[data-id="'+id+'"] .panel-title').text(title);
                     }
                 }, this);
             }, this);
@@ -311,16 +328,26 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
             if (this.mode == 'edit') {
                 actionsHtml +=
                                 '<a href="javascript:" class="pull-right" data-action="removeDashlet" data-id="'+id+'">'+
-                                    '<span class="glyphicon glyphicon-remove"></span>'+
+                                    '<span class="fas fa-times"></span>'+
                                 '</a>';
                 actions2Html +=
                                 '<a href="javascript:" class="pull-right" data-action="editDashlet" data-id="'+id+'" data-name="'+name+'">'+
                                     this.translate('Edit') +
                                 '</a>';
             }
+            var title = this.getOption(id, 'title');
+
+            if (title) {
+                title = this.getHelper().escapeString(title);
+            }
+
+            if (!title) {
+                title = this.translate(name, 'dashlets');
+            }
+
             var headerHtml =
                         '<div class="panel-heading">' +
-                            actionsHtml + '<h4 class="panel-title">' + (this.getOption(id, 'title') || this.translate(name, 'dashlets')) + '</h4>' +
+                            actionsHtml + '<h4 class="panel-title">' + title  + '</h4>' +
                         '</div>';
             var $container = $('<div class="grid-stack-item-content panel panel-default">' + headerHtml + '<div class="panel-body">'+actions2Html+'</div></div>');
             $container.attr('data-id', id);

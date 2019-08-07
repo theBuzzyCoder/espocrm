@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -39,11 +39,12 @@ class UniqueId extends \Espo\Core\ORM\Repositories\RDB
 
     protected $processFieldsBeforeSaveDisabled = true;
 
-    protected function getNewEntity()
+    protected $processFieldsAfterRemoveDisabled = true;
+
+    public function getNew() : ?Entity
     {
-        $entity = parent::getNewEntity();
-        $entity->set('name', uniqid());
+        $entity = parent::getNew();
+        $entity->set('name', \Espo\Core\Utils\Util::generateId());
         return $entity;
     }
 }
-

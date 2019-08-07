@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -61,8 +61,9 @@ $config = include('core/config.php');
 require_once 'core/SystemHelper.php';
 $systemHelper = new SystemHelper();
 
-if (version_compare(PHP_VERSION, '5.6.0', '<')) {
-    die(str_replace('{minVersion}', $config['requirements']['phpVersion'], $langs['messages']['phpVersion']) . '.');
+$systemConfig = include('application/Espo/Core/defaults/systemConfig.php');
+if (isset($systemConfig['requiredPhpVersion']) && version_compare(PHP_VERSION, $systemConfig['requiredPhpVersion'], '<')) {
+    die(str_replace('{minVersion}', $systemConfig['requiredPhpVersion'], $langs['messages']['phpVersion']) . '.');
 }
 
 if (!$systemHelper->initWritable()) {
@@ -85,17 +86,21 @@ $installer = new Installer();
 
 // check if app was installed
 if ($installer->isInstalled() && !isset($_SESSION['install']['installProcess'])) {
+	if (isset($_SESSION['install']['redirected']) && $_SESSION['install']['redirected']) {
+		die('The installation is disabled. It can be enabled in config files.');
+	}
+
 	$url = "http://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 	$url = preg_replace('/install\/?/', '', $url, 1);
 	$url = strtok($url, '#');
 	$url = strtok($url, '?');
+
+	$_SESSION['install']['redirected'] = true;
 	header("Location: {$url}");
 	exit;
 }
-else {
-	// double check if infinite loop
-	$_SESSION['install']['installProcess'] = true;
-}
+
+$_SESSION['install']['installProcess'] = true;
 
 $smarty->caching = false;
 $smarty->setTemplateDir('install/core/tpl');
@@ -141,6 +146,7 @@ $smarty->assign('action', ucfirst($action));
 
 /** config */
 $smarty->assign('config', $config);
+$smarty->assign('installerConfig', $installer->getInstallerConfigData());
 
 if (Utils::checkActionExists($action)) {
 	include $actionFile;

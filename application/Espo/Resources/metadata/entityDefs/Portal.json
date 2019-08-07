@@ -85,7 +85,8 @@
         },
         "dashboardLayout": {
             "type": "jsonArray",
-            "view": "views/settings/fields/dashboard-layout"
+            "view": "views/settings/fields/dashboard-layout",
+            "required": true
         },
         "dashletsOptions": {
             "type": "jsonObject",
@@ -139,7 +140,7 @@
         }
     },
     "collection": {
-        "sortBy": "name",
-        "asc": true
+        "orderBy": "name",
+        "order": "asc"
     }
 }

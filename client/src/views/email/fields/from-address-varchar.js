@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -106,6 +106,11 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
             var fromString = this.model.get('fromString') || this.model.get('fromName');
 
             var name = this.nameHash[address] || this.parseNameFromStringAddress(fromString) || null;
+
+            if (name) {
+                name = this.getHelper().escapeString(name);
+            }
+
             var entityType = this.typeHash[address] || null;
             var id = this.idHash[address] || null;
 
@@ -129,6 +134,8 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
         },
 
         getCreateHtml: function (address) {
+            address = this.getHelper().escapeString(address);
+
             var html = '<span class="dropdown email-address-create-dropdown pull-right">' +
                 '<button class="dropdown-toggle btn btn-link btn-sm" data-toggle="dropdown">' +
                     '<span class="caret text-muted"></span>' +
@@ -177,6 +184,10 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                 if (this.name == 'from') {
                     name = this.parseNameFromStringAddress(fromString) || null;
                 }
+            }
+
+            if (name) {
+                name = this.getHelper().escapeString(name);
             }
 
             var attributes = {
@@ -238,6 +249,10 @@ Espo.define('views/email/fields/from-address-varchar', 'views/fields/varchar', f
                 if (this.name == 'from') {
                     name = this.parseNameFromStringAddress(fromString) || null;
                 }
+            }
+
+            if (name) {
+                name = this.getHelper().escapeString(name);
             }
 
             var attributes = {

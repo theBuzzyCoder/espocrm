@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/header', 'view', function (Dep) {
+define('views/header', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -39,6 +39,8 @@ Espo.define('views/header', 'view', function (Dep) {
             }
             data.scope = this.scope || this.getParentView().scope;
             data.items = this.getItems();
+
+            data.noBreakWords = this.options.fontSizeFlexible;
 
             data.isXsSingleRow = this.options.isXsSingleRow;
 
@@ -61,14 +63,52 @@ Espo.define('views/header', 'view', function (Dep) {
         },
 
         afterRender: function () {
+            if (this.options.fontSizeFlexible) {
+                this.adjustFontSize();
+            }
+        },
 
+        adjustFontSize: function (step) {
+            step = step || 0;
+
+            if (!step) this.fontSizePercentage = 100;
+
+            var $container = this.$el.find('.header-breadcrumbs');
+            var containerWidth = $container.width();
+            var childrenWidth = 0;
+            $container.children().each(function (i, el) {
+                childrenWidth += $(el).outerWidth(true);
+            });
+
+            if (containerWidth < childrenWidth) {
+                if (step > 7) {
+                    $container.addClass('overlapped');
+                    this.$el.find('.title').each(function (i, el) {
+                        $(el).attr('title', $(el).text());
+                    });
+                    return;
+                }
+
+                var fontSizePercentage = this.fontSizePercentage -= 4;
+                var $flexible = this.$el.find('.font-size-flexible');
+                $flexible.css('font-size', this.fontSizePercentage + '%');
+
+                $flexible.css('position', 'relative');
+
+                if (step > 6) {
+                    $flexible.css('top', '-1px');
+                } else if (step > 4) {
+                    $flexible.css('top', '-1px');
+                }
+
+                this.adjustFontSize(step + 1);
+            }
         },
 
         getItems: function () {
             var items = this.getParentView().getMenu() || {};
 
             return items;
-        }
+        },
     });
 });
-

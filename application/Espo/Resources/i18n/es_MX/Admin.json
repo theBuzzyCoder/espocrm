@@ -13,7 +13,7 @@
     "Add Panel": "Agregar Panel",
     "Add Field": "Agregar Campo",
     "Settings": "Ajustes",
-    "Scheduled Jobs": "Tareas Programadas",
+    "Scheduled Jobs": "Tareas Agendadas",
     "Upgrade": "Actualizar",
     "Clear Cache": "Borrar Cache",
     "Rebuild": "Reconstruir",
@@ -37,7 +37,7 @@
     "Installing...": "Instalando...",
     "Upgrading...": "Actualizando",
     "Upgraded successfully": "Actualización exitosa",
-    "Installed successfully": "Instalado de forma exitosa",
+    "Installed successfully": "Instalado exitosamente",
     "Ready for upgrade": "Listo para actualizar",
     "Run Upgrade": "Ejecutar actualización",
     "Install": "Instalar",
@@ -50,12 +50,24 @@
     "Edit Link": "Editar Enlace",
     "Notifications": "Notificaciones",
     "Jobs": "Trabajos",
-    "Reset to Default": "Restablecer valores por omisión",
+    "Reset to Default": "Restablecer valores default",
     "Email Filters": "Filtros de Correo",
     "Portal Users": "Usuarios",
     "Action History": "Historial",
     "Label Manager": "Etiquetas",
-    "Auth Log": "Historial de Autorizaciones"
+    "Auth Log": "Historial de Autorizaciones",
+    "Lead Capture": "Capturar Referencia",
+    "Attachments": "Adjuntos ",
+    "API Users": "Usuarios de la API",
+    "Template Manager": "Administrador de Plantillas",
+    "System Requirements": "Requerimientos del Sistema",
+    "PHP Settings": "Configuración PHP",
+    "Database Settings": "Configuración de la Base de Datos",
+    "Permissions": "Permisos",
+    "Success": "Correcto",
+    "Fail": "Falló",
+    "is recommended": "es recomendado",
+    "extension is missing": "falta la extensión "
   },
   "layouts": {
     "list": "Lista",
@@ -111,14 +123,15 @@
     "int": "Entero",
     "number": "Número (auto-incremeto)",
     "jsonArray": "Arreglo Json",
-    "jsonObject": "Objeto Json"
+    "jsonObject": "Objeto Json",
+    "datetime": "Fecha-Hr",
+    "datetimeOptional": "Fecha/Fecha-Hr"
   },
   "fields": {
     "type": "Tipo",
     "name": "Nombre",
     "label": "Etiqueta",
     "required": "Requerido",
-    "default": "Por Omisión",
     "maxLength": "Longitud máxima",
     "options": "Opciones",
     "after": "Posterior al Campo",
@@ -129,12 +142,12 @@
     "max": "Máximo",
     "translation": "Traducción",
     "previewSize": "Tamaño de Vista Previa",
-    "defaultType": "Tipo por Omisión",
+    "defaultType": "Tipo Default",
     "seeMoreDisabled": "Desactivar cortar texto",
     "entityList": "Lista de Entidades",
     "isSorted": "Esta ordenado (alfabeticamente)",
     "audited": "Auditada",
-    "trim": "recortado",
+    "trim": "Recortado",
     "height": "Altura (px)",
     "minHeight": "Altura Min (px)",
     "provider": "Proveedor",
@@ -155,7 +168,12 @@
     "readOnly": "Solo-lectura",
     "noEmptyString": "No se permite el campo vacío",
     "maxFileSize": "Tamaño máximo (Mb)",
-    "isPersonalData": "Son Datos Personales"
+    "isPersonalData": "Son Datos Personales",
+    "useIframe": "Usar iFrame",
+    "useNumericFormat": "Use Formato numérico ",
+    "strip": "Limpiar",
+    "inlineEditDisabled": "Deshabilitar edición en linea",
+    "displayAsLabel": "Mostrar como etiqueta"
   },
   "messages": {
     "selectEntityType": "Seleccione el tipo de entidad en el menú de la izquierda.",
@@ -171,9 +189,9 @@
     "thousandSeparatorEqualsDecimalMark": "El caracter separador de miles no puede ser el mismo que el separador decimal.",
     "userHasNoEmailAddress": "Este usuario no tiene correo de contacto.",
     "newVersionIsAvailable": "Hay una nueva versión disponible de EspoCRM. ({latestVersion}).",
-    "newExtensionVersionIsAvailable": "Hay una nueva versión de {extensionName} disponible. ({latestversion}).",
-    "cronIsNotConfigured": "Las tareas programadas no están funcionando.  Los correos, notificaciones y recordatorios no están operando.  Favor de seguir estas <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instrucciones</a> para configurar el cron job.",
-    "uninstallConfirmation": "¿Realmente quiere desinstalar esta extensión?"
+    "uninstallConfirmation": "¿Realmente quiere desinstalar esta extensión?",
+    "cronIsNotConfigured": "No se están ejecutando las tareas programadas. Por lo cual los correos enviados, notificaciones y alarmas no están funcionando.  Por favor siga las {instructions}\n(https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) para activar los cron jobs. ",
+    "newExtensionVersionIsAvailable": "Nueva versión {latestVersion} disponible para {extensionName}. "
   },
   "descriptions": {
     "settings": "Configuración del sistema de aplicación.",
@@ -205,7 +223,12 @@
     "emailFilters": "Los mensajes de correo que cumplan con el filtro indicado, no se importarán.",
     "actionHistory": "Historial de acciones del usuario.",
     "labelManager": "Personalizar etiquetas de aplicación",
-    "authLog": "Historial de Ingresos"
+    "authLog": "Historial de Ingresos",
+    "leadCapture": "Puntos de entrada de la API para Web-a-Ref",
+    "attachments": "Todos los archivos adjuntos fueron guardados en el sistema. ",
+    "templateManager": "Personalizar plantillas de mensajes.",
+    "systemRequirements": "Requerimientos del Sistema para EspoCRM.",
+    "apiUsers": "Separar usuarios para integración de grupos."
   },
   "options": {
     "previewSize": {
@@ -219,5 +242,25 @@
     "and": "Y",
     "or": "O",
     "not": "NO"
+  },
+  "systemRequirements": {
+    "requiredPhpVersion": "Versión PHP",
+    "requiredMysqlVersion": "Versión MySQL",
+    "host": "Nombre del Hospedaje",
+    "dbname": "Nombre de la Base de Datos",
+    "user": "Nombre del Usuario",
+    "writable": "Permite grabar",
+    "readable": "Permite leer"
+  },
+  "templates": {
+    "accessInfo": "Información de Acceso",
+    "accessInfoPortal": "Información de Acceso a Portales",
+    "assignment": "Asignación",
+    "mention": "Mención",
+    "noteEmailRecieved": "Nota sobre el Correo Recibido",
+    "notePost": "Nota sobre la Publicación",
+    "notePostNoParent": "Nota sobre la Publicación (No el Padre)",
+    "noteStatus": "Nota sobre el Estado de la Actualización",
+    "passwordChangeLink": "Liga para Cambiar Contraseña"
   }
 }

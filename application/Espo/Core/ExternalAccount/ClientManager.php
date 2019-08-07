@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -69,7 +69,7 @@ class ClientManager
             $externalAccountEntity = $this->clientMap[$hash]['externalAccountEntity'];
             $externalAccountEntity->set('accessToken', $data['accessToken']);
             $externalAccountEntity->set('tokenType', $data['tokenType']);
-            $this->getEntityManager()->saveEntity($externalAccountEntity);
+            $this->getEntityManager()->saveEntity($externalAccountEntity, ['isTokenRenewal' => true]);
         }
     }
 
@@ -87,7 +87,12 @@ class ClientManager
 
         $className = $this->getMetadata()->get("integrations.{$integration}.clientClassName");
 
-        $redirectUri = $this->getConfig()->get('siteUrl') . '?entryPoint=oauthCallback'; // TODO move to client class
+        $redirectUri = $this->getConfig()->get('siteUrl') . '?entryPoint=oauthCallback';
+
+        $redirectUriPath = $this->getMetadata()->get(['integrations', $integration, 'params', 'redirectUriPath']);
+        if ($redirectUriPath) {
+            $redirectUri = rtrim($this->getConfig()->get('siteUrl'), '/') . '/' . $redirectUriPath;
+        }
 
         if (!$externalAccountEntity) {
             throw new Error("External Account {$integration} not found for {$userId}");

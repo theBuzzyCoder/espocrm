@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -85,7 +85,7 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             this.messageData = {
                 'user': 'field:createdBy',
                 'entity': 'field:parent',
-                'entityType': this.translateEntityType(this.model.get('parentType')),
+                'entityType': this.getHelper().escapeString(this.translateEntityType(this.model.get('parentType'))),
             };
 
             if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
@@ -118,9 +118,9 @@ Espo.define('views/stream/note', 'view', function (Dep) {
             return string;
         },
 
-        createField: function (name, type, params, view) {
+        createField: function (name, type, params, view, options) {
             type = type || this.model.getFieldType(name) || 'base';
-            this.createView(name, view || this.getFieldManager().getViewName(type), {
+            var o = {
                 model: this.model,
                 defs: {
                     name: name,
@@ -128,7 +128,13 @@ Espo.define('views/stream/note', 'view', function (Dep) {
                 },
                 el: this.options.el + ' .cell-' + name,
                 mode: 'list'
-            });
+            };
+            if (options) {
+                for (var i in options) {
+                    o[i] = options[i];
+                }
+            }
+            this.createView(name, view || this.getFieldManager().getViewName(type), o);
         },
 
         isMale: function () {

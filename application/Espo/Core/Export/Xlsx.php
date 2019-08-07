@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -62,18 +62,26 @@ class Xlsx extends \Espo\Core\Injectable
     public function loadAdditionalFields(Entity $entity, $fieldList)
     {
         foreach ($entity->getRelationList() as $link) {
-            if ($entity->getRelationType($link) === 'belongsToParent') {
-                if (in_array($link, $fieldList)) {
-                    $parent = $entity->get($link);
-                    if ($parent instanceof Entity) {
-                        $entity->set($link . 'Name', $parent->get('name'));
+            if (in_array($link, $fieldList)) {
+                if ($entity->getRelationType($link) === 'belongsToParent') {
+                    if (!$entity->get($link . 'Name')) {
+                        $entity->loadParentNameField($link);
                     }
-                }
-            } else if ($entity->getRelationType($link) === 'belongsTo' && $entity->getRelationParam($link, 'noJoin') && $entity->hasField($link . 'Name')) {
-                if (in_array($link, $fieldList)) {
-                    $related = $entity->get($link);
-                    if ($related instanceof Entity) {
-                        $entity->set($link . 'Name', $related->get('name'));
+                } else if (
+                    (
+                        (
+                            $entity->getRelationType($link) === 'belongsTo'
+                            &&
+                            $entity->getRelationParam($link, 'noJoin')
+                        )
+                        ||
+                        $entity->getRelationType($link) === 'hasOne'
+                    )
+                    &&
+                    $entity->hasAttribute($link . 'Name')
+                ) {
+                    if (!$entity->get($link . 'Name') || !$entity->get($link . 'Id')) {
+                        $entity->loadLinkField($link);
                     }
                 }
             }
@@ -138,7 +146,7 @@ class Xlsx extends \Espo\Core\Injectable
         }
     }
 
-    public function process($entityType, $params, $dataList)
+    public function process(string $entityType, array $params, ?array $dataList = null, $dataFp = null)
     {
         if (!is_array($params['fieldList'])) {
             throw new Error();
@@ -250,7 +258,24 @@ class Xlsx extends \Espo\Core\Injectable
         $typesCache = array();
 
         $rowNumber++;
-        foreach ($dataList as $row) {
+
+        $lineIndex = -1;
+        if ($dataList) {
+            $lineCount = count($dataList);
+        }
+
+        while (true) {
+            $lineIndex++;
+
+            if ($dataFp) {
+                $line = fgets($dataFp);
+                if ($line === false) break;
+                $row = unserialize(base64_decode($line));
+            } else {
+                if ($lineIndex >= $lineCount) break;
+                $row = $dataList[$lineIndex];
+            }
+
             $i = 0;
             foreach ($fieldList as $i => $name) {
                 $col = $azRange[$i];
@@ -466,7 +491,14 @@ class Xlsx extends \Espo\Core\Injectable
 
                         $sheet->setCellValue("$col$rowNumber", $value);
                     }
-
+                } else if ($type == 'multiEnum' || $type == 'array') {
+                    if (!empty($row[$name])) {
+                        $array = json_decode($row[$name]);
+                        if (is_array($array)) {
+                            $value = implode(', ', $array);
+                            $sheet->setCellValue("$col$rowNumber", $value, \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);
+                        }
+                    }
                 } else {
                     if (array_key_exists($name, $row)) {
                         $sheet->setCellValueExplicit("$col$rowNumber", $row[$name], \PhpOffice\PhpSpreadsheet\Cell\DataType::TYPE_STRING);

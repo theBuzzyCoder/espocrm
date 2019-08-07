@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
+define('views/email/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -72,39 +72,46 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 }
             }, this);
 
-            if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
-                this.dropdownItemList.push({
-                    'label': 'Show Plain Text',
-                    'name': 'showBodyPlain'
-                });
+            if (!(this.model.get('isHtml') && this.model.get('bodyPlain'))) {
+                this.listenToOnce(this.model, 'sync', function () {
+                    if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
+                        this.showActionItem('showBodyPlain');
+                    }
+                }, this);
             }
 
             if (this.model.get('isUsers')) {
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Mark as Important',
                     'name': 'markAsImportant',
                     'hidden': this.model.get('isImportant')
                 });
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Unmark Importance',
                     'name': 'markAsNotImportant',
                     'hidden': !this.model.get('isImportant')
                 });
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Move to Trash',
                     'name': 'moveToTrash',
                     'hidden': this.model.get('inTrash')
                 });
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Retrieve from Trash',
                     'name': 'retrieveFromTrash',
                     'hidden': !this.model.get('inTrash')
                 });
-                this.dropdownItemList.push({
+                this.addDropdownItem({
                     'label': 'Move to Folder',
                     'name': 'moveToFolder'
                 });
             }
+
+            this.addDropdownItem({
+                label: 'Show Plain Text',
+                name: 'showBodyPlain',
+                hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
+            });
 
             this.listenTo(this.model, 'change:isImportant', function () {
                 if (this.model.get('isImportant')) {
@@ -130,37 +137,32 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 this.showField('replies');
                 this.model.fetch();
             }, this);
+
+            if (this.getUser().isAdmin()) {
+                this.addDropdownItem({
+                    label: 'View Users',
+                    name: 'viewUsers'
+                });
+            }
         },
 
         actionMarkAsImportant: function () {
-            $.ajax({
-                url: 'Email/action/markAsImportant',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
-                })
+            Espo.Ajax.postRequest('Email/action/markAsImportant', {
+                id: this.model.id
             });
             this.model.set('isImportant', true);
         },
 
         actionMarkAsNotImportant: function () {
-            $.ajax({
-                url: 'Email/action/markAsNotImportant',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
-                })
+            Espo.Ajax.postRequest('Email/action/markAsNotImportant', {
+                id: this.model.id
             });
             this.model.set('isImportant', false);
         },
 
         actionMoveToTrash: function () {
-            $.ajax({
-                url: 'Email/action/moveToTrash',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
-                })
+            Espo.Ajax.postRequest('Email/action/moveToTrash', {
+                id: this.model.id
             }).then(function () {
                 Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
             }.bind(this));
@@ -171,12 +173,8 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
         },
 
         actionRetrieveFromTrash: function () {
-            $.ajax({
-                url: 'Email/action/retrieveFromTrash',
-                type: 'POST',
-                data: JSON.stringify({
-                    id: this.model.id
-                })
+            Espo.Ajax.postRequest('Email/action/retrieveFromTrash', {
+                id: this.model.id
             }).then(function () {
                 Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
             }.bind(this));
@@ -324,8 +322,49 @@ Espo.define('views/email/record/detail', 'views/record/detail', function (Dep) {
             this.getRouter().navigate(url, {trigger: false});
 
             return true;
-        }
+        },
+
+        actionViewUsers: function (data) {
+            var viewName =
+                this.getMetadata().get(['clientDefs', this.model.name, 'relationshipPanels', 'users', 'viewModalView']) ||
+                this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
+                'views/modals/related-list';
+
+            var options = {
+                model: this.model,
+                link: 'users',
+                scope: 'User',
+                filtersDisabled: true,
+                url: this.model.entityType + '/' + this.model.id + '/users',
+                createDisabled: true,
+                selectDisabled: !this.getUser().isAdmin(),
+                rowActionsView: 'views/record/row-actions/relationship-view-and-unlink',
+            };
+
+            if (data.viewOptions) {
+                for (var item in data.viewOptions) {
+                    options[item] = data.viewOptions[item];
+                }
+            }
+
+            Espo.Ui.notify(this.translate('loading', 'messages'));
+            this.createView('modalRelatedList', viewName, options, function (view) {
+                Espo.Ui.notify(false);
+                view.render();
+
+                this.listenTo(view, 'action', function (action, data, e) {
+                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
+                    if (typeof this[method] == 'function') {
+                        this[method](data, e);
+                        e.preventDefault();
+                    }
+                }, this);
+
+                this.listenToOnce(view, 'close', function () {
+                    this.clearView('modalRelatedList');
+                }, this);
+            });
+        },
 
     });
 });
-

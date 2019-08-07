@@ -8,11 +8,11 @@
     "EmailAccount": "Cuenta de Correo",
     "EmailAccountScope": "Cuenta de Correo",
     "OutboundEmail": "Correo Saliente",
-    "ScheduledJob": "Tarea Programada",
+    "ScheduledJob": "Tarea Agendada",
     "ExternalAccount": "Cuenta Externa",
-    "Dashboard": "Escritorio",
+    "Dashboard": "Tablero",
     "InboundEmail": "Correo Entrante",
-    "Stream": "Seguimiento",
+    "Stream": "Flujo",
     "Import": "Importar",
     "Template": "Plantilla",
     "Job": "Trabajo",
@@ -21,7 +21,7 @@
     "Attachment": "Datos adjuntos",
     "EmailFolder": "Carpeta del Correo",
     "PortalUser": "Portal del Usuario",
-    "ScheduledJobLogRecord": "Historial de Tareas Programadas",
+    "ScheduledJobLogRecord": "Historial de Tareas Agendadas",
     "PasswordChangeRequest": "Solicitar Cambio de Contraseña",
     "ActionHistoryRecord": "Historial de Acciones",
     "AuthToken": "Clave de Autorización",
@@ -39,7 +39,12 @@
     "EmailAddress": "Dirección de Correo",
     "PhoneNumber": "Teléfono",
     "AuthLogRecord": "Registro en Hist. de Aut.",
-    "AuthFailLogRecord": "Registro en Hist. de Fallos de Aut."
+    "AuthFailLogRecord": "Registro en Hist. de Fallos de Aut.",
+    "EmailTemplateCategory": "Categorías de Formatos de Correo",
+    "LeadCapture": "Punto de Entrada para Captura de Referencias",
+    "LeadCaptureLogRecord": "Historial de Captura de Referencias",
+    "ArrayValue": "Valor del Arreglo ",
+    "ApiUser": "Usuario de la API"
   },
   "scopeNamesPlural": {
     "Email": "Correos",
@@ -49,13 +54,12 @@
     "EmailAccount": "Cuentas de Correo Electrónico",
     "EmailAccountScope": "Cuentas de Correo Electrónico",
     "OutboundEmail": "Correos Salientes",
-    "ScheduledJob": "Tareas Programadas",
+    "ScheduledJob": "Tareas Agendadas",
     "ExternalAccount": "Cuentas Externas",
     "Extension": "Extensiones",
-    "Dashboard": "Escritorio",
+    "Dashboard": "Tablero",
     "InboundEmail": "Grupo de Cuentas de Correo",
-    "Stream": "Seguimiento",
-    "Import": "Importar Resultados",
+    "Stream": "Flujo",
     "Template": "Plantillas",
     "Job": "Trabajos",
     "EmailFilter": "Filtros de Correo",
@@ -64,18 +68,24 @@
     "Attachment": "Datos adjuntos",
     "EmailFolder": "Carpetas del Correo",
     "PortalUser": "Usuarios del Portal",
-    "ScheduledJobLogRecord": "Historial de Tareas Programadas",
+    "ScheduledJobLogRecord": "Historial de Tareas Agendadas",
     "PasswordChangeRequest": "Solicitudes de Cambio de contraseña",
     "ActionHistoryRecord": "Historial de Acciones",
     "AuthToken": "Clave de Autorización",
     "UniqueId": "IDs Unicos",
     "LastViewed": "Ultimos Revisados",
     "AuthLogRecord": "Historial de Autorizaciones",
-    "AuthFailLogRecord": "Hist. de Fallos de Aut.\n"
+    "AuthFailLogRecord": "Hist. de Fallos de Aut.\n",
+    "EmailTemplateCategory": "Categorías de Formatos de Correo",
+    "Import": "Importar ",
+    "LeadCapture": "Capturar Referencia",
+    "LeadCaptureLogRecord": "Historial de Captura de Referencias",
+    "ArrayValue": "Valores del Arreglo",
+    "ApiUser": "Usuarios de la API"
   },
   "labels": {
     "Misc": "Misceláneos",
-    "Merge": "Unir",
+    "Merge": "Generar",
     "None": "(vacío)",
     "Home": "Inicio",
     "by": "por",
@@ -88,7 +98,7 @@
     "Uploading...": "Subiendo...",
     "Sending...": "Enviando...",
     "Merging...": "Fusionando...",
-    "Merged": "Fusionado",
+    "Merged": "Generado",
     "Removed": "Eliminado",
     "Posted": "Publicado",
     "Linked": "Ligado",
@@ -118,7 +128,7 @@
     "Add Field": "Agregar Campo",
     "Add Dashlet": "Agregar Panel",
     "Filter": "Filtro",
-    "Edit Dashboard": "Editar Escritorio",
+    "Edit Dashboard": "Editar Tablero",
     "Add": "Agregar",
     "Add Item": "Agregar Elemento",
     "Reset": "Restablecer",
@@ -130,7 +140,7 @@
     "Admin": "Administrador",
     "About": "Acerca de EspoCRM",
     "Refresh": "Actualizar",
-    "Remove": "Remover",
+    "Remove": "Eliminar",
     "Options": "Opciones",
     "Username": "Nombre de Usuario",
     "Password": "Contraseña",
@@ -163,10 +173,10 @@
     "Active": "Activo",
     "Inactive": "Inactivo",
     "Write your comment here": "Escriba su comentario aquí",
-    "Post": "Entrada",
-    "Stream": "Seguimiento",
+    "Post": "Guardar",
+    "Stream": "Flujo",
     "Show more": "Mostrar mas",
-    "Dashlet Options": "Opciones de Cuadros",
+    "Dashlet Options": "Opciones del Panel",
     "Full Form": "Formulario Completo",
     "Insert": "Insertar",
     "Person": "Persona",
@@ -196,7 +206,6 @@
     "Tree View": "Vista de árbol",
     "Unlink All": "Desligar todo",
     "Print to PDF": "Imprimir PDF",
-    "Default": "Por Omisión",
     "Number": "Número",
     "From": "De",
     "To": "Para",
@@ -220,7 +229,8 @@
     "Convert to": "Convertir a",
     "View Personal Data": "Ver Datos Personales",
     "Personal Data": "Datos Personales",
-    "Erase": "Borrar"
+    "Erase": "Borrar",
+    "Move Over": "Mover"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -232,10 +242,10 @@
     "fieldShouldBefore": "{field} debe estar antes de {otherField}",
     "fieldShouldBeBetween": "{field} debe estar entre {min} y {max}",
     "fieldBadPasswordConfirm": "{field} confirmado de forma incorrecta",
-    "resetPreferencesDone": "Se han restablecido las preferencias por omisión",
+    "resetPreferencesDone": "Se han restablecido las preferencias default",
     "confirmation": "¿Está seguro?",
     "unlinkAllConfirmation": "¿Realmente desea desvincular todos los registros relacionados?",
-    "resetPreferencesConfirmation": "¿Realmente desea restablecer las preferencias por omisión?",
+    "resetPreferencesConfirmation": "¿Realmente desea restablecer las preferencias default?",
     "removeRecordConfirmation": "¿Realmente desea eliminar registros?",
     "unlinkRecordConfirmation": "¿Realmente quiere desligar este registro?",
     "removeSelectedRecordsConfirmation": "¿Realmente desea eliminar los registros seleccionados?",
@@ -252,8 +262,8 @@
     "checkForNewNotifications": "Ver si hay nuevas notificaciones",
     "duplicate": "El registro que estás creando ya puede existir.",
     "dropToAttach": "Haga drop para adjuntar",
-    "writeMessageToSelf": "Escriba un mensaje de seguimiento",
-    "checkForNewNotes": "Verifique si no hay actualizaciones al seguimiento",
+    "writeMessageToSelf": "Escribe un mensaje en tu flujo",
+    "checkForNewNotes": "Verificar si hay nuevos flujos",
     "internalPost": "La publicación sólo será vista por los usuarios internos",
     "done": "Enviados",
     "confirmMassFollow": "¿Realmente quieres marcar con seguimiento a los registros seleccionados?",
@@ -277,7 +287,9 @@
     "fieldShouldBeGreater": "{field} no debe ser menor que {value}",
     "fieldIsUploading": "Carga en prograso",
     "streamPostInfo": "Escriba <strong>@username</strong> para indicar los usuarios de esta publicación.\n\nSintaxis disponible para los marcadores:\n`<code>código</code>`\n**<strong>texto en negrita</strong>**\n*<em>texto en itálica</em>*\n~<del>texto eliminado</del>~\n> marcador de bloque\n[texto de la liga](url) ",
-    "erasePersonalDataConfirmation": "¿Realmente desea borrar permanentemente los campos seleccionados?"
+    "erasePersonalDataConfirmation": "¿Realmente desea borrar permanentemente los campos seleccionados?",
+    "massPrintPdfMaxCountError": "No se pueden imprimir mas de {maxCount} registros.",
+    "unlinkSelectedRecordsConfirmation": "Estas seguro que deseas desligar los registros seleccionados ?"
   },
   "boolFilters": {
     "onlyMy": "Sólo míos",
@@ -288,13 +300,15 @@
     "all": "Todos"
   },
   "massActions": {
-    "remove": "Remover",
-    "merge": "Unir",
+    "remove": "Eliminar",
+    "merge": "Generar",
     "massUpdate": "Actualización Masiva",
     "export": "Exportar",
     "follow": "Dar seguimiento",
     "unfollow": "Quitar seguimiento",
-    "convertCurrency": "Convertir Moneda"
+    "convertCurrency": "Convertir Moneda",
+    "printPdf": "Imprimir a PDF",
+    "unlink": "Desligar"
   },
   "fields": {
     "name": "Nombre",
@@ -325,7 +339,10 @@
     "phoneNumberData": "Datos del Número de Teléfono",
     "ids": "ID's",
     "names": "Nombres",
-    "emailAddressIsOptedOut": "La dirección de correo está Confirmada"
+    "emailAddressIsOptedOut": "La dirección de correo está Confirmada",
+    "targetListIsOptedOut": "Se ha Excluido (De la Lista)",
+    "type": "Tipo",
+    "types": "Tipos"
   },
   "links": {
     "assignedUser": "Usuario Asignado",
@@ -338,7 +355,7 @@
     "children": "Hijos"
   },
   "dashlets": {
-    "Stream": "Seguimiento",
+    "Stream": "Flujo",
     "Emails": "Mi Bandeja de Entrada",
     "Records": "Lista de Registros"
   },
@@ -558,7 +575,11 @@
       "isEmpty": "Está Vacío",
       "olderThanXDays": "Mayor de \"X\" Días",
       "afterXDays": "Después de \"X\" Días",
-      "nextMonth": "Siguiente mes"
+      "nextMonth": "Siguiente mes",
+      "currentFiscalYear": "Año Fiscal Actual",
+      "lastFiscalYear": "Último Año Fiscal",
+      "currentFiscalQuarter": "Trimestre Fiscal Actual",
+      "lastFiscalQuarter": "Último Trimestre Fiscal"
     },
     "searchRanges": {
       "is": "Es",
@@ -634,7 +655,7 @@
         "dragImageHere": "Arrastre la imagen aquí",
         "selectFromFiles": "Seleccionar desde Archivo",
         "url": "Url de Imagen",
-        "remove": "Remover Imagen"
+        "remove": "Eliminar Imagen"
       },
       "link": {
         "link": "Enlace",

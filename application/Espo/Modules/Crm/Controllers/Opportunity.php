@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -112,5 +112,13 @@ class Opportunity extends \Espo\Core\Controllers\Record
         if (empty($data->baseCurrency)) throw new BadRequest();
 
         return $this->getRecordService()->massConvertCurrency($data->field, $data->targetCurrency, $params, $data->baseCurrency, $data->currencyRates);
+    }
+
+    public function getActionEmailAddressList($params, $data, $request)
+    {
+        if (!$request->get('id')) throw new BadRequest();
+        if (!$this->getAcl()->checkScope($this->name, 'read')) throw new Forbidden();
+
+        return $this->getRecordService()->getEmailAddressList($request->get('id'));
     }
 }

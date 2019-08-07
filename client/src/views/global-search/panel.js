@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,14 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/global-search/panel', 'view', function (Dep) {
+define('views/global-search/panel', 'view', function (Dep) {
 
     return Dep.extend({
 
         template: 'global-search/panel',
 
-        afterRender: function () {
+        events: {
+            'click [data-action="closePanel"]': function () {
+                this.close();
+            },
+        },
 
+        setup: function () {
+            this.maxSize = this.getConfig().get('globalSearchMaxSize') || 10;
+
+            this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
+            this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
+
+            this.once('remove', function () {
+                $(window).off('resize.global-search-height');
+                if (this.overflowWasHidden) {
+                    $('body').css('overflow', 'unset');
+                    this.overflowWasHidden = false;
+                }
+            }, this);
+        },
+
+        afterRender: function () {
             this.listenToOnce(this.collection, 'sync', function () {
                 this.createView('list', 'views/record/list-expanded', {
                     el: this.options.el + ' .list-container',
@@ -46,7 +66,7 @@ Espo.define('views/global-search/panel', 'view', function (Dep) {
                                     view: 'views/global-search/name-field',
                                     params: {
                                         containerEl: this.options.el
-                                    },
+                                    }
                                 }
                             ]
                         ],
@@ -59,12 +79,55 @@ Espo.define('views/global-search/panel', 'view', function (Dep) {
                 }, function (view) {
                     view.render();
                 });
-            }.bind(this));
-            this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 10;
+            }, this);
+
+            this.collection.reset();
+            this.collection.maxSize = this.maxSize;
             this.collection.fetch();
-        }
+
+            var $window = $(window);
+            $window.off('resize.global-search-height');
+            $window.on('resize.global-search-height', this.processSizing.bind(this));
+            this.processSizing();
+        },
+
+        processSizing: function () {
+            var $window = $(window);
+            var windowHeight = $window.height();
+            var windowWidth = $window.width();
+
+            var diffHeight = this.$el.find('.panel-heading').outerHeight();
+
+            var cssParams = {};
+
+            if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
+                cssParams.height = (windowHeight - diffHeight) + 'px';
+                cssParams.overflow = 'auto';
+
+                $('body').css('overflow', 'hidden');
+                this.overflowWasHidden = true;
+
+            } else {
+                cssParams.height = 'unset';
+                cssParams.overflow = 'none';
+
+                if (this.overflowWasHidden) {
+                    $('body').css('overflow', 'unset');
+                    this.overflowWasHidden = false;
+                }
+
+                if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
+                    var maxHeight = windowHeight - this.navbarPanelHeightSpace;
+                    cssParams.maxHeight = maxHeight + 'px';
+                }
+            }
+
+            this.$el.find('.panel-body').css(cssParams);
+        },
+
+        close: function () {
+            this.trigger('close');
+        },
 
     });
-
 });
-

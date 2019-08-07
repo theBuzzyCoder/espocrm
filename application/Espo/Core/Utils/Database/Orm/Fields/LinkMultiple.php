@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,28 +33,33 @@ class LinkMultiple extends Base
 {
     protected function load($fieldName, $entityName)
     {
-        $data = array(
-            $entityName => array (
-                'fields' => array(
-                    $fieldName.'Ids' => array(
+        $data = [
+            $entityName => [
+                'fields' => [
+                    $fieldName.'Ids' => [
                         'type' => 'jsonArray',
                         'notStorable' => true,
                         'isLinkMultipleIdList' => true,
-                        'relation' => $fieldName
-                    ),
-                    $fieldName.'Names' => array(
+                        'relation' => $fieldName,
+                        'isUnordered' => true,
+                        'attributeRole' => 'idList',
+                        'fieldType' => 'linkMultiple',
+                    ],
+                    $fieldName.'Names' => [
                         'type' => 'jsonObject',
                         'notStorable' => true,
-                        'isLinkMultipleNameMap' => true
-                    )
-                )
-            ),
-            'unset' => array(
-                $entityName => array(
-                    'fields.'.$fieldName
-                )
-            )
-        );
+                        'isLinkMultipleNameMap' => true,
+                        'attributeRole' => 'nameMap',
+                        'fieldType' => 'linkMultiple',
+                    ]
+                ]
+            ],
+            'unset' => [
+                $entityName => [
+                    'fields.' . $fieldName
+                ]
+            ]
+        ];
 
         $fieldParams = $this->getFieldParams();
 
@@ -67,10 +72,12 @@ class LinkMultiple extends Base
 
         $columns = $this->getMetadata()->get("entityDefs.{$entityName}.fields.{$fieldName}.columns");
         if (!empty($columns)) {
-            $data[$entityName]['fields'][$fieldName . 'Columns'] = array(
+            $data[$entityName]['fields'][$fieldName . 'Columns'] = [
                 'type' => 'jsonObject',
                 'notStorable' => true,
-            );
+                'columns' => $columns,
+                'attributeRole' => 'columnsMap',
+            ];
         }
 
         return $data;

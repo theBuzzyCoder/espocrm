@@ -6,7 +6,8 @@
         "fields": {
             "title": {
                 "type": "varchar",
-                "required": true
+                "required": true,
+                "trim": true
             },
             "autorefreshInterval": {
                 "type": "enumFloat",
@@ -18,8 +19,8 @@
             }
         },
         "defaults": {
-            "sortBy": "dateSent",
-            "asc": false,
+            "orderBy": "dateSent",
+            "order": "desc",
             "displayRecords": 5,
             "expandedLayout": {
                 "rows": [
@@ -35,7 +36,8 @@
                             "view": "views/fields/datetime-short"
                         },
                         {
-                            "name": "personStringData"
+                            "name": "personStringData",
+                            "view": "views/email/fields/person-string-data-for-expanded"
                         }
                     ]
                 ]

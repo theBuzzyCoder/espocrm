@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,7 +50,7 @@ class Import extends \Espo\Services\Record
         $this->addDependency('fileStorageManager');
     }
 
-    protected $dateFormatsMap = array(
+    protected $dateFormatsMap = [
         'YYYY-MM-DD' => 'Y-m-d',
         'DD-MM-YYYY' => 'd-m-Y',
         'MM-DD-YYYY' => 'm-d-Y',
@@ -59,18 +59,18 @@ class Import extends \Espo\Services\Record
         'DD.MM.YYYY' => 'd.m.Y',
         'MM.DD.YYYY' => 'm.d.Y',
         'YYYY.MM.DD' => 'Y.m.d',
-    );
+    ];
 
-    protected $timeFormatsMap = array(
+    protected $timeFormatsMap = [
         'HH:mm' => 'H:i',
         'HH:mm:ss' => 'H:i:s',
         'hh:mm a' => 'h:i a',
         'hh:mma' => 'h:ia',
         'hh:mm A' => 'h:iA',
         'hh:mmA' => 'h:iA',
-    );
+    ];
 
-    protected $services = array();
+    protected $services = [];
 
     protected function getSelectManagerFactory()
     {
@@ -109,27 +109,26 @@ class Import extends \Espo\Services\Record
         $importedCount = $this->getRepository()->countRelated($entity, 'imported');
         $duplicateCount = $this->getRepository()->countRelated($entity, 'duplicates');
         $updatedCount = $this->getRepository()->countRelated($entity, 'updated');
-        $entity->set(array(
+        $entity->set([
             'importedCount' => $importedCount,
             'duplicateCount' => $duplicateCount,
-            'updatedCount' => $updatedCount,
-        ));
+            'updatedCount' => $updatedCount
+        ]);
     }
 
-    public function findLinkedEntities($id, $link, $params)
+    public function findLinked($id, $link, $params)
     {
         $entity = $this->getRepository()->get($id);
-        $foreignEntityName = $entity->get('entityType');
+        $foreignEntityType = $entity->get('entityType');
 
         if (!$this->getAcl()->check($entity, 'read')) {
             throw new Forbidden();
         }
-        if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+        if (!$this->getAcl()->check($foreignEntityType, 'read')) {
             throw new Forbidden();
         }
 
-
-        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, true);
+        $selectParams = $this->getSelectManager($foreignEntityType)->getSelectParams($params, true);
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
@@ -137,7 +136,7 @@ class Import extends \Espo\Services\Record
 
         $collection = $this->getRepository()->findRelated($entity, $link, $selectParams);
 
-        $recordService = $this->getRecordService($foreignEntityName);
+        $recordService = $this->getRecordService($foreignEntityType);
 
         foreach ($collection as $e) {
             $recordService->loadAdditionalFieldsForList($e);
@@ -146,15 +145,15 @@ class Import extends \Espo\Services\Record
 
         $total = $this->getRepository()->countRelated($entity, $link, $selectParams);
 
-        return array(
+        return [
             'total' => $total,
             'collection' => $collection
-        );
+        ];
     }
 
     protected function readCsvString(&$string, $CSV_SEPARATOR = ';', $CSV_ENCLOSURE = '"', $CSV_LINEBREAK = "\n")
     {
-        $o = array();
+        $o = [];
         $cnt = strlen($string);
         $esc = false;
         $escesc = false;
@@ -220,8 +219,11 @@ class Import extends \Espo\Services\Record
             throw new NotFound();
         }
 
-        $pdo = $this->getEntityManager()->getPDO();
+        if (!$this->getAcl()->check($import, 'delete')) {
+            throw new Forbidden();
+        }
 
+        $pdo = $this->getEntityManager()->getPDO();
 
         $sql = "SELECT * FROM import_entity WHERE import_id = ".$pdo->quote($import->id) . " AND is_imported = 1";
 
@@ -272,6 +274,10 @@ class Import extends \Espo\Services\Record
             throw new NotFound();
         }
 
+        if (!$this->getAcl()->check($import, 'delete')) {
+            throw new Forbidden();
+        }
+
         $pdo = $this->getEntityManager()->getPDO();
 
 
@@ -296,29 +302,63 @@ class Import extends \Espo\Services\Record
         return true;
     }
 
-    public function runIdleImport($data)
+    public function jobRunIdleImport($data)
     {
+        if (
+            empty($data->userId) ||
+            empty($data->userId) ||
+            !isset($data->importAttributeList) ||
+            !isset($data->params) ||
+            !isset($data->entityType)
+        ) {
+            throw new Error("Import: Bad job data.");
+        }
+
         $entityType = $data->entityType;
-
         $params = json_decode(json_encode($data->params), true);
-
-        $importFieldList = $data->importFieldList;
         $attachmentId = $data->attachmentId;
-
         $importId = $data->importId;
+        $importAttributeList = $data->importAttributeList;
+        $userId = $data->userId;
 
-        $this->import($entityType, $importFieldList, $attachmentId, $params, $importId);
+        $user = $this->getEntityManager()->getEntity('User', $userId);
+
+        if (!$user) {
+            throw new Error("Import: User not found.");
+        }
+        if (!$user->get('isActive')) {
+            throw new Error("Import: User is not active.");
+        }
+
+        $this->import($entityType, $importAttributeList, $attachmentId, $params, $importId, $user);
     }
 
-    public function import($scope, array $importFieldList, $attachmentId, array $params = array(), $importId = null)
+    public function import($scope, array $importAttributeList, $attachmentId, array $params = [], $importId = null, $user = null)
     {
         $delimiter = ',';
-        if (!empty($params['fieldDelimiter'])) {
-            $delimiter = $params['fieldDelimiter'];
+        if (!empty($params['delimiter'])) {
+            $delimiter = $params['delimiter'];
         }
         $enclosure = '"';
         if (!empty($params['textQualifier'])) {
             $enclosure = $params['textQualifier'];
+        }
+
+        if (!$user) {
+            $user = $this->getUser();
+        }
+
+        if (!$user->isAdmin()) {
+            $forbiddenAttrbuteList = $this->getAclManager()->getScopeForbiddenAttributeList($user, $scope, 'edit');
+            foreach ($importAttributeList as $i => $attribute) {
+                if (in_array($attribute, $forbiddenAttrbuteList)) {
+                    unset($importAttributeList[$i]);
+                }
+            }
+
+            if (!$this->getAclManager()->checkScope($user, $scope, 'create')) {
+                throw new Error('Import: Create is forbidden.');
+            }
         }
 
         $attachment = $this->getEntityManager()->getEntity('Attachment', $attachmentId);
@@ -334,14 +374,14 @@ class Import extends \Espo\Services\Record
         if ($importId) {
             $import = $this->getEntityManager()->getEntity('Import', $importId);
             if (!$import) {
-                throw new Error('Import error: Could not find import record.');
+                throw new Error('Import: Could not find import record.');
             }
         } else {
             $import = $this->getEntityManager()->getEntity('Import');
-            $import->set(array(
+            $import->set([
                 'entityType' => $scope,
                 'fileId' => $attachmentId
-            ));
+            ]);
             $import->set('status', 'In Process');
         }
 
@@ -353,34 +393,35 @@ class Import extends \Espo\Services\Record
             $params['idleMode'] = false;
 
             $job = $this->getEntityManager()->getEntity('Job');
-            $job->set(array(
+            $job->set([
                 'serviceName' => 'Import',
-                'methodName' => 'runIdleImport',
-                'data' => array(
+                'methodName' => 'jobRunIdleImport',
+                'data' => [
                     'entityType' => $scope,
                     'params' => $params,
                     'attachmentId' => $attachmentId,
-                    'importFieldList' => $importFieldList,
-                    'importId' => $import->id
-                )
-            ));
+                    'importAttributeList' => $importAttributeList,
+                    'importId' => $import->id,
+                    'userId' => $this->getUser()->id
+                ]
+            ]);
             $this->getEntityManager()->saveEntity($job);
 
-            return array(
+            return [
                 'id' => $import->id,
                 'countCreated' => 0,
                 'countUpdated' => 0
-            );
+            ];
         }
 
         try {
             $pdo = $this->getEntityManager()->getPDO();
 
-            $result = array(
-                'importedIds' => array(),
-                'updatedIds' => array(),
-                'duplicateIds' => array()
-            );
+            $result = [
+                'importedIds' => [],
+                'updatedIds' => [],
+                'duplicateIds' => []
+            ];
             $i = -1;
 
             $contents = str_replace("\r\n", "\n", $contents);
@@ -393,7 +434,7 @@ class Import extends \Espo\Services\Record
                 if (count($arr) == 1 && empty($arr[0])) {
                     continue;
                 }
-                $r = $this->importRow($scope, $importFieldList, $arr, $params);
+                $r = $this->importRow($scope, $importAttributeList, $arr, $params, $user);
                 if (empty($r)) {
                     continue;
                 }
@@ -431,14 +472,14 @@ class Import extends \Espo\Services\Record
 
         $this->getEntityManager()->saveEntity($import);
 
-        return array(
+        return [
             'id' => $import->id,
             'countCreated' => count($result['importedIds']),
             'countUpdated' => count($result['updatedIds']),
-        );
+        ];
     }
 
-    public function importRow($scope, array $importFieldList, array $row, array $params = array())
+    public function importRow($scope, array $importAttributeList, array $row, array $params = [], $user)
     {
         $id = null;
         $action = 'create';
@@ -446,18 +487,18 @@ class Import extends \Espo\Services\Record
             $action = $params['action'];
         }
 
-        if (empty($importFieldList)) {
+        if (empty($importAttributeList)) {
             return;
         }
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
-            $updateByFieldList = [];
-            $whereClause = array();
+            $updateByAttributeList = [];
+            $whereClause = [];
             if (!empty($params['updateBy']) && is_array($params['updateBy'])) {
                 foreach ($params['updateBy'] as $i) {
-                    if (array_key_exists($i, $importFieldList)) {
-                        $updateByFieldList[] = $importFieldList[$i];
-                        $whereClause[$importFieldList[$i]] = $row[$i];
+                    if (array_key_exists($i, $importAttributeList)) {
+                        $updateByAttributeList[] = $importAttributeList[$i];
+                        $whereClause[$importAttributeList[$i]] = $row[$i];
                     }
                 }
             }
@@ -466,10 +507,18 @@ class Import extends \Espo\Services\Record
         $recordService = $this->getRecordService($scope);
 
         if (in_array($action, ['createAndUpdate', 'update'])) {
-            if (!count($updateByFieldList)) {
+            if (!count($updateByAttributeList)) {
                 return;
             }
             $entity = $this->getEntityManager()->getRepository($scope)->where($whereClause)->findOne();
+
+            if ($entity) {
+                if (!$user->isAdmin()) {
+                    if (!$this->getAclManager()->checkEntity($user, $entity, 'edit')) {
+                        return;
+                    }
+                }
+            }
             if (!$entity) {
                 if ($action == 'createAndUpdate') {
                     $entity = $this->getEntityManager()->getEntity($scope);
@@ -495,11 +544,15 @@ class Import extends \Espo\Services\Record
             $entity->set($v);
         }
 
-        $fieldsDefs = $entity->getFields();
+        $attributeDefs = $entity->getAttributes();
         $relDefs = $entity->getRelations();
 
         $phoneFieldList = [];
-        if (!empty($fieldsDefs['phoneNumber']) && !empty($fieldsDefs['phoneNumber']['type']) && $fieldsDefs['phoneNumber']['type'] == 'phone') {
+        if (
+            $entity->hasAttribute('phoneNumber')
+            &&
+            $entity->getAttributeParam('phoneNumber', 'fieldType') === 'phone'
+        ) {
             $typeList = $this->getMetadata()->get('entityDefs.' . $scope . '.fields.phoneNumber.typeList', []);
             foreach ($typeList as $type) {
                 $attr = str_replace(' ', '_', ucfirst($type));
@@ -507,24 +560,60 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        foreach ($importFieldList as $i => $field) {
-            if (!empty($field)) {
+        $valueMap = (object) [];
+        foreach ($importAttributeList as $i => $attribute) {
+            if (!empty($attribute)) {
                 if (!array_key_exists($i, $row)) {
                     continue;
                 }
                 $value = $row[$i];
-                if ($field == 'id') {
+                $valueMap->$attribute = $value;
+            }
+        }
+
+        foreach ($importAttributeList as $i => $attribute) {
+            if (!empty($attribute)) {
+                if (!array_key_exists($i, $row)) {
+                    continue;
+                }
+                $value = $row[$i];
+                if ($attribute == 'id') {
                     if ($params['action'] == 'create') {
                         $entity->id = $value;
                     }
                     continue;
                 }
-                if (array_key_exists($field, $fieldsDefs)) {
+                if (array_key_exists($attribute, $attributeDefs)) {
                     if ($value !== '') {
-                        $type = $this->getMetadata()->get("entityDefs.{$scope}.fields.{$field}.type");
+                        $type = $this->getMetadata()->get(['entityDefs', $scope, 'fields', $attribute, 'type']);
+
+                        if ($attribute === 'emailAddress' && $type === 'email') {
+                            $emailAddressData = $entity->get('emailAddressData');
+                            $emailAddressData = $emailAddressData ?? [];
+                            $o = (object) [
+                                'emailAddress' => $value,
+                                'primary' => true,
+                            ];
+                            $emailAddressData[] = $o;
+                            $entity->set('emailAddressData', $emailAddressData);
+                            continue;
+                        }
+
+                        if ($attribute === 'phoneNumber' && $type === 'phone') {
+                            $phoneNumberData = $entity->get('phoneNumberData');
+                            $phoneNumberData = $phoneNumberData ?? [];
+                            $o = (object) [
+                                'phoneNumber' => $value,
+                                'primary' => true,
+                            ];
+                            $phoneNumberData[] = $o;
+                            $entity->set('phoneNumberData', $phoneNumberData);
+                            continue;
+                        }
+
                         if ($type == 'personName') {
-                            $firstNameAttribute = 'first' . ucfirst($field);
-                            $lastNameAttribute = 'last' . ucfirst($field);
+                            $firstNameAttribute = 'first' . ucfirst($attribute);
+                            $lastNameAttribute = 'last' . ucfirst($attribute);
 
                             $personName = $this->parsePersonName($value, $params['personNameFormat']);
 
@@ -539,27 +628,54 @@ class Import extends \Espo\Services\Record
                             continue;
                         }
 
-                        $entity->set($field, $this->parseValue($entity, $field, $value, $params));
+                        $entity->set($attribute, $this->parseValue($entity, $attribute, $value, $params));
                     }
                 } else {
-                    if (in_array($field, $phoneFieldList) && !empty($value)) {
+                    if (in_array($attribute, $phoneFieldList) && !empty($value)) {
                         $phoneNumberData = $entity->get('phoneNumberData');
                         $isPrimary = false;
                         if (empty($phoneNumberData)) {
                             $phoneNumberData = [];
-                            if (!in_array('phoneNumber', $importFieldList)) {
-                                $isPrimary = true;
-                            }
+                            if (empty($valueMap->phoneNumber)) $isPrimary = true;
                         }
-                        $type = str_replace('phoneNumber', '', $field);
+                        $type = str_replace('phoneNumber', '', $attribute);
                         $type = str_replace('_', ' ', $type);
-                        $o = new \StdClass();
-                        $o->phoneNumber = $value;
-                        $o->type = $type;
-                        $o->primary = $isPrimary;
+                        $o = (object) [
+                            'phoneNumber' => $value,
+                            'type' => $type,
+                            'primary' => $isPrimary,
+                        ];
                         $phoneNumberData[] = $o;
-
                         $entity->set('phoneNumberData', $phoneNumberData);
+                    }
+
+                    if (
+                        strpos($attribute, 'emailAddress') === 0 && $attribute !== 'emailAddress'
+                        &&
+                        $entity->hasAttribute('emailAddress')
+                        &&
+                        $entity->hasAttribute('emailAddressData')
+                        &&
+                        is_numeric(substr($attribute, 12))
+                        &&
+                        intval(substr($attribute, 12)) >= 2
+                        &&
+                        intval(substr($attribute, 12)) <= 4
+                        &&
+                        !empty($value)
+                    ) {
+                        $emailAddressData = $entity->get('emailAddressData');
+                        $isPrimary = false;
+                        if (empty($emailAddressData)) {
+                            $emailAddressData = [];
+                            if (empty($valueMap->emailAddress)) $isPrimary = true;
+                        }
+                        $o = (object) [
+                            'emailAddress' => $value,
+                            'primary' => $isPrimary,
+                        ];
+                        $emailAddressData[] = $o;
+                        $entity->set('emailAddressData', $emailAddressData);
                     }
                 }
             }
@@ -580,20 +696,20 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        foreach ($importFieldList as $i => $field) {
-            if (!array_key_exists($field, $fieldsDefs)) continue;;
-            $defs = $fieldsDefs[$field];
-            $type = $fieldsDefs[$field]['type'];
+        foreach ($importAttributeList as $i => $attribute) {
+            if (!array_key_exists($attribute, $attributeDefs)) continue;;
+            $defs = $attributeDefs[$attribute];
+            $type = $attributeDefs[$attribute]['type'];
 
             if (in_array($type, [Entity::FOREIGN, Entity::VARCHAR]) && !empty($defs['foreign'])) {
                 $relatedEntityIsPerson = is_array($defs['foreign']) && in_array('firstName', $defs['foreign']) && in_array('lastName', $defs['foreign']);
 
                 if ($defs['foreign'] === 'name' || $relatedEntityIsPerson) {
-                    if ($entity->has($field)) {
+                    if ($entity->has($attribute)) {
                         $relation = $defs['relation'];
-                        if ($field == $relation . 'Name' && !$entity->has($relation . 'Id') && array_key_exists($relation, $relDefs)) {
+                        if ($attribute == $relation . 'Name' && !$entity->has($relation . 'Id') && array_key_exists($relation, $relDefs)) {
                             if ($relDefs[$relation]['type'] == Entity::BELONGS_TO) {
-                                $value = $entity->get($field);
+                                $value = $entity->get($attribute);
                                 $scope = $relDefs[$relation]['entity'];
 
                                 if ($relatedEntityIsPerson) {
@@ -619,23 +735,24 @@ class Import extends \Espo\Services\Record
             }
         }
 
-        $result = array();
+        $result = [];
 
         try {
             if ($isNew) {
                 $isDuplicate = false;
                 if (empty($params['skipDuplicateChecking'])) {
-                    $isDuplicate = $recordService->checkEntityForDuplicate($entity);
+                    $isDuplicate = $recordService->checkIsDuplicate($entity);
                 }
             }
             if ($entity->id) {
                 $sql = $this->getEntityManager()->getRepository($entity->getEntityType())->deleteFromDb($entity->id, true);
             }
-            $saveResult = $this->getEntityManager()->saveEntity($entity, array(
+            $saveResult = $this->getEntityManager()->saveEntity($entity, [
                 'noStream' => true,
                 'noNotifications' => true,
-                'import' => true
-            ));
+                'import' => true,
+                'silent' => !empty($params['silentMode']),
+            ]);
             if ($saveResult) {
                 $result['id'] = $entity->id;
                 if ($isNew) {
@@ -697,7 +814,7 @@ class Import extends \Espo\Services\Record
         return ['firstName' => $firstName, 'lastName' => $lastName];
     }
 
-    protected function parseValue(Entity $entity, $attribute, $value, $params = array())
+    protected function parseValue(Entity $entity, $attribute, $value, $params = [])
     {
         $decimalMark = '.';
         if (!empty($params['decimalMark'])) {

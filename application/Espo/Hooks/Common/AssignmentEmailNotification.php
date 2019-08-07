@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -58,32 +58,47 @@ class AssignmentEmailNotification extends \Espo\Core\Hooks\Base
 
                 foreach ($userIdList as $userId) {
                     if (in_array($userId, $fetchedAssignedUserIdList)) continue;
-                    if ($this->getUser()->id === $userId) continue;
+                    if (!$this->isNotSelfAssignment($entity, $userId)) continue;
                     $this->createJob($entity, $userId);
                 }
             } else {
                 $userId = $entity->get('assignedUserId');
-                if (!empty($userId) && $userId != $this->getUser()->id && $entity->isAttributeChanged('assignedUserId')) {
+                if (!empty($userId) && $entity->isAttributeChanged('assignedUserId') && $this->isNotSelfAssignment($entity, $userId)) {
                     $this->createJob($entity, $userId);
                 }
             }
         }
     }
 
+    protected function isNotSelfAssignment(Entity $entity, $assignedUserId)
+    {
+        if ($entity->hasAttribute('createdById') && $entity->hasAttribute('modifiedById')) {
+            if ($entity->isNew()) {
+                $isNotSelfAssignment = $assignedUserId !== $entity->get('createdById');
+            } else {
+                $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
+            }
+        } else {
+            $isNotSelfAssignment = $assignedUserId !== $this->getUser()->id;
+        }
+        return $isNotSelfAssignment;
+    }
+
     protected function createJob(Entity $entity, $userId)
     {
         $job = $this->getEntityManager()->getEntity('Job');
-        $job->set(array(
+        $job->set([
             'serviceName' => 'EmailNotification',
             'methodName' => 'notifyAboutAssignmentJob',
-            'data' => json_encode(array(
+            'data' => [
                 'userId' => $userId,
                 'assignerUserId' => $this->getUser()->id,
                 'entityId' => $entity->id,
                 'entityType' => $entity->getEntityType()
-            )),
+            ],
             'executeTime' => date('Y-m-d H:i:s'),
-        ));
+            'queue' => 'e0'
+        ]);
         $this->getEntityManager()->saveEntity($job);
     }
 }

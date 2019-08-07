@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -46,7 +46,9 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
                 this.createField('post', null, null, 'views/stream/fields/post');
             }
             if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
+                this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
+                    previewSize: this.options.isNotification ? 'small' : null
+                });
             }
 
             var data = this.model.get('data');
@@ -74,7 +76,7 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
                                 teamIdList.forEach(function (teamId) {
                                     var teamName = teamNameHash[teamId];
                                     if (teamName) {
-                                        teamHtmlList.push('<a href="#Team/view/' + teamId + '">' + teamName + '</a>');
+                                        teamHtmlList.push('<a href="#Team/view/' + this.getHelper().escapeString(teamId) + '">' + this.getHelper().escapeString(teamName) + '</a>');
                                     }
                                 }, this);
 
@@ -91,7 +93,7 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
                                     userIdList.forEach(function (userId) {
                                         var userName = userNameHash[userId];
                                         if (userName) {
-                                            userHtmlList.push('<a href="#User/view/' + userId + '">' + userName + '</a>');
+                                            userHtmlList.push('<a href="#User/view/' + this.getHelper().escapeString(userId) + '">' + this.getHelper().escapeString(userName) + '</a>');
                                         }
                                     }, this);
                                     this.messageData['target'] = userHtmlList.join(', ');
@@ -111,4 +113,3 @@ Espo.define('views/stream/notes/mention-in-post', 'views/stream/note', function 
 
     });
 });
-

@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,12 +81,13 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
                 this.hasExpandedToggler = false;
             } else {
                 if (!this.expandedTogglerDisabled) {
-                    if (!this.getUser().get('isPortalUser')) {
+                    if (!this.getUser().isPortal()) {
                         if (this.hasIsExpandedStoredValue()) {
                             this.isExpanded = this.getIsExpandedStoredValue();
                         }
                     } else {
                         this.hasExpandedToggler = false;
+                        this.isExpanded = false;
                     }
                 }
             }
@@ -128,7 +129,8 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         getIsExpandedStoredValue: function () {
-            return this.getStorage().get('state', 'categories-expanded-' + this.scope) === 'true';
+            var value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
+            return value === 'true' || value === true ;
         },
 
         setIsExpandedStoredValue: function (value) {
@@ -395,49 +397,67 @@ Espo.define('views/list-with-categories', 'views/list', function (Dep) {
         },
 
         applyCategoryToCollection: function () {
-            this.collection.whereAdditional = null;
-            var filter;
-            if (!this.isExpanded) {
-                if (this.isCategoryMultiple()) {
-                    if (this.currentCategoryId) {
-                        filter = {
-                            attribute: this.categoryField,
-                            type: 'linkedWith',
-                            value: [this.currentCategoryId]
-                        };
+
+            this.collection.whereFunction = function () {
+                var filter;
+                var isExpanded = this.isExpanded;
+
+                var hasTextFilter = false;
+                if (this.collection.where) {
+                    for (var i = 0; i < this.collection.where.length; i++) {
+                        if (this.collection.where[i].type === 'textFilter') {
+                            hasTextFilter = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (this.collection.data && this.collection.data.textFilter) {
+                    hasTextFilter = true;
+                }
+
+                if (!isExpanded && !hasTextFilter) {
+                    if (this.isCategoryMultiple()) {
+                        if (this.currentCategoryId) {
+                            filter = {
+                                attribute: this.categoryField,
+                                type: 'linkedWith',
+                                value: [this.currentCategoryId]
+                            };
+                        } else {
+                            filter = {
+                                attribute: this.categoryField,
+                                type: 'isNotLinked'
+                            };
+                        }
                     } else {
-                        filter = {
-                            attribute: this.categoryField,
-                            type: 'isNotLinked'
-                        };
+                        if (this.currentCategoryId) {
+                            filter = {
+                                attribute: this.categoryField + 'Id',
+                                type: 'equals',
+                                value: this.currentCategoryId
+                            };
+                        } else {
+                            filter = {
+                                attribute: this.categoryField + 'Id',
+                                type: 'isNull'
+                            };
+                        }
                     }
                 } else {
                     if (this.currentCategoryId) {
                         filter = {
-                            attribute: this.categoryField + 'Id',
-                            type: 'equals',
+                            field: this.categoryField,
+                            type: this.categoryFilterType,
                             value: this.currentCategoryId
-                        };
-                    } else {
-                        filter = {
-                            attribute: this.categoryField + 'Id',
-                            type: 'isNull'
                         };
                     }
                 }
-            } else {
-                if (this.currentCategoryId) {
-                    filter = {
-                        field: this.categoryField,
-                        type: this.categoryFilterType,
-                        value: this.currentCategoryId
-                    };
+                if (filter) {
+                    return [filter];
                 }
-            }
 
-            if (filter) {
-                this.collection.whereAdditional = [filter];
-            }
+            }.bind(this);
         },
 
         isCategoryMultiple: function () {

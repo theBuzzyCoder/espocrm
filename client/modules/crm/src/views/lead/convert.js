@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -81,13 +81,14 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
                 if (scope == 'Account' && this.getConfig().get('b2cMode')) {
                     return;
                 }
+                if (this.getMetadata().get(['scopes', scope, 'disabled'])) return;
                 if (this.getAcl().check(scope, 'edit')) {
                     scopeList.push(scope);
                 }
             }, this);
             var i = 0;
 
-            var attributeList = this.getFieldManager().getEntityAttributes(this.model.name);
+            var attributeList = this.getFieldManager().getEntityTypeAttributeList(this.model.name);
             var ignoreAttributeList = ['createdAt', 'modifiedAt', 'modifiedById', 'modifiedByName', 'createdById', 'createdByName'];
 
             if (scopeList.length) {
@@ -105,6 +106,7 @@ Espo.define('crm:views/lead/convert', 'view', function (Dep) {
                                 model: model,
                                 el: '#main .edit-container-' + Espo.Utils.toDom(scope),
                                 buttonsPosition: false,
+                                buttonsDisabled: true,
                                 layoutName: 'detailConvert',
                                 exit: function () {},
                             }, function (view) {

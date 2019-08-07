@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/notification/panel', 'view', function (Dep) {
+define('views/notification/panel', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -43,16 +43,34 @@ Espo.define('views/notification/panel', 'view', function (Dep) {
             },
             'click [data-action="openNotifications"]': function (e) {
                 this.getRouter().navigate('#Notification', {trigger: true});
-                this.remove();
-            }
+                this.close();
+            },
+            'click [data-action="closePanel"]': function () {
+                this.close();
+            },
         },
 
         setup: function () {
             this.wait(true);
             this.getCollectionFactory().create('Notification', function (collection) {
                 this.collection = collection;
-                collection.maxSize = 5;
+                collection.maxSize = this.getConfig().get('notificationsMaxSize') || 5;
                 this.wait(false);
+
+                this.listenTo(this.collection, 'sync', function () {
+                    this.trigger('collection-fetched');
+                }, this);
+            }, this);
+
+            this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
+            this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
+
+            this.once('remove', function () {
+                $(window).off('resize.notifications-height');
+                if (this.overflowWasHidden) {
+                    $('body').css('overflow', 'unset');
+                    this.overflowWasHidden = false;
+                }
             }, this);
         },
 
@@ -71,7 +89,7 @@ Espo.define('views/notification/panel', 'view', function (Dep) {
                                     view: 'views/notification/fields/container',
                                     params: {
                                         containerEl: this.options.el
-                                    },
+                                    }
                                 }
                             ]
                         ],
@@ -86,8 +104,50 @@ Espo.define('views/notification/panel', 'view', function (Dep) {
                 });
             }, this);
             this.collection.fetch();
-        }
+
+            var $window = $(window);
+            $window.off('resize.notifications-height');
+            $window.on('resize.notifications-height', this.processSizing.bind(this));
+            this.processSizing();
+        },
+
+        processSizing: function () {
+            var $window = $(window);
+            var windowHeight = $window.height();
+            var windowWidth = $window.width();
+
+            var diffHeight = this.$el.find('.panel-heading').outerHeight();
+
+            var cssParams = {};
+
+            if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
+                cssParams.height = (windowHeight - diffHeight) + 'px';
+                cssParams.overflow = 'auto';
+
+                $('body').css('overflow', 'hidden');
+                this.overflowWasHidden = true;
+
+            } else {
+                cssParams.height = 'unset';
+                cssParams.overflow = 'none';
+
+                if (this.overflowWasHidden) {
+                    $('body').css('overflow', 'unset');
+                    this.overflowWasHidden = false;
+                }
+
+                if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
+                    var maxHeight = windowHeight - this.navbarPanelHeightSpace;
+                    cssParams.maxHeight = maxHeight + 'px';
+                }
+            }
+
+            this.$el.find('.panel-body').css(cssParams);
+        },
+
+        close: function () {
+            this.trigger('close');
+        },
 
     });
-
 });

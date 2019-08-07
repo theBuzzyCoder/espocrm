@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
+define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
 
     return Dep.extend({
 
@@ -36,8 +36,12 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         postDisabled: false,
 
+        relatedListFiltersDisabled: true,
+
+        layoutName: null,
+
         events: _.extend({
-            'focus textarea.note': function (e) {
+            'focus textarea[data-name="post"]': function (e) {
                 this.enablePostingMode();
             },
             'click button.post': function () {
@@ -55,7 +59,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 }
 
             },
-            'keypress textarea.note': function (e) {
+            'keypress textarea[data-name="post"]': function (e) {
                 if ((e.keyCode == 10 || e.keyCode == 13) && e.ctrlKey) {
                     this.post();
                 } else if (e.keyCode == 9) {
@@ -64,10 +68,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                         this.disablePostingMode();
                     }
                 }
-            },
-            'input textarea.note': function (e) {
-                this.controlTextareaHeight();
-            },
+            }
         }, Dep.prototype.events),
 
         data: function () {
@@ -78,35 +79,22 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             return data;
         },
 
-        controlTextareaHeight: function (lastHeight) {
-            var scrollHeight = this.$textarea.prop('scrollHeight');
-            var clientHeight = this.$textarea.prop('clientHeight');
-
-            if (clientHeight === lastHeight) return;
-            if (scrollHeight > clientHeight + 1) {
-                this.$textarea.attr('rows', this.$textarea.prop('rows') + 1);
-                this.controlTextareaHeight(clientHeight);
-            }
-            if (this.$textarea.val().length === 0) {
-                this.$textarea.attr('rows', 1);
-            }
-        },
-
         enablePostingMode: function () {
             this.$el.find('.buttons-panel').removeClass('hide');
 
             if (!this.postingMode) {
                 if (this.$textarea.val() && this.$textarea.val().length) {
-                    this.controlTextareaHeight();
+                    this.getView('postField').controlTextareaHeight();
                 }
                 $('body').on('click.stream-panel', function (e) {
                     var $target = $(e.target);
                     if ($target.parent().hasClass('remove-attachment')) return;
                     if ($.contains(this.$postContainer.get(0), e.target)) return;
                     if (this.$textarea.val() !== '') return;
+                    if ($(e.target).closest('.popover-content').get(0)) return;
 
-                    var attachmentsIds = this.seed.get('attachmentsIds');
-                    if (!attachmentsIds.length && !this.getView('attachments').isUploading) {
+                    var attachmentsIds = this.seed.get('attachmentsIds') || [];
+                    if (!attachmentsIds.length && (!this.getView('attachments') || !this.getView('attachments').isUploading)) {
                         this.disablePostingMode();
                     }
                 }.bind(this));
@@ -130,16 +118,16 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         setup: function () {
-            this.title = this.translate('Stream');
-
             this.scope = this.model.name;
 
             this.filter = this.getStoredFilter();
 
+            this.setupTitle();
+
             this.placeholderText = this.translate('writeYourCommentHere', 'messages');
 
             this.allowInternalNotes = false;
-            if (!this.getUser().get('isPortalUser')) {
+            if (!this.getUser().isPortal()) {
                 this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
             }
 
@@ -147,6 +135,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
             this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
+            this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.name + '-' + this.model.id;
 
             this.on('remove', function () {
                 this.storeControl();
@@ -159,6 +148,8 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
             var storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
 
+            this.setupActions();
+
             this.wait(true);
             this.getModelFactory().create('Note', function (model) {
                 this.seed = model;
@@ -169,35 +160,108 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                         attachmentsNames: storedAttachments.names
                     });
                 }
+
+                if (this.allowInternalNotes) {
+                    if (this.getMetadata().get(['entityDefs', 'Note', 'fields', 'isInternal', 'default'])) {
+                        this.isInternalNoteMode = true;
+                    }
+                    if (this.getSessionStorage().has(this.storageIsInernalKey)) {
+                        this.isInternalNoteMode = this.getSessionStorage().get(this.storageIsInernalKey);
+                    }
+                }
+
+                if (this.isInternalNoteMode) {
+                    this.seed.set('isInternal', true);
+                }
+
+                this.createView('postField', 'views/note/fields/post', {
+                    el: this.getSelector() + ' .textarea-container',
+                    name: 'post',
+                    mode: 'edit',
+                    params: {
+                        required: true,
+                        rows: 1
+                    },
+                    model: this.seed,
+                    placeholderText: this.placeholderText
+                });
                 this.createCollection(function () {
                     this.wait(false);
                 }, this);
             }, this);
+
+            if (!this.defs.hidden) {
+                this.subscribeToWebSocket();
+            }
+
+            this.once('remove', function () {
+                if (this.isSubscribedToWebSocked) {
+                    this.unsubscribeFromWebSocket();
+                }
+            }.bind(this));
+        },
+
+        subscribeToWebSocket: function () {
+            if (!this.getConfig().get('useWebSocket')) return;
+            if (this.model.entityType === 'User') return;
+
+            var topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
+            this.streamUpdateWebSocketTopic = topic;
+
+            this.isSubscribedToWebSocked = true;
+
+            this.getHelper().webSocketManager.subscribe(topic, function (t, data) {
+                if (data.createdById === this.getUser().id) return;
+                this.collection.fetchNew();
+            }.bind(this))
+        },
+
+        unsubscribeFromWebSocket: function () {
+            this.getHelper().webSocketManager.unsubscribe(this.streamUpdateWebSocketTopic);
+        },
+
+        setupTitle: function () {
+            this.title = this.translate('Stream');
+
+            this.titleHtml = this.title;
+
+            if (this.filter && this.filter !== 'all') {
+                this.titleHtml += ' &middot; ' + this.translate(this.filter, 'filters', 'Note');
+            }
         },
 
         storeControl: function () {
-            if (this.$textarea && this.$textarea.size()) {
+            var isNotEmpty = false;
+
+            if (this.$textarea && this.$textarea.length) {
                 var text = this.$textarea.val();
                 if (text.length) {
                     this.getSessionStorage().set(this.storageTextKey, text);
+                    isNotEmpty = true;
                 } else {
                     if (this.hasStoredText) {
                         this.getSessionStorage().clear(this.storageTextKey);
                     }
                 }
+            }
 
-                var attachmetIdList = this.seed.get('attachmentsIds') || [];
-
-                if (attachmetIdList.length) {
-                    this.getSessionStorage().set(this.storageAttachmentsKey, {
-                        idList: attachmetIdList,
-                        names: this.seed.get('attachmentsNames') || {}
-                    });
-                } else {
-                    if (this.hasStoredAttachments) {
-                        this.getSessionStorage().clear(this.storageAttachmentsKey);
-                    }
+            var attachmetIdList = this.seed.get('attachmentsIds') || [];
+            if (attachmetIdList.length) {
+                this.getSessionStorage().set(this.storageAttachmentsKey, {
+                    idList: attachmetIdList,
+                    names: this.seed.get('attachmentsNames') || {}
+                });
+                isNotEmpty = true;
+            } else {
+                if (this.hasStoredAttachments) {
+                    this.getSessionStorage().clear(this.storageAttachmentsKey);
                 }
+            }
+
+            if (isNotEmpty) {
+                this.getSessionStorage().set(this.storageIsInernalKey, this.isInternalNoteMode);
+            } else {
+                this.getSessionStorage().clear(this.storageIsInernalKey);
             }
         },
 
@@ -213,7 +277,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         afterRender: function () {
-            this.$textarea = this.$el.find('textarea.note');
+            this.$textarea = this.$el.find('textarea[data-name="post"]');
             this.$attachments = this.$el.find('div.attachments');
             this.$postContainer = this.$el.find('.post-container');
 
@@ -224,6 +288,10 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
             if (storedText && storedText.length) {
                 this.hasStoredText = true;
                 this.$textarea.val(storedText);
+            }
+
+            if (this.isInternalNoteMode) {
+                this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
             }
 
             $textarea.off('drop');
@@ -308,33 +376,77 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                         });
                     },
                     template: function (mention) {
-                        return mention.name + ' <span class="text-muted">@' + mention.userName + '</span>';
-                    },
+                        return this.getHelper().escapeString(mention.name) + ' <span class="text-muted">@' + this.getHelper().escapeString(mention.userName) + '</span>';
+                    }.bind(this),
                     replace: function (o) {
                         return '$1@' + o.userName + '';
                     }
                 }]);
 
                 this.once('remove', function () {
-                    if (this.$textarea.size()) {
+                    if (this.$textarea.length) {
                         this.$textarea.textcomplete('destroy');
                     }
                 }, this);
             }
 
-            $a = this.$el.find('.buttons-panel a.stream-post-info');
+            var $a = this.$el.find('.buttons-panel a.stream-post-info');
+
+            var message = this.getHelper().transfromMarkdownInlineText(
+                this.translate('infoMention', 'messages', 'Stream')
+            ) + '<br><br>' +
+            this.getHelper().transfromMarkdownInlineText(
+                this.translate('infoSyntax', 'messages', 'Stream') + ':'
+            ) + '<br><br>';
+
+            var syntaxItemList = [
+                ['code', '`{text}`'],
+                ['multilineCode', '```{text}```'],
+                ['strongText', '**{text}**'],
+                ['emphasizedText', '*{text}*'],
+                ['deletedText', '~~{text}~~'],
+                ['blockquote', '> {text}'],
+                ['link', '[{text}](url)'],
+            ];
+
+            var messageItemList = [];
+
+            syntaxItemList.forEach(function (item) {
+                var text = this.translate(item[0], 'syntaxItems', 'Stream');
+                var result = item[1].replace('{text}', text);
+                messageItemList.push(result);
+            }, this);
+
+            message += '<ul>' + messageItemList.map(function (item) {
+                return '<li>'+ item + '</li>';
+            }).join('') + '</ul>';
+
 
             $a.popover({
                 placement: 'bottom',
                 container: 'body',
-                content: this.translate('streamPostInfo', 'messages').replace(/(\r\n|\n|\r)/gm, '<br>'),
-                trigger: 'click',
+                content: message,
                 html: true
             }).on('shown.bs.popover', function () {
-                $('body').one('click', function () {
+                $('body').off('click.popover-' + this.id);
+                $('body').on('click.popover-' + this.id , function (e) {
+                    if (e.target.classList.contains('popover-content')) return;
+                    if ($(e.target).closest('.popover-content').get(0)) return;
+                    if ($.contains($a.get(0), e.target)) return;
+                    $('body').off('click.popover-' + this.id);
                     $a.popover('hide');
-                });
+                    e.stopPropagation();
+                }.bind(this));
             });
+
+            $a.on('click', function () {
+                $(this).popover('toggle');
+            });
+
+            this.on('remove', function () {
+                if ($a) $a.popover('destroy')
+                $('body').off('click.popover-' + this.id);
+            }, this);
 
             this.createView('attachments', 'views/stream/fields/attachment-multiple', {
                 model: this.seed,
@@ -363,7 +475,7 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                     return;
                 }
 
-                if (message == '' && this.seed.get('attachmentsIds').length == 0) {
+                if (message == '' && (this.seed.get('attachmentsIds') || []).length == 0) {
                     this.notify('Post cannot be empty', 'error');
                     this.$textarea.prop('disabled', false);
                     return;
@@ -383,10 +495,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
                     this.getSessionStorage().clear(this.storageTextKey);
                     this.getSessionStorage().clear(this.storageAttachmentsKey);
+                    this.getSessionStorage().clear(this.storageIsInernalKey);
                 }, this);
 
                 model.set('post', message);
-                model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds')));
+                model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds') || []));
                 model.set('type', 'Post');
                 model.set('isInternal', this.isInternalNoteMode);
 
@@ -412,8 +525,16 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
         filterList: ['all', 'posts', 'updates'],
 
-        getActionList: function () {
-            var list = [];
+        setupActions: function () {
+            this.actionList = [];
+
+            this.actionList.push({
+                action: 'viewPostList',
+                html: this.translate('View List') + ' &middot; ' + this.translate('posts', 'filters', 'Note')
+            });
+
+            this.actionList.push(false);
+
             this.filterList.forEach(function (item) {
                 var selected = false;
                 if (item == 'all') {
@@ -421,15 +542,28 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
                 } else {
                     selected = item === this.filter;
                 }
-                list.push({
+                this.actionList.push({
                     action: 'selectFilter',
-                    html: '<span class="check-icon glyphicon glyphicon-ok pull-right' + (!selected ? ' hidden' : '') + '"></span><div>' + this.translate(item, 'filters', 'Note') + '</div>',
+                    html: '<span class="check-icon fas fa-check pull-right' + (!selected ? ' hidden' : '') + '"></span><div>' + this.translate(item, 'filters', 'Note') + '</div>',
                     data: {
                         name: item
                     }
                 });
             }, this);
-            return list;
+        },
+
+        actionViewPostList: function () {
+            var url = this.model.name + '/' + this.model.id + '/posts';
+
+            var data = {
+                scope: 'Note',
+                viewOptions: {
+                    url: url,
+                    title: this.translate('Stream') + ' &raquo ' + this.translate('posts', 'filters', 'Note'),
+                    forceSelectAllAttributes: true
+                }
+            };
+            this.actionViewRelatedList(data);
         },
 
         getStoredFilter: function () {
@@ -445,31 +579,11 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
         },
 
         setFilter: function (filter) {
+            this.filter = filter;
             this.collection.data.filter = null;
             if (filter) {
                 this.collection.data.filter = filter;
             }
-        },
-
-        actionSelectFilter: function (data) {
-            var filter = data.name;
-            var filterInternal = filter;
-            if (filter == 'all') {
-                filterInternal = false;
-            }
-            this.storeFilter(filterInternal);
-            this.setFilter(filterInternal);
-
-            this.filterList.forEach(function (item) {
-                var $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
-                if (item === filter) {
-                    $el.removeClass('hidden');
-                } else {
-                    $el.addClass('hidden');
-                }
-            }, this);
-            this.collection.reset();
-            this.collection.fetch();
         },
 
         actionRefresh: function () {
@@ -480,4 +594,3 @@ Espo.define('views/stream/panel', ['views/record/panels/relationship', 'lib!Text
 
     });
 });
-

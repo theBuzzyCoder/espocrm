@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -76,5 +76,30 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $expression = "5 != null";
         $actual = $this->evaluator->process($expression);
         $this->assertTrue($actual);
+    }
+
+    function testSummationOfMultipleIfThenElse()
+    {
+        $expression = "
+            ifThenElse(
+                true,
+                (1 + 0 + 1) - 1 * 0.5,
+                0
+            )
+            +
+            ifThenElse(
+                true,
+                (1 - 0) * 0.5,
+                0
+            )
+            +
+            ifThenElse(
+                true,
+                (1 - 0) * 0.5,
+                0
+            )
+        ";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(2.5, $actual);
     }
 }

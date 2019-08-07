@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nombre",
     "parent": "Padre",
-    "status": "Estátus",
+    "status": "Estatus",
     "dateStart": "Fecha de Comienzo",
     "dateEnd": "Fecha de Finalización",
     "duration": "Duración",
@@ -12,7 +12,8 @@
     "leads": "Referencias",
     "reminders": "Recordatorios",
     "account": "Cuenta",
-    "acceptanceStatus": "Estátus de aprobación"
+    "acceptanceStatus": "Estátus de aprobación",
+    "Acceptance": "Aceptación"
   },
   "options": {
     "status": {
@@ -32,7 +33,7 @@
     "setNotHeld": "Marcar como Pendiente"
   },
   "labels": {
-    "Create Meeting": "Crear Junta",
+    "Create Meeting": "Crear Presentación",
     "Set Held": "Marcar como Retenida",
     "Set Not Held": "Marcar como Pendiente",
     "Send Invitations": "Enviar Invitaciones",

@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,5 +41,19 @@ class Lead extends \Espo\Core\ORM\Repositories\RDB
         	$this->relate($entity, 'targetLists', $entity->get('targetListId'));
         }
     }
-}
 
+    public function handleSelectParams(&$params)
+    {
+        parent::handleSelectParams($params);
+        if (array_key_exists('select', $params)) {
+            if (in_array('name', $params['select'])) {
+                $additionalAttributeList = ['emailAddress', 'phoneNumber', 'accountName'];
+                foreach ($additionalAttributeList as $attribute) {
+                    if (!in_array($attribute, $params['select'])) {
+                        $params['select'][] = $attribute;
+                    }
+                }
+            }
+        }
+    }
+}

@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -35,25 +35,30 @@ class Link extends Base
     {
         $fieldParams = $this->getFieldParams();
 
-        $data = array(
-            $entityName => array (
-                'fields' => array(
-                    $fieldName.'Id' => array(
+        $data = [
+            $entityName => [
+                'fields' => [
+                    $fieldName.'Id' => [
                         'type' => 'foreignId',
-                        'index' => $fieldName
-                    ),
-                    $fieldName.'Name' => array(
+                        'index' => $fieldName,
+                        'attributeRole' => 'id',
+                        'fieldType' => 'link',
+                    ],
+                    $fieldName.'Name' => [
                         'type' => 'varchar',
-                        'notStorable' => true
-                    )
-                )
-            ),
-            'unset' => array(
-                $entityName => array(
-                    'fields.'.$fieldName
-                )
-            )
-        );
+                        'notStorable' => true,
+                        'attributeRole' => 'name',
+                        'fieldType' => 'link',
+                    ]
+                ]
+            ],
+            'unset' => [
+                $entityName => [
+                    'fields.' . $fieldName
+                ]
+            ]
+        ];
+
         if (!empty($fieldParams['notStorable'])) {
             $data[$entityName]['fields'][$fieldName.'Id']['notStorable'] = true;
         }

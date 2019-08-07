@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,6 +29,12 @@
 Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', function (Dep) {
 
     return Dep.extend({
+
+        dataUrl: 'MassEmail/action/smtpAccountDataList',
+
+        getAttributeList: function () {
+            return [this.name, 'inboundEmailId'];
+        },
 
         setupOptions: function () {
             Dep.prototype.setupOptions.call(this);
@@ -59,10 +65,14 @@ Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', fun
 
         getValueForDisplay: function () {
             if (!this.model.has(this.name)) {
-                if (this.model.get('inboundEmailId')) {
-                    return 'inboundEmail:' + this.model.get('inboundEmailId');
+                if (this.model.has('inboundEmailId')) {
+                    if (this.model.get('inboundEmailId')) {
+                        return 'inboundEmail:' + this.model.get('inboundEmailId');
+                    } else {
+                        return 'system';
+                    }
                 } else {
-                    return 'system';
+                    return '...';
                 }
             }
 
@@ -73,7 +83,7 @@ Espo.define('crm:views/mass-email/fields/smtp-account', 'views/fields/enum', fun
             Dep.prototype.setup.call(this);
 
             if (this.getAcl().checkScope('MassEmail', 'create') || this.getAcl().checkScope('MassEmail', 'edit')) {
-                this.ajaxGetRequest('MassEmail/action/smtpAccountDataList').then(function (dataList) {
+                this.ajaxGetRequest(this.dataUrl).then(function (dataList) {
                     if (!dataList.length) return;
                     this.loadedOptionList = [];
                     this.loadedOptionTranslations = {};

@@ -3,6 +3,7 @@
         "name": "Name",
         "userName": "User Name",
         "title": "Title",
+        "type": "Type",
         "isAdmin": "Is Admin",
         "defaultTeam": "Default Team",
         "emailAddress": "Email",
@@ -16,6 +17,7 @@
         "passwordConfirm": "Confirm Password",
         "newPassword": "New Password",
         "newPasswordConfirm": "Confirm New Password",
+        "yourPassword": "Your current password",
         "avatar": "Avatar",
         "isActive": "Is Active",
         "isPortalUser": "Is Portal User",
@@ -29,9 +31,17 @@
         "ipAddress": "IP Address",
         "passwordPreview": "Password Preview",
         "isSuperAdmin": "Is Super Admin",
-        "lastAccess": "Last Access"
+        "lastAccess": "Last Access",
+        "apiKey": "API Key",
+        "secretKey": "Secret Key",
+        "dashboardTemplate": "Dashboard Template",
+        "authMethod": "Authentication Method",
+        "auth2FA": "Enable 2-Factor Authentication",
+        "auth2FAMethod": "2FA Method",
+        "auth2FATotpSecret": "2FA TOTP Secret"
     },
     "links": {
+        "defaultTeam": "Default Team",
         "teams": "Teams",
         "roles": "Roles",
         "notes": "Notes",
@@ -56,7 +66,13 @@
         "Email Accounts": "Email Accounts",
         "Portal": "Portal",
         "Create Portal User": "Create Portal User",
-        "Proceed w/o Contact": "Proceed w/o Contact"
+        "Proceed w/o Contact": "Proceed w/o Contact",
+        "Generate New API Key": "Generate New API Key",
+        "Code": "Code",
+        "Back to login form": "Back to login form",
+        "Security": "Security",
+        "Code": "Code",
+        "Secret": "Secret"
     },
     "tooltips": {
         "defaultTeam": "All records created by this user will be related to this team by default.",
@@ -70,10 +86,6 @@
     },
     "messages": {
         "passwordWillBeSent": "Password will be sent to user's email address.",
-        "accountInfoEmailSubject": "EspoCRM User Access Info",
-        "accountInfoEmailBody": "Your access information:\n\nUsername: {userName}\nPassword: {password}\n\n{siteUrl}",
-        "passwordChangeLinkEmailSubject": "Change Password Request",
-        "passwordChangeLinkEmailBody": "You can change your password by following this link {link}. This unique URL will be expired soon.",
         "passwordChanged": "Password has been changed",
         "userCantBeEmpty": "Username can not be empty",
         "wrongUsernamePasword": "Wrong username/password",
@@ -82,8 +94,13 @@
         "forbidden": "Forbidden, please try later",
         "uniqueLinkHasBeenSent": "The unique URL has been sent to the specified email address.",
         "passwordChangedByRequest": "Password has been changed.",
-        "setupSmtpBefore": "You need to setup <a href=\"{url}\">SMTP settings</a> to make the system be able to send password in email.",
-        "userNameExists": "User Name already exists"
+        "setupSmtpBefore": "You need to setup [SMTP settings]({url}) to make the system be able to send password in email.",
+        "userNameExists": "User Name already exists",
+        "wrongCode": "Wrong code",
+        "codeIsRequired": "Code is required",
+        "enterTotpCode": "Enter a code from your authenticator app.",
+        "verifyTotpCode": "Scan the QR-code with your mobile authenticator app. If you have a trouble with scanning, you can enter the secret manually. After that you will see a 6-digit code in your application. Enter this code in the field below.",
+        "securityResetConfimation": "Are you sure you want to reset security settings?"
     },
     "options": {
         "gender": {
@@ -91,6 +108,18 @@
             "Male": "Male",
             "Female": "Female",
             "Neutral": "Neutral"
+        },
+        "type": {
+            "regular": "Regular",
+            "admin": "Admin",
+            "portal": "Portal",
+            "system": "System",
+            "super-admin": "Super-Admin",
+            "api": "API"
+        },
+        "authMethod": {
+            "ApiKey": "API Key",
+            "Hmac": "HMAC"
         }
     },
     "boolFilters": {
@@ -98,6 +127,7 @@
     },
     "presetFilters": {
         "active": "Active",
-        "activePortal": "Portal Active"
+        "activePortal": "Portal Active",
+        "activeApi": "API Active"
     }
 }

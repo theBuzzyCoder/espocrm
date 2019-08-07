@@ -3,8 +3,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -38,32 +38,32 @@ class Import extends \Espo\Core\Controllers\Record
 {
     protected function checkControllerAccess()
     {
-        if (!$this->getUser()->isAdmin()) {
+        if (!$this->getAcl()->check('Import')) {
             throw new Forbidden();
         }
     }
 
-    public function actionPatch($params, $data, $request)
+    public function beforePatch()
     {
         throw new BadRequest();
     }
 
-    public function actionUpdate($params, $data, $request)
+    public function beforeUpdate()
     {
         throw new BadRequest();
     }
 
-    public function actionMassUpdate($params, $data, $request)
+    public function beforeMassUpdate()
     {
         throw new BadRequest();
     }
 
-    public function actionCreateLink($params, $data, $request)
+    public function beforeCreateLink()
     {
         throw new BadRequest();
     }
 
-    public function actionRemoveLink($params, $data, $request)
+    public function beforeRemoveLink()
     {
         throw new BadRequest();
     }
@@ -90,13 +90,12 @@ class Import extends \Espo\Core\Controllers\Record
         $attachment->set('type', 'text/csv');
         $attachment->set('role', 'Import File');
         $attachment->set('name', 'import-file.csv');
+        $attachment->set('contents', $contents);
         $this->getEntityManager()->saveEntity($attachment);
 
-        $this->getFileStorageManager()->putContents($attachment, $contents);
-
-        return array(
+        return [
             'attachmentId' => $attachment->id
-        );
+        ];
     }
 
     public function actionRevert($params, $data, $request)
@@ -127,7 +126,7 @@ class Import extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        if (!isset($data->fieldDelimiter)) {
+        if (!isset($data->delimiter)) {
             throw new BadRequest();
         }
 
@@ -167,7 +166,7 @@ class Import extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        if (!isset($data->fields)) {
+        if (!isset($data->attributeList)) {
             throw new BadRequest();
         }
 
@@ -176,9 +175,9 @@ class Import extends \Espo\Core\Controllers\Record
            $timezone = $data->timezone;
         }
 
-        $importParams = array(
+        $importParams = [
             'headerRow' => !empty($data->headerRow),
-            'fieldDelimiter' => $data->fieldDelimiter,
+            'delimiter' => $data->delimiter,
             'textQualifier' => $data->textQualifier,
             'dateFormat' => $data->dateFormat,
             'timeFormat' => $data->timeFormat,
@@ -189,8 +188,9 @@ class Import extends \Espo\Core\Controllers\Record
             'defaultValues' => $data->defaultValues,
             'action' => $data->action,
             'skipDuplicateChecking' => !empty($data->skipDuplicateChecking),
-            'idleMode' => !empty($data->idleMode)
-        );
+            'idleMode' => !empty($data->idleMode),
+            'silentMode' => !empty($data->silentMode),
+        ];
 
         if (property_exists($data, 'updateBy')) {
             $importParams['updateBy'] = $data->updateBy;
@@ -202,7 +202,7 @@ class Import extends \Espo\Core\Controllers\Record
             throw new Forbidden();
         }
 
-        return $this->getService('Import')->import($data->entityType, $data->fields, $attachmentId, $importParams);
+        return $this->getService('Import')->import($data->entityType, $data->attributeList, $attachmentId, $importParams);
     }
 
     public function postActionUnmarkAsDuplicate($params, $data)

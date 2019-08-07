@@ -23,6 +23,7 @@
         "Portals": "Portals",
         "Portal Roles": "Portal Roles",
         "Portal Users": "Portal Users",
+        "API Users": "API Users",
         "Outbound Emails": "Outbound Emails",
         "Group Email Accounts": "Group Email Accounts",
         "Personal Email Accounts": "Personal Email Accounts",
@@ -37,6 +38,8 @@
         "Currency": "Currency",
         "Integrations": "Integrations",
         "Extensions": "Extensions",
+        "Webhooks": "Webhooks",
+        "Dashboard Templates": "Dashboard Templates",
         "Upload": "Upload",
         "Installing...": "Installing...",
         "Upgrading...": "Upgrading...",
@@ -57,7 +60,19 @@
         "Reset to Default": "Reset to Default",
         "Email Filters": "Email Filters",
         "Action History": "Action History",
-        "Label Manager": "Label Manager"
+        "Label Manager": "Label Manager",
+        "Template Manager": "Template Manager",
+        "Lead Capture": "Lead Capture",
+        "Attachments": "Attachments",
+        "System Requirements": "System Requirements",
+        "PDF Templates": "PDF Templates",
+        "PHP Settings": "PHP Settings",
+        "Database Settings": "Database Settings",
+        "Permissions": "Permissions",
+        "Success": "Success",
+        "Fail": "Fail",
+        "is recommended": "is recommended",
+        "extension is missing": "extension is missing"
     },
     "layouts": {
         "list": "List",
@@ -139,6 +154,7 @@
         "noEmptyString": "Empty string value is not allowed",
         "defaultType": "Default Type",
         "seeMoreDisabled": "Disable Text Cut",
+        "cutHeight": "Cut Height (px)",
         "entityList": "Entity List",
         "isSorted": "Is Sorted (alphabetically)",
         "audited": "Audited",
@@ -162,29 +178,40 @@
         "readOnly": "Read-only",
         "maxFileSize": "Max File Size (Mb)",
         "isPersonalData": "Is Personal Data",
-        "useIframe": "Use Iframe"
+        "useIframe": "Use Iframe",
+        "useNumericFormat": "Use Numeric Format",
+        "strip": "Strip",
+        "minuteStep": "Minutes Step",
+        "inlineEditDisabled": "Disable Inline Edit",
+        "allowCustomOptions": "Allow Custom Options",
+        "displayAsLabel": "Display as Label",
+        "maxCount": "Max Item Count",
+        "displayRawText": "Display raw text (no markdown)"
     },
     "messages": {
-        "upgradeVersion": "EspoCRM will be upgraded to version <strong>{version}</strong>. Please be patient as this may take a while.",
-        "upgradeDone": "EspoCRM has been upgraded to version <strong>{version}</strong>.",
+        "upgradeVersion": "EspoCRM will be upgraded to version **{version}**. Please be patient as this may take a while.",
+        "upgradeDone": "EspoCRM has been upgraded to version **{version}**.",
         "upgradeBackup": "We recommend making a backup of your EspoCRM files and data before upgrading.",
         "thousandSeparatorEqualsDecimalMark": "The thousands separator character can not be the same as the decimal point character.",
         "userHasNoEmailAddress": "User has no email address.",
         "selectEntityType": "Select entity type in the left menu.",
         "selectUpgradePackage": "Select upgrade package",
-        "downloadUpgradePackage": "Download upgrade package(s) <a href=\"{url}\">here</a>.",
+        "downloadUpgradePackage": "Download upgrade package(s) [here]({url}).",
         "selectLayout": "Select needed layout in the left menu and edit it.",
         "selectExtensionPackage": "Select extension package",
         "extensionInstalled": "Extension {name} {version} has been installed.",
         "installExtension": "Extension {name} {version} is ready for an installation.",
-        "cronIsNotConfigured": "Scheduled jobs are not running.  Hence inbound emails, notifications and reminders are not working. Please follow the <a target=\"_blank\" href=\"https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab\">instructions</a> to setup cron job.",
+        "cronIsNotConfigured": "Scheduled jobs are not running.  Hence inbound emails, notifications and reminders are not working. Please follow the [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) to setup cron job.",
         "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available.",
-        "newExtensionVersionIsAvailable": "New release {latestVersion} of {extensionName} is available.",
-        "uninstallConfirmation": "Are you sure you want to uninstall the extension?"
+        "newExtensionVersionIsAvailable": "New {extensionName} version {latestVersion} is available.",
+        "uninstallConfirmation": "Are you sure you want to uninstall the extension?",
+        "upgradeInfo": "Check the [documentation]({url}) about how to upgrade your EspoCRM instance.",
+        "upgradeRecommendation": "This way of upgrading is not recommended. It's better to upgrade from CLI."
     },
     "descriptions": {
         "settings": "System settings of application.",
         "scheduledJob": "Jobs which are executed by cron.",
+        "jobs": "Jobs execute tasks in the background.",
         "upgrade": "Upgrade EspoCRM.",
         "clearCache": "Clear all backend cache.",
         "rebuild": "Rebuild backend and clear cache.",
@@ -212,7 +239,15 @@
         "emailFilters": "Email messages that match the specified filter won't be imported.",
         "actionHistory": "Log of user actions.",
         "labelManager": "Customize application labels.",
-        "authLog": "Login history."
+        "templateManager": "Customize message templates.",
+        "authLog": "Login history.",
+        "leadCapture": "API entry points for Web-to-Lead.",
+        "attachments": "All file attachments stored in the system.",
+        "systemRequirements": "System Requirements for EspoCRM.",
+        "apiUsers": "Separate users for integration purposes.",
+        "webhooks": "Manage webhooks.",
+        "dashboardTemplates": "Deploy dashboards to users.",
+        "pdfTemplates": "Templates for printing to PDF."
     },
     "options": {
         "previewSize": {
@@ -226,5 +261,26 @@
         "and": "AND",
         "or": "OR",
         "not": "NOT"
+    },
+    "systemRequirements": {
+        "requiredPhpVersion": "PHP Version",
+        "requiredMysqlVersion": "MySQL Version",
+        "requiredMariadbVersion": "MariaDB version",
+        "host": "Host Name",
+        "dbname": "Database Name",
+        "user": "User Name",
+        "writable": "Writable",
+        "readable": "Readable"
+    },
+    "templates": {
+        "accessInfo": "Access Info",
+        "accessInfoPortal": "Access Info for Portals",
+        "assignment": "Assignment",
+        "mention": "Mention",
+        "noteEmailRecieved": "Note about Recieved Email",
+        "notePost": "Note about Post",
+        "notePostNoParent": "Note about Post (no Parent)",
+        "noteStatus": "Note about Status Update",
+        "passwordChangeLink": "Password Change Link"
     }
 }

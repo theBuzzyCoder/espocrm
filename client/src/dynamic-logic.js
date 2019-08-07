@@ -2,8 +2,8 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2018 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
- * Website: http://www.espocrm.com
+ * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('dynamic-logic', [], function () {
+define('dynamic-logic', [], function () {
 
     var DynamicLogic = function (defs, recordView) {
         this.defs = defs || {};
@@ -176,7 +176,7 @@ Espo.define('dynamic-logic', [], function () {
             } else if (type === 'contains' || type === 'has') {
                 if (!setValue) return false;
                 return !!~setValue.indexOf(value);
-            } else if (type === 'notContains' || type === 'hasNot') {
+            } else if (type === 'notContains' || type === 'notHas') {
                 if (!setValue) return true;
                 return !~setValue.indexOf(value);
             } else if (type === 'greaterThan') {
@@ -263,10 +263,17 @@ Espo.define('dynamic-logic', [], function () {
 
         makePanelVisibleFalse: function (field) {
             this.recordView.hidePanel(field);
+        },
+
+        addPanelVisibleCondition: function (name, item) {
+            this.defs.panels = this.defs.panels || {};
+            this.defs.panels[name] = {
+                visible: item
+            };
+            this.processPanel(name, 'visible');
         }
 
     });
 
     return DynamicLogic;
 });
-
