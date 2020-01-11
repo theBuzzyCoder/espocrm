@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
+define('views/email/record/row-actions/default', 'views/record/row-actions/default', function (Dep) {
 
     return Dep.extend({
 
@@ -49,6 +49,20 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
                     id: this.model.id
                 }
             }];
+
+            if (
+                this.model.get('createdById') === this.getUser().id && this.model.get('status') === 'Draft' &&
+                !this.model.get('inTrash')
+            ) {
+                list.push({
+                    action: 'send',
+                    label: 'Send',
+                    data: {
+                        id: this.model.id,
+                    },
+                });
+            }
+
             if (this.options.acl.edit) {
                 list = list.concat([
                     {
@@ -60,6 +74,7 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
                     }
                 ]);
             }
+
             if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
                 if (!this.model.get('inTrash')) {
                     list.push({
@@ -123,7 +138,7 @@ Espo.define('views/email/record/row-actions/default', 'views/record/row-actions/
                 });
             }
             return list;
-        }
+        },
 
     });
 });

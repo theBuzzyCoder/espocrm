@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -37,6 +37,7 @@ class PortalRole extends Record
     {
         parent::init();
         $this->addDependency('fileManager');
+        $this->addDependency('dataManager');
     }
 
     protected $forceSelectAllAttributes = true;
@@ -56,6 +57,6 @@ class PortalRole extends Record
     protected function clearRolesCache()
     {
         $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
+        $this->getInjection('dataManager')->updateCacheTimestamp();
     }
 }
-

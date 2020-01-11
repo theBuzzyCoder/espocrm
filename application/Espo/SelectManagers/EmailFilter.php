@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,37 +33,37 @@ class EmailFilter extends \Espo\Core\SelectManagers\Base
 {
     protected function boolFilterOnlyMy(&$result)
     {
-        $this->accessOnlyOwn($result);
+        $part = [];
+        $part[] = [
+            'parentType' => 'User',
+            'parentId' => $this->getUser()->id
+        ];
+
+        $idList = [];
+        $emailAccountList = $this->getEntityManager()->getRepository('EmailAccount')->where([
+            'assignedUserId' => $this->getUser()->id
+        ])->find();
+        foreach ($emailAccountList as $emailAccount) {
+            $idList[] = $emailAccount->id;
+        }
+
+        if (count($idList)) {
+            $part = [
+                'OR' => [
+                    $part,
+                    [
+                        'parentType' => 'EmailAccount',
+                        'parentId' => $idList
+                    ]
+                ]
+            ];
+        }
+
+        return $part;
     }
 
     protected function accessOnlyOwn(&$result)
     {
-        $d = array();
-        $d[] = array(
-            'parentType' => 'User',
-            'parentId' => $this->getUser()->id
-        );
-
-        $idList = [];
-        $emailAccountList = $this->getEntityManager()->getRepository('EmailAccount')->where(array(
-            'assignedUserId' => $this->getUser()->id
-        ))->find();
-        foreach ($emailAccountList as $emailAccount) {
-            $idList = $emailAccount->id;
-        }
-
-        if (count($idList)) {
-            $d = array(
-                'OR' => array(
-                    $d,
-                    array(
-                        'parentType' => 'EmailAccount',
-                        'parentId' => $idList
-                    )
-                )
-
-            );
-        }
-        $result['whereClause'][] = $d;
+        $result['whereClause'][] = $this->boolFilterOnlyMy($result);
     }
 }

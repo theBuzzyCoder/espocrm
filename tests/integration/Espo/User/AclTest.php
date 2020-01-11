@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -45,11 +45,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $metadata->save();
     }
 
-    /**
-     * @expectedException \Espo\Core\Exceptions\Forbidden
-     */
     public function testUserAccess()
     {
+        $this->expectException('\\Espo\\Core\\Exceptions\\Forbidden');
+
         $this->createUser('tester', array(
             'assignmentPermission' => 'team',
             'userPermission' => 'team',
@@ -86,11 +85,10 @@ class AclTest extends \tests\integration\Core\BaseTestCase
         $result = $controllerManager->process('Account', 'create', $params, $data, $request);
     }
 
-    /**
-     * @expectedException \Espo\Core\Exceptions\Forbidden
-     */
     public function testPortalUserAccess()
     {
+        $this->expectException('\\Espo\\Core\\Exceptions\\Forbidden');
+
         $newUser = $this->createUser(array(
                 'userName' => 'tester',
                 'lastName' => 'tester',

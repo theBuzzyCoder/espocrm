@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -236,19 +236,6 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
             }
         },
 
-        handleRepliesField: function () {
-            if ((this.model.get('repliesIds') || []).length == 0) {
-                this.hideField('replies');
-            } else {
-                this.showField('replies');
-            }
-            if (!this.model.get('repliedId')) {
-                this.hideField('replied');
-            } else {
-                this.showField('replied');
-            }
-        },
-
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
@@ -269,11 +256,6 @@ define('views/email/record/detail', 'views/record/detail', function (Dep) {
                 this.handleBccField();
                 this.listenTo(this.model, 'change:bcc', function () {
                     this.handleBccField();
-                }, this);
-
-                this.handleRepliesField();
-                this.listenTo(this.model, 'change:repliesIds', function () {
-                    this.handleRepliesField();
                 }, this);
             }
         },

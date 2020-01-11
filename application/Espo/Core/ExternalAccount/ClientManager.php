@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -69,7 +69,13 @@ class ClientManager
             $externalAccountEntity = $this->clientMap[$hash]['externalAccountEntity'];
             $externalAccountEntity->set('accessToken', $data['accessToken']);
             $externalAccountEntity->set('tokenType', $data['tokenType']);
-            $this->getEntityManager()->saveEntity($externalAccountEntity, ['isTokenRenewal' => true]);
+
+            $copy = $this->getEntityManager()->getEntity('ExternalAccount', $externalAccountEntity->id);
+            if ($copy) {
+                $copy->set('accessToken', $data['accessToken']);
+                $copy->set('tokenType', $data['tokenType']);
+                $this->getEntityManager()->saveEntity($copy, ['isTokenRenewal' => true]);
+            }
         }
     }
 

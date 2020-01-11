@@ -1,4 +1,6 @@
-<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a> &raquo {{translate 'Upgrade' scope='Admin'}}</h3></div>
+<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a>
+<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+{{translate 'Upgrade' scope='Admin'}}</h3></div>
 
 <div class="row">
 <div class="col-md-8">
@@ -20,7 +22,7 @@
         <h4 class="panel-title">{{translate 'selectUpgradePackage' scope='Admin' category="messages"}}</h4>
     </div>
     <div class="panel-body">
-        <p class="text-danger">{{{upgradeRecommendation}}}</p>
+        <p class="text-danger" style="font-weight: 600;">{{{upgradeRecommendation}}}</p>
         <p class="">
             {{complexText downloadMsg inline=true}}
         </p>

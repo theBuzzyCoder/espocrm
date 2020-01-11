@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
+define('views/fields/link-parent', 'views/fields/base', function (Dep) {
 
     return Dep.extend({
 
@@ -65,6 +65,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             if ((this.mode == 'detail' || this.mode == 'list' && this.displayScopeColorInListMode) && this.foreignScope) {
                 iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
             }
+
             return _.extend({
                 idName: this.idName,
                 nameName: this.nameName,
@@ -102,11 +103,6 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
             this.foreignScopeList = Espo.Utils.clone(this.foreignScopeList).filter(function (item) {
                 if (!this.getMetadata().get(['scopes', item, 'disabled'])) return true;
             }, this);
-
-
-            if (this.mode == 'edit' && this.foreignScopeList.length == 0) {
-                throw new Error('Bad parent link defenition. Model list is empty.');
-            }
 
             this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
 
@@ -186,7 +182,7 @@ Espo.define('views/fields/link-parent', 'views/fields/base', function (Dep) {
         },
 
         select: function (model) {
-            this.$elementName.val(model.get('name'));
+            this.$elementName.val(model.get('name') || model.id);
             this.$elementId.val(model.get('id'));
             this.trigger('change');
         },

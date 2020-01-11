@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -76,6 +76,10 @@ define('ui', [], function () {
         }
 
         this.id = 'dialog-' + Math.floor((Math.random() * 100000));
+
+        if (typeof this.backdrop === 'undefined') {
+            this.backdrop = 'static';
+        }
 
         this.contents = '';
         if (this.header) {
@@ -156,9 +160,11 @@ define('ui', [], function () {
                 diffHeight = diffHeight + options.bodyDiffHeight;
             }
 
+            var h = $window.height();
+
             if (this.fitHeight || options.fullHeight) {
                 var processResize = function () {
-                    var windowHeight = $window.height();
+                    var windowHeight = window.innerHeight;
                     var windowWidth = $window.width();
 
                     if (!options.fullHeight && windowHeight < 512) {
@@ -174,6 +180,7 @@ define('ui', [], function () {
                     };
                     if (options.fullHeight) {
                         cssParams.height = (windowHeight - diffHeight) + 'px';
+
                         this.$el.css('paddingRight', 0);
                     } else {
                         if (windowWidth <= options.screenWidthXs) {
@@ -333,6 +340,7 @@ define('ui', [], function () {
         this.onRemove();
         this.$el.remove();
         $(this).off();
+        $(window).off('resize.modal-height');
     };
 
     var Ui = Espo.Ui = Espo.ui = {
@@ -340,55 +348,97 @@ define('ui', [], function () {
         Dialog: Dialog,
 
         confirm: function (message, o, callback, context) {
+            o = o || {};
             var confirmText = o.confirmText;
             var cancelText = o.cancelText;
             var confirmStyle = o.confirmStyle || 'danger';
 
-            var dialog = new Dialog({
-                backdrop: ('backdrop' in o) ? o.backdrop : false,
-                header: false,
-                className: 'dialog-confirm',
-                body: '<span class="confirm-message">' + message + '</a>',
-                buttonList: [
-                    {
-                        text: ' ' + confirmText + ' ',
-                        name: 'confirm',
-                        onClick: function () {
-                            if (context) {
-                                callback.call(context);
-                            } else {
-                                callback();
-                            }
-                            dialog.close();
-                        },
-                        style: confirmStyle,
-                        pullLeft: true
-                    },
-                    {
-                        text: cancelText,
-                        name: 'cancel',
-                        onClick: function () {
-                            dialog.close();
-                            if (o.cancelCallback) {
-                                if (context) {
-                                    o.cancelCallback.call(context);
-                                } else {
-                                    o.cancelCallback();
+            var backdrop = o.backdrop;
+            if (typeof backdrop === 'undefined') {
+                backdrop = false;
+            }
+
+            return new Promise(function (resolve) {
+                var dialog = new Dialog({
+                    backdrop: backdrop,
+                    header: false,
+                    className: 'dialog-confirm',
+                    body: '<span class="confirm-message">' + message + '</a>',
+                    buttonList: [
+                        {
+                            text: ' ' + confirmText + ' ',
+                            name: 'confirm',
+                            onClick: function () {
+                                if (callback) {
+                                    if (context) {
+                                        callback.call(context);
+                                    } else {
+                                        callback();
+                                    }
                                 }
-                            }
+                                resolve();
+                                dialog.close();
+                            },
+                            style: confirmStyle,
+                            pullLeft: true,
                         },
-                        pullRight: true
-                    }
-                ]
+                        {
+                            text: cancelText,
+                            name: 'cancel',
+                            onClick: function () {
+                                dialog.close();
+                                if (o.cancelCallback) {
+                                    if (context) {
+                                        o.cancelCallback.call(context);
+                                    } else {
+                                        o.cancelCallback();
+                                    }
+                                }
+                            },
+                            pullRight: true,
+                        }
+                    ]
+                });
+
+                dialog.show();
+                dialog.$el.find('button[data-name="confirm"]').focus();
             });
-
-            dialog.show();
-
-            dialog.$el.find('button[data-name="confirm"]').focus();
         },
 
         dialog: function (options) {
             return new Dialog(options);
+        },
+
+        popover: function ($el, o, view) {
+            $el.popover({
+                placement: o.placement || 'bottom',
+                container: o.container || 'body',
+                html: true,
+                content: o.content || o.text,
+                trigger: o.trigger || 'manual',
+            }).on('shown.bs.popover', function () {
+                if (view) {
+                    $('body').off('click.popover-' + view.cid);
+                    $('body').on('click.popover-' + view.cid, function (e) {
+                        if ($(e.target).closest('.popover-content').get(0)) return;
+                        if ($.contains($el.get(0), e.target)) return;
+                        if ($el.get(0) === e.target) return;
+                        $('body').off('click.popover-' + view.cid);
+                        $el.popover('hide');
+                    });
+                }
+            });
+
+            if (view) {
+                view.on('remove', function () {
+                    $el.popover('destroy');
+                    $('body').off('click.popover-' + view.cid);
+                });
+                view.on('render', function () {
+                    $el.popover('destroy');
+                    $('body').off('click.popover-' + view.cid);
+                });
+            }
         },
 
         notify: function (message, type, timeout, closeButton) {

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -70,9 +70,18 @@ class Base
 
     protected $selectAttributesDependancyMap = [];
 
-    const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
+    protected $fullTextOrderType = self::FT_ORDER_COMBINTED;
 
+    protected $fullTextRelevanceThreshold = null;
+
+    const FT_ORDER_COMBINTED = 0;
+    const FT_ORDER_RELEVANCE = 1;
+    const FT_ORDER_ORIGINAL = 3;
+
+    const MIN_LENGTH_FOR_CONTENT_SEARCH = 4;
     const MIN_LENGTH_FOR_FULL_TEXT_SEARCH = 4;
+
+    protected $fullTextOrderRelevanceDivider = 5;
 
     protected $fullTextSearchDataCacheHash = [];
 
@@ -157,7 +166,7 @@ class Base
         if (!empty($sortBy)) {
             $result['orderBy'] = $sortBy;
             $type = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'fields', $sortBy, 'type']);
-            if (in_array($type, ['link', 'file', 'image'])) {
+            if (in_array($type, ['link', 'file', 'image', 'linkOne'])) {
                 $result['orderBy'] .= 'Name';
             } else if ($type === 'linkParent') {
                 $result['orderBy'] .= 'Type';
@@ -183,6 +192,12 @@ class Base
                     }
                     $result['orderBy'] = 'LIST:' . $sortBy . ':' . implode(',', $list);
                     return;
+                }
+            } else {
+                if (strpos($sortBy, '.') === false && strpos($sortBy, ':') === false) {
+                    if (!$this->getSeed()->hasAttribute($sortBy)) {
+                        throw new Error("Order by non-existing field '{$sortBy}'.");
+                    }
                 }
             }
         }
@@ -216,16 +231,15 @@ class Base
     {
         $this->prepareResult($result);
 
+        $boolFilterList = [];
+
         foreach ($where as $item) {
             if (!isset($item['type'])) continue;
 
             if ($item['type'] == 'bool' && !empty($item['value']) && is_array($item['value'])) {
+                $boolOr = [];
                 foreach ($item['value'] as $filter) {
-                    $p = $this->getBoolFilterWhere($filter);
-                    if (!empty($p)) {
-                        $where[] = $p;
-                    }
-                    $this->applyBoolFilter($filter, $result);
+                    $boolFilterList[] = $filter;
                 }
             } else if ($item['type'] == 'textFilter') {
                 if (isset($item['value']) || $item['value'] !== '') {
@@ -234,6 +248,10 @@ class Base
             } else if ($item['type'] == 'primary' && !empty($item['value'])) {
                 $this->applyPrimaryFilter($item['value'], $result);
             }
+        }
+
+        if (count($boolFilterList)) {
+            $this->applyBoolFilterList($boolFilterList, $result);
         }
 
         $whereClause = $this->convertWhere($where, false, $result);
@@ -351,12 +369,16 @@ class Base
         if ($relationType == 'belongsTo') {
             $key = $seed->getRelationParam($link, 'key');
 
-            $aliasName = 'usersTeams' . ucfirst($link);
+            $aliasName = 'usersTeams' . ucfirst($link) . strval(rand(10000, 99999));
 
-            $result['customJoin'] .= "
-                JOIN team_user AS {$aliasName}Middle ON {$aliasName}Middle.user_id = ".$query->toDb($seed->getEntityType()).".".$query->toDb($key)." AND {$aliasName}Middle.deleted = 0
-                JOIN team AS {$aliasName} ON {$aliasName}.deleted = 0 AND {$aliasName}Middle.team_id = {$aliasName}.id
-            ";
+            $this->addLeftJoin([
+                'TeamUser',
+                $aliasName . 'Middle',
+                [
+                    $aliasName . 'Middle.userId:' => $key,
+                    $aliasName . 'Middle.deleted' => false,
+                ]
+            ], $result);
 
             $result['whereClause'][] = [
                 $aliasName . 'Middle.teamId' => $idsValue
@@ -552,16 +574,16 @@ class Base
             return;
         }
 
-        $d = [
+        $or = [
             'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams')
         ];
         if ($this->hasAssignedUserField()) {
-            $d['assignedUserId'] = $this->getUser()->id;
+            $or['assignedUserId'] = $this->getUser()->id;
         } else if ($this->hasCreatedByField()) {
-            $d['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->id;
         }
         $result['whereClause'][] = [
-            'OR' => $d
+            'OR' => $or
         ];
     }
 
@@ -580,38 +602,42 @@ class Base
 
     protected function accessPortalOnlyContact(&$result)
     {
-        $d = [];
+        $or = [];
 
         $contactId = $this->getUser()->get('contactId');
 
         if ($contactId) {
-            if ($this->getSeed()->hasAttribute('contactId')) {
-                $d['contactId'] = $contactId;
+            if (
+                $this->getSeed()->hasAttribute('contactId') && $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
+            ) {
+                $or['contactId'] = $contactId;
             }
-            if ($this->getSeed()->hasRelation('contacts')) {
+            if (
+                $this->getSeed()->hasRelation('contacts') && $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
+            ) {
                 $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
                 $this->setDistinct(true, $result);
-                $d['contactsAccess.id'] = $contactId;
+                $or['contactsAccess.id'] = $contactId;
             }
         }
 
         if ($this->getSeed()->hasAttribute('createdById')) {
-            $d['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->id;
         }
 
         if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
             $contactId = $this->getUser()->get('contactId');
             if ($contactId) {
-                $d[] = [
+                $or[] = [
                     'parentType' => 'Contact',
                     'parentId' => $contactId
                 ];
             }
         }
 
-        if (!empty($d)) {
+        if (!empty($or)) {
             $result['whereClause'][] = [
-                'OR' => $d
+                'OR' => $or
             ];
         } else {
             $result['whereClause'][] = [
@@ -622,27 +648,31 @@ class Base
 
     protected function accessPortalOnlyAccount(&$result)
     {
-        $d = [];
+        $or = [];
 
         $accountIdList = $this->getUser()->getLinkMultipleIdList('accounts');
         $contactId = $this->getUser()->get('contactId');
 
         if (count($accountIdList)) {
-            if ($this->getSeed()->hasAttribute('accountId')) {
-                $d['accountId'] = $accountIdList;
+            if (
+                $this->getSeed()->hasAttribute('accountId') && $this->getSeed()->getRelationParam('account', 'entity') === 'Account'
+            ) {
+                $or['accountId'] = $accountIdList;
             }
-            if ($this->getSeed()->hasRelation('accounts')) {
+            if (
+                $this->getSeed()->hasRelation('accounts') && $this->getSeed()->getRelationParam('accounts', 'entity') === 'Account'
+            ) {
                 $this->addLeftJoin(['accounts', 'accountsAccess'], $result);
                 $this->setDistinct(true, $result);
-                $d['accountsAccess.id'] = $accountIdList;
+                $or['accountsAccess.id'] = $accountIdList;
             }
             if ($this->getSeed()->hasAttribute('parentId') && $this->getSeed()->hasRelation('parent')) {
-                $d[] = [
+                $or[] = [
                     'parentType' => 'Account',
                     'parentId' => $accountIdList
                 ];
                 if ($contactId) {
-                    $d[] = [
+                    $or[] = [
                         'parentType' => 'Contact',
                         'parentId' => $contactId
                     ];
@@ -651,23 +681,27 @@ class Base
         }
 
         if ($contactId) {
-            if ($this->getSeed()->hasAttribute('contactId')) {
-                $d['contactId'] = $contactId;
+            if (
+                $this->getSeed()->hasAttribute('contactId') && $this->getSeed()->getRelationParam('contact', 'entity') === 'Contact'
+            ) {
+                $or['contactId'] = $contactId;
             }
-            if ($this->getSeed()->hasRelation('contacts')) {
+            if (
+                $this->getSeed()->hasRelation('contacts') && $this->getSeed()->getRelationParam('contacts', 'entity') === 'Contact'
+            ) {
                 $this->addLeftJoin(['contacts', 'contactsAccess'], $result);
                 $this->setDistinct(true, $result);
-                $d['contactsAccess.id'] = $contactId;
+                $or['contactsAccess.id'] = $contactId;
             }
         }
 
         if ($this->getSeed()->hasAttribute('createdById')) {
-            $d['createdById'] = $this->getUser()->id;
+            $or['createdById'] = $this->getUser()->id;
         }
 
-        if (!empty($d)) {
+        if (!empty($or)) {
             $result['whereClause'][] = [
-                'OR' => $d
+                'OR' => $or
             ];
         } else {
             $result['whereClause'][] = [
@@ -756,7 +790,7 @@ class Base
 
             $this->order($orderBy, $isDesc, $result);
         } else if (!empty($params['order'])) {
-            $orderBy = $this->getMetadata()->get(['entityDefs', $this->getEntityType(), 'collection', 'orderBy']);
+            $orderBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
             $isDesc = $params['order'] === 'desc';
             $this->order($orderBy, $isDesc, $result);
         }
@@ -774,9 +808,7 @@ class Base
         }
 
         if (!empty($params['boolFilterList']) && is_array($params['boolFilterList'])) {
-            foreach ($params['boolFilterList'] as $filterName) {
-                $this->applyBoolFilter($filterName, $result);
-            }
+            $this->applyBoolFilterList($params['boolFilterList'], $result);
         }
 
         if (!empty($params['filterList']) && is_array($params['filterList'])) {
@@ -805,6 +837,22 @@ class Base
         $this->applyAdditional($params, $result);
 
         return $result;
+    }
+
+    public function applyDefaultOrder(array &$result)
+    {
+        $orderBy = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'orderBy']);
+        $order = $result['order'] ?? null;
+
+        if (!$order && !is_array($orderBy)) {
+            $order = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'order']) ?? null;
+        }
+
+        if ($orderBy) {
+            $this->applyOrder($orderBy, $order, $result);
+        } else {
+            $result['order'] = $order;
+        }
     }
 
     public function checkWhere(array $where, bool $checkWherePermission = true, bool $forbidComplexExpressions = false)
@@ -1602,11 +1650,12 @@ class Base
                     break;
 
                 case 'isNotLinked':
-                    if (!$result) break;
-                    $alias = $attribute . 'IsNotLinkedFilter' . strval(rand(10000, 99999));
-                    $part[$alias . '.id'] = null;
-                    $this->setDistinct(true, $result);
-                    $this->addLeftJoin([$attribute, $alias], $result);
+                    $part['id!=s'] = [
+                        'selectParams' =>  [
+                            'select' => ['id'],
+                            'joins' => [$attribute],
+                        ]
+                    ];
                     break;
 
                 case 'isLinked':
@@ -1696,6 +1745,9 @@ class Base
                 case 'arrayNoneOf':
                 case 'arrayIsEmpty':
                 case 'arrayIsNotEmpty':
+                case 'arrayAllOf':
+                    if (!$result) break;
+
                     $arrayValueAlias = 'arrayFilter' . strval(rand(10000, 99999));
                     $arrayAttribute = $attribute;
                     $arrayEntityType = $this->getEntityType();
@@ -1705,7 +1757,16 @@ class Base
                         list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
                         $seed = $this->getSeed();
                         $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
-                        $idPart = $arrayAttributeLink . '.id';
+
+                        $arrayLinkAlias = $arrayAttributeLink . 'Filter' . strval(rand(10000, 99999));
+                        $idPart = $arrayLinkAlias . '.id';
+
+                        $this->addLeftJoin([$arrayAttributeLink, $arrayLinkAlias], $result);
+
+                        $relationType = $seed->getRelationType($arrayAttributeLink);
+                        if ($relationType === 'manyMany' || $relationType === 'hasMany') {
+                            $this->setDistinct(true, $result);
+                        }
                     }
 
                     if ($type === 'arrayAnyOf') {
@@ -1716,6 +1777,8 @@ class Base
                             $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
                         $part[$arrayValueAlias . '.value'] = $value;
+
+                        $this->setDistinct(true, $result);
                     } else if ($type === 'arrayNoneOf') {
                         if (is_null($value) || !$value && !is_array($value)) break;
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
@@ -1725,6 +1788,8 @@ class Base
                             $arrayValueAlias . '.value=' => $value
                         ]], $result);
                         $part[$arrayValueAlias . '.id'] = null;
+
+                        $this->setDistinct(true, $result);
                     } else if ($type === 'arrayIsEmpty') {
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
                             $arrayValueAlias . '.entityId:' => $idPart,
@@ -1732,6 +1797,8 @@ class Base
                             $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
                         $part[$arrayValueAlias . '.id'] = null;
+
+                        $this->setDistinct(true, $result);
                     } else if ($type === 'arrayIsNotEmpty') {
                         $this->addLeftJoin(['ArrayValue', $arrayValueAlias, [
                             $arrayValueAlias . '.entityId:' => $idPart,
@@ -1739,9 +1806,31 @@ class Base
                             $arrayValueAlias . '.attribute' => $arrayAttribute
                         ]], $result);
                         $part[$arrayValueAlias . '.id!='] = null;
-                    }
 
-                    $this->setDistinct(true, $result);
+                        $this->setDistinct(true, $result);
+                    } else if ($type === 'arrayAllOf') {
+                        if (is_null($value) || !$value && !is_array($value)) break;
+
+                        if (!is_array($value)) {
+                            $value = [$value];
+                        }
+
+                        foreach ($value as $arrayValue) {
+                            $part[] = [
+                                $idPart .'=s' => [
+                                    'entityType' => 'ArrayValue',
+                                    'selectParams' => [
+                                        'select' => ['entityId'],
+                                        'whereClause' => [
+                                            'value' => $arrayValue,
+                                            'attribute' => $arrayAttribute,
+                                            'entityType' => $arrayEntityType,
+                                        ],
+                                    ],
+                                ]
+                            ];
+                        }
+                    }
             }
         }
 
@@ -1760,42 +1849,70 @@ class Base
         $this->limit($offset, $maxSize, $result);
     }
 
-    public function applyPrimaryFilter(string $filterName, array &$result)
+    public function applyPrimaryFilter(string $filter, array &$result)
     {
         $this->prepareResult($result);
 
-        $method = 'filter' . ucfirst($filterName);
+        $method = 'filter' . ucfirst($filter);
         if (method_exists($this, $method)) {
             $this->$method($result);
         } else {
-            $className = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'filters', $filterName, 'className']);
+            $className = $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'filters', $filter, 'className']);
             if ($className) {
                 if (!class_exists($className)) {
-                    $GLOBALS['log']->error("Could find class for filter {$filterName}.");
+                    $GLOBALS['log']->error("Could find class for filter {$filter}.");
                     return;
                 }
                 $impl = $this->getInjectableFactory()->createByClassName($className);
                 if (!$impl) {
-                    $GLOBALS['log']->error("Could not create filter {$filterName} implementation.");
+                    $GLOBALS['log']->error("Could not create filter {$filter} implementation.");
                     return;
                 }
-                $impl->applyFilter($this->entityType, $filterName, $result, $this);
+                $impl->applyFilter($this->entityType, $filter, $result, $this);
             }
         }
     }
 
-    public function applyFilter(string $filterName, array &$result)
+    public function applyFilter(string $filter, array &$result)
     {
-        $this->applyPrimaryFilter($filterName, $result);
+        $this->applyPrimaryFilter($filter, $result);
     }
 
-    public function applyBoolFilter(string $filterName, array &$result)
+    public function applyBoolFilter(string $filter, array &$result)
     {
         $this->prepareResult($result);
 
-        $method = 'boolFilter' . ucfirst($filterName);
+        $method = 'boolFilter' . ucfirst($filter);
         if (method_exists($this, $method)) {
-            $this->$method($result);
+            $wherePart = $this->$method($result);
+            if ($wherePart) {
+                $result['whereClause'][] = $wherePart;
+            }
+        }
+    }
+
+    public function applyBoolFilterList(array $filterList, array &$result)
+    {
+        $this->prepareResult($result);
+
+        $wherePartList = [];
+
+        foreach ($filterList as $filter) {
+            $method = 'boolFilter' . ucfirst($filter);
+            if (method_exists($this, $method)) {
+                $wherePart = $this->$method($result);
+                if ($wherePart) {
+                    $wherePartList[] = $wherePart;
+                }
+            }
+        }
+
+        if (count($wherePartList)) {
+            if (count($wherePartList) === 1) {
+                $result['whereClause'][] = $wherePartList;
+            } else {
+                $result['whereClause'][] = ['OR' => $wherePartList];
+            }
         }
     }
 
@@ -2062,7 +2179,7 @@ class Base
                 $fullTextSearchColumnSanitizedList[$i] = $query->sanitize($query->toDb($field));
             }
 
-            $where = $function . ':' . implode(',', $fullTextSearchColumnSanitizedList) . ':' . $textFilter;
+            $where = $function . ':(' . implode(',', $fullTextSearchColumnSanitizedList) . ',' . $textFilter . ')';
 
             $result = [
                 'where' => $where,
@@ -2105,7 +2222,7 @@ class Base
             $textFilter = str_replace('*', '%', $textFilter);
         } else {
             if (!$useFullTextSearch) {
-                $textFilterForFullTextSearch .= '*';
+                //$textFilterForFullTextSearch .= '*';
             }
         }
 
@@ -2129,8 +2246,37 @@ class Base
 
         $fullTextSearchFieldList = [];
         if ($fullTextSearchData) {
-            $fullTextGroup[] = $fullTextSearchData['where'];
+            if ($this->fullTextRelevanceThreshold) {
+                $fullTextGroup[] = [$fullTextSearchData['where'] . '>=' => $this->fullTextRelevanceThreshold];
+            } else {
+                $fullTextGroup[] = $fullTextSearchData['where'];
+            }
+
             $fullTextSearchFieldList = $fullTextSearchData['fieldList'];
+
+            $relevanceExpression = $fullTextSearchData['where'];
+
+            if (!isset($result['orderBy']) || $this->fullTextOrderType === self::FT_ORDER_RELEVANCE) {
+                $result['orderBy'] = [[$relevanceExpression, 'desc']];
+                $result['order'] = null;
+            } else {
+                if ($this->fullTextOrderType === self::FT_ORDER_COMBINTED) {
+                     $relevanceExpression =
+                        'ROUND:(DIV:(' . $fullTextSearchData['where'] . ','.$this->fullTextOrderRelevanceDivider.'))';
+
+                    if (is_string($result['orderBy'])) {
+                        $result['orderBy'] = [
+                            [$relevanceExpression, 'desc'],
+                            [$result['orderBy'], $result['order'] ?? 'asc'],
+                        ];
+                    }
+                }
+            }
+
+            $result['additionalSelect'] = $result['additionalSelect'] ?? [];
+            $result['additionalSelect'][] = $relevanceExpression;
+
+            $result['hasFullTextSearch'] = true;
         }
 
         foreach ($fieldList as $field) {
@@ -2186,10 +2332,10 @@ class Base
             if ($fullTextSearchData) {
                 if (!$useFullTextSearch) {
                     if (in_array($field, $fullTextSearchFieldList)) {
-                        if (!array_key_exists('OR', $fullTextGroup)) {
+                        /*if (!array_key_exists('OR', $fullTextGroup)) {
                             $fullTextGroup['OR'] = [];
                         }
-                        $fullTextGroup['OR'][$field . '*'] = $expression;
+                        $fullTextGroup['OR'][$field . '*'] = $expression;*/
                         continue;
                     }
                 }
@@ -2246,43 +2392,78 @@ class Base
 
     protected function boolFilterOnlyMy(&$result)
     {
+        $wherePart = null;
+
         if (!$this->checkIsPortal()) {
             if ($this->hasAssignedUsersField()) {
                 $this->setDistinct(true, $result);
-                $this->addLeftJoin(['assignedUsers', 'assignedUsersAccess'], $result);
-                $result['whereClause'][] = [
-                    'assignedUsersAccess.id' => $this->getUser()->id
+                $this->addLeftJoin(['assignedUsers', 'assignedUsersOnlyMyFilter'], $result);
+                $wherePart = [
+                    'assignedUsersOnlyMyFilter.id' => $this->getUser()->id
                 ];
             } else if ($this->hasAssignedUserField()) {
-                $result['whereClause'][] = [
+                $wherePart = [
                     'assignedUserId' => $this->getUser()->id
                 ];
             } else {
-                $result['whereClause'][] = [
+                $wherePart = [
                     'createdById' => $this->getUser()->id
                 ];
             }
         } else {
-            $result['whereClause'][] = [
+            $wherePart = [
                 'createdById' => $this->getUser()->id
             ];
         }
+
+        return $wherePart;
+    }
+
+    protected function boolFilterOnlyMyTeam(&$result)
+    {
+        $teamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+
+        if (count($teamIdList) === 0) {
+            return [
+                'id' => null
+            ];
+        }
+
+        $this->addLeftJoin(['teams', 'teamsOnlyMyFilter'], $result);
+        $this->setDistinct(true, $result);
+        return [
+            'teamsOnlyMyFilterMiddle.teamId' => $teamIdList
+        ];
     }
 
     protected function filterFollowed(&$result)
     {
-        $query = $this->getEntityManager()->getQuery();
-        $result['customJoin'] .= "
-            JOIN subscription ON
-                subscription.entity_type = ".$query->quote($this->getEntityType())." AND
-                subscription.entity_id = ".$query->toDb($this->getEntityType()).".id AND
-                subscription.user_id = ".$query->quote($this->getUser()->id)."
-        ";
+        $this->addJoin([
+            'Subscription',
+            'subscription',
+            [
+                'subscription.entityType' => $this->getEntityType(),
+                'subscription.entityId=:' => 'id',
+                'subscription.userId' => $this->getUser()->id,
+            ]
+        ], $result);
     }
 
     protected function boolFilterFollowed(&$result)
     {
-        $this->filterFollowed($result);
+        $this->addLeftJoin([
+            'Subscription',
+            'subscription',
+            [
+                'subscription.entityType' => $this->getEntityType(),
+                'subscription.entityId=:' => 'id',
+                'subscription.userId' => $this->getUser()->id,
+            ]
+        ], $result);
+
+        return ['subscription.id!=' => null];
+
+        //$result['whereClause'][] = ['subscription.id!=' => null];
     }
 
     public function mergeSelectParams(array $selectParams1, ?array $selectParams2) : array

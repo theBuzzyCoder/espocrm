@@ -17,6 +17,19 @@
          "min": 0
       },
       {
+         "name": "accept",
+         "type": "multiEnum",
+         "noEmptyString": true,
+         "allowCustomOptions": true,
+         "options": [
+            "image/*",
+            "audio/*",
+            "video/*",
+            ".pdf"
+         ],
+         "tooltip": "fileAccept"
+      },
+      {
          "name":"audited",
          "type":"bool"
       }

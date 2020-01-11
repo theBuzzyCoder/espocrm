@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -141,6 +141,7 @@ define(
             this.preferences = new Preferences();
             this.preferences.settings = this.settings;
             this.acl = this.createAclManager();
+            this.fieldManager.acl = this.acl;
 
             this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
 
@@ -224,7 +225,7 @@ define(
                 this.fieldManager.defs = this.metadata.get('fields');
                 this.fieldManager.metadata = this.metadata;
 
-                this.settings.defs = this.metadata.get('entityDefs.Settings');
+                this.settings.defs = this.metadata.get('entityDefs.Settings') || {};
                 this.user.defs = this.metadata.get('entityDefs.User');
                 this.preferences.defs = this.metadata.get('entityDefs.Preferences');
                 this.viewHelper.layoutManager.userId = this.user.id;
@@ -312,7 +313,7 @@ define(
                     controller.doAction(params.action, params.options);
                     this.trigger('action:done');
                 } catch (e) {
-                    console.log(e);
+                    console.error(e);
                     switch (e.name) {
                         case 'AccessDenied':
                             this.baseController.error403();

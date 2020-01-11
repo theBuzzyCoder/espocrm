@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -41,7 +41,7 @@ class PasswordHashTest extends \PHPUnit\Framework\TestCase
 
     protected $salt = 'bdaff81c7b8db54d';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['config'] = $this->getMockBuilder('\Espo\Core\Utils\Config')->disableOriginalConstructor()->getMock();
 
@@ -50,7 +50,7 @@ class PasswordHashTest extends \PHPUnit\Framework\TestCase
         $this->reflection = new ReflectionHelper($this->object);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

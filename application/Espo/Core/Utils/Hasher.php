@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -25,35 +25,25 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
-ob_start();
-$result = array('success' => false, 'errorMsg' => '');
+namespace Espo\Core\Utils;
 
-if (!empty($_SESSION['install'])) {
-    $preferences = array(
-        'dateFormat' => $_SESSION['install']['dateFormat'], 
-        'timeFormat' => $_SESSION['install']['timeFormat'],
-        'timeZone' => $_SESSION['install']['timeZone'],
-        'weekStart' => (int)$_SESSION['install']['weekStart'],
-        'defaultCurrency' => $_SESSION['install']['defaultCurrency'],
-        'thousandSeparator' => $_SESSION['install']['thousandSeparator'],
-        'decimalMark' => $_SESSION['install']['decimalMark'],
-        'language' => $_SESSION['install']['language'],
-    );
-    $res = $installer->setPreferences($preferences);
-    if (!empty($res)) {
-        $result['success'] = true;
+class Hasher
+{
+    protected $config;
+
+    protected $secretKeyParam = 'hashSecretKey';
+
+    public function __construct(\Espo\Core\Utils\Config $config)
+    {
+        $this->config = $config;
     }
-    else {
-        $result['success'] = false;
-        $result['errorMsg'] = 'Cannot save preferences';
+
+    public function hash(string $string) : string
+    {
+        $secretKey = $this->config->get($this->secretKeyParam) ?? '';
+
+        return md5(hash_hmac('sha256', $string, $secretKey, true));
     }
 }
-else {
-    $result['success'] = false;
-    $result['errorMsg'] = 'Cannot save preferences';
-}
-
-ob_clean();
-echo json_encode($result);

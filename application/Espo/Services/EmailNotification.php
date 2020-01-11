@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -121,6 +121,9 @@ class EmailNotification extends \Espo\Core\Services\Base
         $preferences = $this->getEntityManager()->getEntity('Preferences', $userId);
         if (!$preferences) return;
         if (!$preferences->get('receiveAssignmentEmailNotifications')) return;
+
+        $ignoreList = $preferences->get('assignmentEmailNotificationsIgnoreEntityTypeList') ?? [];
+        if (in_array($entityType, $ignoreList)) return;
 
         $assignerUser = $this->getEntityManager()->getEntity('User', $assignerUserId);
         $entity = $this->getEntityManager()->getEntity($entityType, $entityId);

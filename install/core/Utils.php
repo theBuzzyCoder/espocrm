@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -34,15 +34,15 @@ class Utils
     static public function checkActionExists($actionName)
     {
         return in_array($actionName, [
-            'applySett',
+            'saveSettings',
             'buildDatabase',
             'checkPermission',
             'createUser',
             'errors',
             'finish',
             'main',
-            'setEmailSett',
-            'setPreferences',
+            'saveEmailSettings',
+            'savePreferences',
             'settingsTest',
             'setupConfirmation',
             'step1',
@@ -51,7 +51,6 @@ class Utils
             'step4',
             'step5'
         ]);
-
 
         return false;
     }

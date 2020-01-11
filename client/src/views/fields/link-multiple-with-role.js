@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', function (Dep) {
+define('views/fields/link-multiple-with-role', 'views/fields/link-multiple', function (Dep) {
 
     return Dep.extend({
 
@@ -58,8 +58,12 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 this.roleFieldScope = this.model.name;
             }
 
-            if (this.roleType == 'enum') {
+            if (this.roleType == 'enum' && !this.forceRoles) {
                 this.roleList = this.getMetadata().get('entityDefs.' + this.roleFieldScope + '.fields.' + this.roleField + '.options');
+                if (!this.roleList) {
+                    this.roleList = [];
+                    this.skipRoles = true;
+                }
             }
         },
 
@@ -70,7 +74,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
         },
 
         getDetailLinkHtml: function (id, name) {
-            name = name || this.nameHash[id];
+            name = name || this.nameHash[id] || id;
             if (!name && id) {
                 name = this.translate(this.foreignScope, 'scopeNames');
             }
@@ -158,9 +162,12 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
         },
 
         addLinkHtml: function (id, name) {
-            if (this.mode == 'search') {
+            name = name || id;
+
+            if (this.mode == 'search' || this.skipRoles) {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }
+
             var $container = this.$el.find('.link-container');
             var $el = $('<div class="form-inline list-group-item link-with-role link-group-item-with-columns clearfix">').addClass('link-' + id);
 
@@ -198,6 +205,7 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
                 if ($role) {
                     var fetch = function ($target) {
                         if (!$target || !$target.length) return;
+                        if ($target.val() === null) return;
 
                         var value = $target.val().toString().trim();
                         var id = $target.data('id');
@@ -217,11 +225,12 @@ Espo.define('views/fields/link-multiple-with-role', 'views/fields/link-multiple'
 
         fetch: function () {
             var data = Dep.prototype.fetch.call(this);
-            data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
+
+            if (!this.skipRoles) {
+                data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
+            }
             return data;
         },
 
     });
 });
-
-

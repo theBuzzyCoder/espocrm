@@ -15,6 +15,8 @@
         "sortBy": "Order (field)",
         "sortDirection": "Order (direction)",
         "expandedLayout": "Layout",
+        "skipOwn": "Don't show own records",
+        "url": "URL",
         "dateFilter": "Date Filter"
     },
     "options": {
@@ -29,5 +31,8 @@
     },
     "messages": {
         "selectEntityType": "Select Entity Type in dashlet options."
+    },
+    "tooltips": {
+        "skipOwn": "Actions made by your user account won't be displayed."
     }
 }

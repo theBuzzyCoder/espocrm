@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -88,7 +88,7 @@ class Table
         if ($this->isStrictModeForced) {
             $this->isStrictMode = true;
         } else {
-            $this->isStrictMode = $config->get('aclStrictMode', false);
+            $this->isStrictMode = $config->get('aclStrictMode', true);
         }
 
         $this->user = $user;
@@ -182,12 +182,13 @@ class Table
         return 'no';
     }
 
-    public function getHighestLevel($action)
+    public function getHighestLevel($scope, $action)
     {
         if (in_array($action, $this->booleanActionList)) {
             return 'yes';
         } else {
-            return 'all';
+            $level = $this->metadata->get(['scopes', $scope, $this->type . 'HighestLevel']);
+            return $level ?? 'all';
         }
     }
 

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -66,7 +66,7 @@ describe('acl-manager', function () {
 
 		expect(acl.check('Lead', 'delete')).toBe(false);
 
-		expect(acl.check('Account', 'edit')).toBe(true);
+		expect(acl.check('Account', 'edit')).toBe(false);
 
 		expect(acl.check('Opportunity', 'edit')).toBe(false);
 		expect(acl.check('Meeting', 'edit')).toBe(true);

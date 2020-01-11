@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -223,9 +223,11 @@ class EmailTemplate extends Record
                 if (!$attributeType) continue;
 
                 if ($attributeType == 'date') {
-                    $value = $this->getDateTime()->convertSystemDate($value);
+                    if ($value)
+                        $value = $this->getDateTime()->convertSystemDate($value);
                 } else if ($attributeType == 'datetime') {
-                    $value = $this->getDateTime()->convertSystemDateTime($value);
+                    if ($value)
+                        $value = $this->getDateTime()->convertSystemDateTime($value);
                 } else if ($attributeType == 'text') {
                     if (!is_string($value)) {
                         $value = '';

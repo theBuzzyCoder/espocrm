@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -57,6 +57,8 @@ class RDB extends \Espo\ORM\Repository
      * @var array Parameters to be used in further find operations.
      */
     protected $listParams = [];
+
+    private $isTableLocked = false;
 
     public function __construct($entityType, EntityManager $entityManager, EntityFactory $entityFactory)
     {
@@ -296,7 +298,7 @@ class RDB extends \Espo\ORM\Repository
     public function isRelated(Entity $entity, $relationName, $foreign)
     {
         if (!$entity->id) {
-            return;
+            return null;
         }
 
         if ($foreign instanceof Entity) {
@@ -304,10 +306,34 @@ class RDB extends \Espo\ORM\Repository
         } else if (is_string($foreign)) {
             $id = $foreign;
         } else {
-            return;
+            return null;
         }
 
-        if (!$id) return;
+        if (!$id) return null;
+
+        if ($entity->getRelationType($relationName) === Entity::BELONGS_TO) {
+            $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+            if (!$foreignEntityType) return null;
+
+            $foreignId = $entity->get($relationName . 'Id');
+
+            if (!$foreignId) {
+                $e = $this->select([$relationName . 'Id'])->where(['id' => $entity->id])->findOne();
+                if ($e) {
+                    $foreignId = $e->get($relationName . 'Id');
+                }
+            }
+
+            if (!$foreignId) return false;
+
+            $foreignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->select(['id'])->where([
+                'id' => $foreignId,
+            ])->findOne();
+
+            if (!$foreignEntity) return false;
+
+            return $foreignEntity->id === $id;
+        }
 
         return !!$this->countRelated($entity, $relationName, [
             'whereClause' => [
@@ -394,6 +420,11 @@ class RDB extends \Espo\ORM\Repository
         }
 
         return $result;
+    }
+
+    public function getRelationColumn(Entity $entity, string $relationName, string $foreignId, string $column)
+    {
+        return $this->getMapper()->getRelationColumn($entity, $relationName, $foreignId, $column);
     }
 
     protected function beforeRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
@@ -638,9 +669,27 @@ class RDB extends \Espo\ORM\Repository
         return $params;
     }
 
-
     protected function getPDO()
     {
         return $this->getEntityManager()->getPDO();
+    }
+
+    protected function lockTable()
+    {
+        $tableName = $this->getEntityManager()->getQuery()->toDb($this->entityType);
+
+        $this->getPDO()->query("LOCK TABLES `{$tableName}` WRITE");
+        $this->isTableLocked = true;
+    }
+
+    protected function unlockTable()
+    {
+        $this->getPDO()->query("UNLOCK TABLES");
+        $this->isTableLocked = false;
+    }
+
+    protected function isTableLocked()
+    {
+        return $this->isTableLocked;
     }
 }

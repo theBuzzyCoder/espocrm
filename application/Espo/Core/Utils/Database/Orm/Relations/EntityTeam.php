@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -31,13 +31,13 @@ namespace Espo\Core\Utils\Database\Orm\Relations;
 
 class EntityTeam extends Base
 {
-    protected function load($linkName, $entityName)
+    protected function load($linkName, $entityType)
     {
         $linkParams = $this->getLinkParams();
         $foreignEntityName = $this->getForeignEntityName();
 
         return [
-            $entityName => [
+            $entityType => [
                 'relations' => [
                     $linkName => [
                         'type' => 'manyMany',
@@ -45,19 +45,19 @@ class EntityTeam extends Base
                         'relationName' => lcfirst($linkParams['relationName']),
                         'midKeys' => [
                             'entityId',
-                            'teamId'
+                            'teamId',
                         ],
                         'conditions' => [
-                            'entityType' => $entityName
+                            'entityType' => $entityType,
                         ],
                         'additionalColumns' => [
                             'entityType' => [
                                 'type' => 'varchar',
-                                'len' => 100
-                            ]
-                        ]
-                    ]
-                ]
+                                'len' => 100,
+                            ],
+                        ],
+                    ],
+                ],
             ]
         ];
     }

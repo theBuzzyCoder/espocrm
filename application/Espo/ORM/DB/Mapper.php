@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -264,7 +264,6 @@ abstract class Mapper implements IMapper
                 }
 
                 $ps = $this->pdo->query($sql);
-
                 if ($ps) {
                     if (!$returnTotalCount) {
                         $resultDataList = $ps->fetchAll();
@@ -379,17 +378,17 @@ abstract class Mapper implements IMapper
         return $this->selectRelated($entity, $relationName, $params, true);
     }
 
-    public function relate(IEntity $entityFrom, $relationName, IEntity $entityTo, $data = null)
+    public function relate(IEntity $entityFrom, string $relationName, IEntity $entityTo, ?array $data = null)
     {
         return $this->addRelation($entityFrom, $relationName, null, $entityTo, $data);
     }
 
-    public function unrelate(IEntity $entityFrom, $relationName, IEntity $entityTo)
+    public function unrelate(IEntity $entityFrom, string $relationName, IEntity $entityTo)
     {
         return $this->removeRelation($entityFrom, $relationName, null, false, $entityTo);
     }
 
-    public function updateRelation(IEntity $entity, $relationName, $id = null, $columnData)
+    public function updateRelation(IEntity $entity, string $relationName, ?string $id = null, array $columnData)
     {
         if (empty($id) || empty($relationName)) {
             return false;
@@ -436,6 +435,59 @@ abstract class Mapper implements IMapper
                     return true;
                 }
         }
+    }
+
+    public function getRelationColumn(IEntity $entity, string $relationName, string $id, string $column)
+    {
+        $type = $entity->getRelationType($entityType, $relationName);
+
+        if (!$type === IEntity::MANY_MANY) return null;
+
+        $relDefs = $entity->relations[$relationName];
+
+        $relTable = $this->toDb($relDefs['relationName']);
+
+        $keySet = $this->query->getKeys($entity, $relationName);
+        $key = $keySet['key'];
+        $foreignKey = $keySet['foreignKey'];
+        $nearKey = $keySet['nearKey'];
+        $distantKey = $keySet['distantKey'];
+
+        $additionalColumns = $entity->getRelationParam($relationName, 'additionalColumns') ?? [];
+
+        if (!isset($additionalColumns[$column])) return null;
+
+        $columnType = $additionalColumns[$column]['type'] ?? 'string';
+
+        $columnAlias = $this->query->sanitizeSelectAlias($column);
+
+        $sql =
+            "SELECT " . $this->toDb($this->query->sanitize($column)) . " AS `{$columnAlias}` FROM `{$relTable}` " .
+            "WHERE ";
+
+        $wherePart =
+            $this->toDb($nearKey) . " = " . $this->pdo->quote($entity->id) . " ".
+            "AND " . $this->toDb($distantKey) . " = " . $this->pdo->quote($id) . " AND deleted = 0";
+
+        $sql .= $wherePart;
+
+        $ps = $this->pdo->query($sql);
+        if ($ps) {
+            foreach ($ps as $row) {
+                $value = $row[$columnAlias];
+                if ($columnType == 'bool') {
+                    $value = boolval($value);
+                } else if ($columnType == 'int') {
+                    $value = intval($value);
+                } else if ($columnType == 'float') {
+                    $value = floatval($value);
+                }
+
+                return $value;
+            }
+        }
+
+        return null;
     }
 
     public function massRelate(IEntity $entity, $relationName, array $params = [])
@@ -521,7 +573,8 @@ abstract class Mapper implements IMapper
         }
     }
 
-    public function addRelation(IEntity $entity, string $relationName, $id = null, $relEntity = null, $data = null)
+    public function addRelation
+        (IEntity $entity, string $relationName, ?string $id = null, ?IEntity $relEntity = null, ?array $data = null)
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -557,8 +610,23 @@ abstract class Mapper implements IMapper
         switch ($relType) {
             case IEntity::BELONGS_TO:
                 $key = $relationName . 'Id';
+
+                $foreignRelationName = $entity->getRelationParam($relationName, 'foreign');
+                if ($foreignRelationName) {
+                    if ($relEntity->getRelationParam($foreignRelationName, 'type') === IEntity::HAS_ONE) {
+                        $setPart = $this->toDb($key) . " = " . $this->quote(null);
+                        $wherePart = $this->query->getWhere($entity, ['id!=' => $entity->id, $key => $id, 'deleted' => 0]);
+                        $sql = $this->composeUpdateQuery(
+                            $this->toDb($entity->getEntityType()),
+                            $setPart,
+                            $wherePart
+                        );
+                        $this->pdo->query($sql);
+                    }
+                }
+
                 $setPart = $this->toDb($key) . " = " . $this->pdo->quote($relEntity->id);
-                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
 
                 $entity->set([
                     $key => $relEntity->id
@@ -601,6 +669,23 @@ abstract class Mapper implements IMapper
                 return false;
 
             case IEntity::HAS_ONE:
+                $foreignKey = $keySet['foreignKey'];
+
+                if ($this->count($relEntity, ['whereClause' => ['id' => $id]]) === 0) return false;
+
+                $setPart = $this->toDb($foreignKey) . " = " . $this->quote(null);
+                $wherePart = $this->query->getWhere($relEntity, [$foreignKey => $entity->id, 'deleted' => 0]);
+                $sql = $this->composeUpdateQuery($this->toDb($foreignEntityType), $setPart, $wherePart);
+                $this->pdo->query($sql);
+
+                $setPart = $this->toDb($foreignKey) . " = " . $this->pdo->quote($entity->id);
+                $wherePart = $this->query->getWhere($relEntity, ['id' => $id, 'deleted' => 0]);
+                $sql = $this->composeUpdateQuery($this->toDb($foreignEntityType), $setPart, $wherePart);
+
+                if ($this->pdo->query($sql)) {
+                    return true;
+                }
+
                 return false;
 
             case IEntity::HAS_CHILDREN:
@@ -721,7 +806,8 @@ abstract class Mapper implements IMapper
         return false;
     }
 
-    public function removeRelation(IEntity $entity, string $relationName, $id = null, $all = false, IEntity $relEntity = null)
+    public function removeRelation
+        (IEntity $entity, string $relationName, ?string $id = null, bool $all = false, IEntity $relEntity = null)
     {
         if (!is_null($relEntity)) {
             $id = $relEntity->id;
@@ -758,7 +844,7 @@ abstract class Mapper implements IMapper
             case IEntity::BELONGS_TO:
                 $key = $relationName . 'Id';
                 $setPart = $this->toDb($key) . " = " . $this->quote(null);
-                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
 
                 $entity->set([
                     $key => null
@@ -787,7 +873,7 @@ abstract class Mapper implements IMapper
                 $setPart =
                     $this->toDb($key) . " = " . $this->quote(null) . ', ' .
                     $this->toDb($typeKey) . " = " . $this->quote(null);
-                $wherePart = $this->query->getWhere($entity, ['id' => $id, 'deleted' => 0]);
+                $wherePart = $this->query->getWhere($entity, ['id' => $entity->id, 'deleted' => 0]);
 
                 $sql = $this->composeUpdateQuery(
                     $this->toDb($entity->getEntityType()),
@@ -801,8 +887,6 @@ abstract class Mapper implements IMapper
                 return false;
 
             case IEntity::HAS_ONE:
-                return false;
-
             case IEntity::HAS_MANY:
             case IEntity::HAS_CHILDREN:
                 $key = $keySet['key'];
@@ -811,7 +895,7 @@ abstract class Mapper implements IMapper
                 $setPart = $this->toDb($foreignKey) . " = " . "NULL";
 
                 $whereClause = ['deleted' => 0];
-                if (empty($all)) {
+                if (empty($all) && $relType != IEntity::HAS_ONE) {
                     $whereClause['id'] = $id;
                 } else {
                     $whereClause[$foreignKey] = $entity->id;
@@ -919,7 +1003,7 @@ abstract class Mapper implements IMapper
                 continue;
             }
 
-            if (!$entity->isAttributeChanged($attribute) && $type !== IEntity::JSON_OBJECT) {
+            if (!$entity->isAttributeChanged($attribute)) {
                 continue;
             }
 
@@ -992,7 +1076,7 @@ abstract class Mapper implements IMapper
         return $this->update($entity);
     }
 
-    protected function toValueMap(IEntity $entity, $onlyStorable = true)
+    protected function toValueMap(IEntity $entity, bool $onlyStorable = true)
     {
         $data = [];
         foreach ($entity->getAttributes() as $attribute => $defs) {

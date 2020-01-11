@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ Espo.define('views/modals/select-category-tree-records', 'views/modals/select-re
             if (this.multiple) {
                 this.buttonList.unshift({
                     name: 'select',
-                    style: 'primary',
+                    style: 'danger',
                     label: 'Select',
                     onClick: function (dialog) {
                         var listView = this.getView('list');

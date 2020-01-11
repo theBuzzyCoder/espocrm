@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -64,8 +64,13 @@ class CountType extends \Espo\Core\Formula\Functions\Base
 
             $selectManager = $this->getInjection('selectManagerFactory')->create($entityType);
             $selectParams = $selectManager->getEmptySelectParams();
+
             if ($filter) {
-                $selectManager->applyFilter($filter, $selectParams);
+                if (is_string($filter)) {
+                    $selectManager->applyFilter($filter, $selectParams);
+                } else {
+                    throw new Error("Formula record\\count: Bad filter.");
+                }
             }
 
             return $this->getInjection('entityManager')->getRepository($entityType)->count($selectParams);

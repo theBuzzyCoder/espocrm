@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -82,11 +82,9 @@ define('views/record/panels-container', 'view', function (Dep) {
         applyAccessToActions: function (actionList) {
             if (!actionList) return;
             actionList.forEach(function (item) {
-                if (item.configCheck) {
-                    if (!this.getConfig().getByPath(item.configCheck.split('.'))) {
-                        item.hidden = true;
-                        return;
-                    }
+                if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
+                    item.hidden = true;
+                    return;
                 }
                 if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
                     if (item.isHiddenByAcl) {

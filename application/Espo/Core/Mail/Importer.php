@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -212,56 +212,70 @@ class Importer
         if ($parser->checkMessageAttribute($message, 'in-Reply-To') && $parser->getMessageAttribute($message, 'in-Reply-To')) {
             $arr = explode(' ', $parser->getMessageAttribute($message, 'in-Reply-To'));
             $inReplyTo = $arr[0];
-            $replied = $this->getEntityManager()->getRepository('Email')->where(array(
-                'messageId' => $inReplyTo
-            ))->findOne();
-            if ($replied) {
-                $email->set('repliedId', $replied->id);
-                $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
-                foreach ($repliedTeamIdList as $repliedTeamId) {
-                    $email->addLinkMultipleId('teams', $repliedTeamId);
+
+            if ($inReplyTo) {
+                if ($inReplyTo[0] !== '<') $inReplyTo = '<' . $inReplyTo . '>';
+                $replied = $this->getEntityManager()->getRepository('Email')->where(array(
+                    'messageId' => $inReplyTo
+                ))->findOne();
+                if ($replied) {
+                    $email->set('repliedId', $replied->id);
+                    $repliedTeamIdList = $replied->getLinkMultipleIdList('teams');
+                    foreach ($repliedTeamIdList as $repliedTeamId) {
+                        $email->addLinkMultipleId('teams', $repliedTeamId);
+                    }
                 }
             }
         }
 
         if ($parser->checkMessageAttribute($message, 'references') && $parser->getMessageAttribute($message, 'references')) {
-            $arr = explode(' ', $parser->getMessageAttribute($message, 'references'));
-            $reference = $arr[0];
-            $reference = str_replace(array('/', '@'), " ", trim($reference, '<>'));
-            $parentType = $parentId = null;
-            $emailSent = PHP_INT_MAX;
-            $number = null;
-            $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
-            if ($n != 4) {
-                $n = sscanf($reference, '%s %s %d %d espo-system', $parentType, $parentId, $emailSent, $number);
+            $references = $parser->getMessageAttribute($message, 'references');
+            $delimiter = ' ';
+            if (strpos($references, '>,')) {
+                $delimiter = ',';
             }
-            if ($n == 4 && $emailSent < time()) {
-                if (!empty($parentType) && !empty($parentId)) {
-                    if ($parentType == 'Lead') {
-                        $parent = $this->getEntityManager()->getEntity('Lead', $parentId);
-                        if ($parent && $parent->get('status') == 'Converted') {
-                            if ($parent->get('createdAccountId')) {
-                                $account = $this->getEntityManager()->getEntity('Account', $parent->get('createdAccountId'));
-                                if ($account) {
-                                    $parentType = 'Account';
-                                    $parentId = $account->id;
-                                }
-                            } else {
-                                if ($this->getConfig()->get('b2cMode')) {
-                                    if ($parent->get('createdContactId')) {
-                                        $contact = $this->getEntityManager()->getEntity('Contact', $parent->get('createdContactId'));
-                                        if ($contact) {
-                                            $parentType = 'Contact';
-                                            $parentId = $contact->id;
+
+            $arr = explode($delimiter, $references);
+
+            foreach ($arr as $reference) {
+                $reference = trim($reference);
+                $reference = str_replace(['/', '@'], " ", trim($reference, '<>'));
+                $parentType = $parentId = null;
+                $emailSent = PHP_INT_MAX;
+                $number = null;
+                $n = sscanf($reference, '%s %s %d %d espo', $parentType, $parentId, $emailSent, $number);
+                if ($n != 4) {
+                    $n = sscanf($reference, '%s %s %d %d espo-system', $parentType, $parentId, $emailSent, $number);
+                }
+
+                if ($n == 4 && $emailSent < time()) {
+                    if (!empty($parentType) && !empty($parentId)) {
+                        if ($parentType == 'Lead') {
+                            $parent = $this->getEntityManager()->getEntity('Lead', $parentId);
+                            if ($parent && $parent->get('status') == 'Converted') {
+                                if ($parent->get('createdAccountId')) {
+                                    $account = $this->getEntityManager()->getEntity('Account', $parent->get('createdAccountId'));
+                                    if ($account) {
+                                        $parentType = 'Account';
+                                        $parentId = $account->id;
+                                    }
+                                } else {
+                                    if ($this->getConfig()->get('b2cMode')) {
+                                        if ($parent->get('createdContactId')) {
+                                            $contact = $this->getEntityManager()->getEntity('Contact', $parent->get('createdContactId'));
+                                            if ($contact) {
+                                                $parentType = 'Contact';
+                                                $parentId = $contact->id;
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                        $email->set('parentType', $parentType);
+                        $email->set('parentId', $parentId);
+                        $parentFound = true;
                     }
-                    $email->set('parentType', $parentType);
-                    $email->set('parentId', $parentId);
-                    $parentFound = true;
                 }
             }
         }

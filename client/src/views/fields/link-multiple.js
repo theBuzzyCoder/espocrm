@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -100,13 +100,10 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                 this.nameHash = Espo.Utils.clone(nameHash);
                 this.ids = Espo.Utils.clone(idList);
             } else {
-                this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
-                this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
-            }
+                this.copyValuesFromModel();            }
 
             this.listenTo(this.model, 'change:' + this.idsName, function () {
-                this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
-                this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
+                this.copyValuesFromModel();
             }, this);
 
             this.sortable = this.sortable || this.params.sortable;
@@ -149,6 +146,11 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     this.deleteLink(id);
                 };
             }
+        },
+
+        copyValuesFromModel: function () {
+            this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
+            this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
         },
 
         handleSearchType: function (type) {
@@ -307,6 +309,8 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
         },
 
         addLinkHtml: function (id, name) {
+            name = name || id;
+
             var $container = this.$el.find('.link-container');
             var $el = $('<div />').addClass('link-' + id).addClass('list-group-item').attr('data-id', id);
             $el.html(this.getHelper().escapeString(name || id) + '&nbsp');
@@ -339,7 +343,7 @@ Espo.define('views/fields/link-multiple', 'views/fields/base', function (Dep) {
                     names.push(this.getDetailLinkHtml(id));
                 }, this);
                 if (names.length) {
-                    return '<div>' + names.join('</div><div>') + '</div>';
+                    return '<div class="link-multiple-item">' + names.join('</div><div class="link-multiple-item">') + '</div>';
                 }
                 return;
             }

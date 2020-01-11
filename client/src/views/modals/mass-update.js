@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -79,7 +79,8 @@ define('views/modals/mass-update', 'views/modal', function (Dep) {
             this.selectData = this.options.selectData;
             this.byWhere = this.options.byWhere;
 
-            this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') + ' &raquo ' + this.translate('Mass Update');
+            this.headerHtml = this.translate(this.scope, 'scopeNamesPlural') +
+                ' <span class="chevron-right"></span> ' + this.translate('Mass Update');
 
             var fobiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 

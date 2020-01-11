@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -84,8 +84,22 @@ define('views/header', 'view', function (Dep) {
                 if (step > 7) {
                     $container.addClass('overlapped');
                     this.$el.find('.title').each(function (i, el) {
-                        $(el).attr('title', $(el).text());
-                    });
+                        var $el = $(el);
+                        var text = $(el).text();
+                        $el.attr('title', text);
+
+                        var isInitialized = false;
+                        $el.on('touchstart', function () {
+                            if (!isInitialized) {
+                                $el.attr('title', '');
+                                isInitialized = true;
+                                Espo.Ui.popover($el, {
+                                    content: text,
+                                }, this);
+                            }
+                            $el.popover('toggle');
+                        }.bind(this));
+                    }.bind(this));
                     return;
                 }
 

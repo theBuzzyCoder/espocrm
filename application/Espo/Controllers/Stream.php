@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -46,6 +46,7 @@ class Stream extends \Espo\Core\Controllers\Base
         $maxSize = intval($request->get('maxSize'));
         $after = $request->get('after');
         $filter = $request->get('filter');
+        $skipOwn = $request->get('skipOwn') === 'true';
 
         $service = $this->getService('Stream');
 
@@ -61,7 +62,8 @@ class Stream extends \Espo\Core\Controllers\Base
             'offset' => $offset,
             'maxSize' => $maxSize,
             'after' => $after,
-            'filter' => $filter
+            'filter' => $filter,
+            'skipOwn' => $skipOwn,
         ]);
 
         return (object) [
@@ -96,7 +98,7 @@ class Stream extends \Espo\Core\Controllers\Base
             'maxSize' => $maxSize,
             'after' => $after,
             'filter' => 'posts',
-            'where' => $where
+            'where' => $where,
         ]);
 
         return (object) [

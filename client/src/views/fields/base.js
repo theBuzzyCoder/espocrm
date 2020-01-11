@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -280,7 +280,7 @@ Espo.define('views/fields/base', 'view', function (Dep) {
             this.inlineEditDisabled = this.options.inlineEditDisabled || this.params.inlineEditDisabled || this.inlineEditDisabled;
             this.readOnly = this.readOnlyLocked || this.options.readOnly || false;
 
-            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip');
+            this.tooltip = this.options.tooltip || this.params.tooltip || this.model.getFieldParam(this.name, 'tooltip') || this.tooltip;
 
             if (this.options.readOnlyDisabled) {
                 this.readOnly = false;
@@ -374,11 +374,20 @@ Espo.define('views/fields/base', 'view', function (Dep) {
                 $label.append(' ');
                 this.getLabelElement().append($a);
 
+                var tooltipText = this.options.tooltipText || this.tooltipText;
+
+                if (!tooltipText && typeof this.tooltip === 'string') {
+                    tooltipText = this.translate(this.tooltip, 'tooltips', this.model.name);
+                }
+
+                tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
+                tooltipText = this.getHelper().transfromMarkdownText(tooltipText).toString();
+
                 $a.popover({
                     placement: 'bottom',
                     container: 'body',
                     html: true,
-                    content: (this.options.tooltipText || this.translate(this.name, 'tooltips', this.model.name)).replace(/\n/g, "<br />"),
+                    content: tooltipText,
                 }).on('shown.bs.popover', function () {
                     $('body').off('click.popover-' + this.id);
                     $('body').on('click.popover-' + this.id , function (e) {

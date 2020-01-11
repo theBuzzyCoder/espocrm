@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -589,6 +589,12 @@ define('views/record/list', 'view', function (Dep) {
         },
 
         massActionRecalculateFormula: function () {
+            var ids = false;
+            var allResultIsChecked = this.allResultIsChecked;
+            if (!allResultIsChecked) {
+                ids = this.checkedList;
+            }
+
             this.confirm({
                 message: this.translate('recalculateFormulaConfirmation', 'messages'),
                 confirmText: this.translate('Yes')
@@ -599,6 +605,13 @@ define('views/record/list', 'view', function (Dep) {
                     result = result || {};
                     this.collection.fetch().then(function () {
                         Espo.Ui.success(this.translate('Done'));
+                        if (allResultIsChecked) {
+                            this.selectAllResult();
+                        } else {
+                            ids.forEach(function (id) {
+                                this.checkRecord(id);
+                            }, this);
+                        }
                     }.bind(this));
                 }.bind(this));
             }.bind(this));
@@ -700,10 +713,7 @@ define('views/record/list', 'view', function (Dep) {
         massActionFollow: function () {
             var count = this.checkedList.length;
 
-            var idList = [];
-            for (var i in this.checkedList) {
-                idList.push(this.checkedList[i]);
-            }
+            var data = this.getMassActionSelectionPostData();
 
             var confirmMsg = this.translate('confirmMassFollow', 'messages').replace('{count}', count.toString());
             this.confirm({
@@ -711,9 +721,7 @@ define('views/record/list', 'view', function (Dep) {
                 confirmText: this.translate('Follow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massFollow', {
-                    ids: idList
-                }).then(function (result) {
+                this.ajaxPostRequest(this.entityType + '/action/massFollow', data).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massFollowResult';
                     if (resultCount) {
@@ -731,10 +739,7 @@ define('views/record/list', 'view', function (Dep) {
         massActionUnfollow: function () {
             var count = this.checkedList.length;
 
-            var idList = [];
-            for (var i in this.checkedList) {
-                idList.push(this.checkedList[i]);
-            }
+            var data = this.getMassActionSelectionPostData();
 
             var confirmMsg = this.translate('confirmMassUnfollow', 'messages').replace('{count}', count.toString());
             this.confirm({
@@ -742,9 +747,7 @@ define('views/record/list', 'view', function (Dep) {
                 confirmText: this.translate('Unfollow')
             }, function () {
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-                this.ajaxPostRequest(this.entityType + '/action/massUnfollow', {
-                    ids: idList
-                }).then(function (result) {
+                this.ajaxPostRequest(this.entityType + '/action/massUnfollow', data).then(function (result) {
                     var resultCount = result.count || 0;
                     var msg = 'massUnfollowResult';
                     if (resultCount) {
@@ -855,6 +858,45 @@ define('views/record/list', 'view', function (Dep) {
             }, this);
         },
 
+        massActionConvertCurrency: function () {
+            var ids = false;
+            var allResultIsChecked = this.allResultIsChecked;
+            if (!allResultIsChecked) {
+                ids = this.checkedList;
+            }
+
+            this.createView('modalConvertCurrency', 'views/modals/mass-convert-currency', {
+                entityType: this.entityType,
+                ids: ids,
+                where: this.collection.getWhere(),
+                selectData: this.collection.data,
+                byWhere: this.allResultIsChecked,
+            }, function (view) {
+                view.render();
+                this.listenToOnce(view, 'after:update', function (count) {
+                    this.listenToOnce(this.collection, 'sync', function () {
+                        if (count) {
+                            var msg = 'massUpdateResult';
+                            if (count == 1) {
+                                msg = 'massUpdateResultSingle'
+                            }
+                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                        } else {
+                            Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
+                        }
+                        if (allResultIsChecked) {
+                            this.selectAllResult();
+                        } else {
+                            ids.forEach(function (id) {
+                                this.checkRecord(id);
+                            }, this);
+                        }
+                    }, this);
+                    this.collection.fetch();
+                }, this);
+            });
+        },
+
         removeMassAction: function (item) {
             var index = this.massActionList.indexOf(item);
             if (~index) {
@@ -896,9 +938,16 @@ define('views/record/list', 'view', function (Dep) {
             this.massActionList = Espo.Utils.clone(this.massActionList);
             this.buttonList = Espo.Utils.clone(this.buttonList);
 
+            this.editDisabled = this.options.editDisabled || this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']);
+            this.removeDisabled = this.options.removeDisabled || this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']);
+
             if (!this.getAcl().checkScope(this.entityType, 'delete')) {
                 this.removeMassAction('remove');
                 this.removeMassAction('merge');
+            }
+
+            if (this.removeDisabled) {
+                this.removeMassAction('remove');
             }
 
             if (!this.getAcl().checkScope(this.entityType, 'edit')) {
@@ -906,22 +955,16 @@ define('views/record/list', 'view', function (Dep) {
                 this.removeMassAction('merge');
             }
 
+            if (this.getMetadata().get(['clientDefs', this.scope, 'mergeDisabled'])) {
+                this.removeMassAction('merge');
+            }
+
             (this.getMetadata().get(['clientDefs', this.scope, 'massActionList']) || []).forEach(function (item) {
                 var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
-                var acl = defs.acl;
-                var aclScope = defs.aclScope;
-                if (acl || aclScope) {
-                    if (!this.getAcl().check(aclScope || this.scope, acl)) {
-                        return;
-                    }
-                }
-                var configCheck = defs.configCheck;
-                if (configCheck) {
-                    var arr = configCheck.split('.');
-                    if (!this.getConfig().getByPath(arr)) {
-                        return;
-                    }
-                }
+
+                if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) return;
+                if (!Espo.Utils.checkActionAccess(this.getAcl(), null, defs)) return;
+
                 this.massActionList.push(item);
             }, this);
 
@@ -937,20 +980,10 @@ define('views/record/list', 'view', function (Dep) {
                 if (this.collection.url !== this.entityType) return;
                 if (~this.massActionList.indexOf(item)) {
                     var defs = this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs', item]) || {};
-                    var acl = defs.acl;
-                    var aclScope = defs.aclScope;
-                    if (acl || aclScope) {
-                        if (!this.getAcl().check(aclScope || this.scope, acl)) {
-                            return;
-                        }
-                    }
-                    var configCheck = defs.configCheck;
-                    if (configCheck) {
-                        var arr = configCheck.split('.');
-                        if (!this.getConfig().getByPath(arr)) {
-                            return;
-                        }
-                    }
+
+                    if (!Espo.Utils.checkActionAvailability(this.getHelper(), defs)) return;
+                    if (!Espo.Utils.checkActionAccess(this.getAcl(), null, defs)) return;
+
                     this.checkAllResultMassActionList.push(item);
                 }
             }, this);
@@ -959,11 +992,13 @@ define('views/record/list', 'view', function (Dep) {
                 this.getConfig().get('exportDisabled') && !this.getUser().get('isAdmin')
                 ||
                 this.getAcl().get('exportPermission') === 'no'
+                ||
+                this.getMetadata().get(['clientDefs', this.scope, 'exportDisabled'])
             ) {
                 this.removeMassAction('export');
             }
 
-            if (this.getAcl().get('massUpdatePermission') !== 'yes') {
+            if (this.getAcl().get('massUpdatePermission') !== 'yes' || this.editDisabled) {
                 this.removeMassAction('massUpdate');
             }
 
@@ -973,7 +1008,7 @@ define('views/record/list', 'view', function (Dep) {
                 this.getAcl().check(this.entityType, 'stream')
             ) {
                 this.addMassAction('follow');
-                this.addMassAction('unfollow');
+                this.addMassAction('unfollow', true);
             }
 
             if (
@@ -984,9 +1019,24 @@ define('views/record/list', 'view', function (Dep) {
                 this.addMassAction('printPdf');
             }
 
-
             if (this.options.unlinkMassAction && this.collection) {
                 this.addMassAction('unlink', false, true);
+            }
+
+            if (
+                !this.massConvertCurrencyDisabled &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'convertCurrencyDisabled']) &&
+                this.getConfig().get('currencyList').length > 1 &&
+                this.getAcl().checkScope(this.scope, 'edit') &&
+                this.getAcl().get('massUpdatePermission') === 'yes'
+            ) {
+                var currencyFieldList = this.getFieldManager().getEntityTypeFieldList(this.entityType, {
+                    type: 'currency',
+                    acl: 'edit',
+                });
+
+                if (currencyFieldList.length)
+                    this.addMassAction('convertCurrency', true);
             }
 
             this.setupMassActionItems();
@@ -1412,8 +1462,8 @@ define('views/record/list', 'view', function (Dep) {
                 this.prepareInternalLayout(internalLayout, model);
 
                 var acl =  {
-                    edit: this.getAcl().checkModel(model, 'edit'),
-                    delete: this.getAcl().checkModel(model, 'delete')
+                    edit: this.getAcl().checkModel(model, 'edit') && !this.editDisabled,
+                    delete: this.getAcl().checkModel(model, 'delete') && !this.removeDisabled,
                 };
 
                 this.createView(key, 'views/base', {
@@ -1752,6 +1802,6 @@ define('views/record/list', 'view', function (Dep) {
             if (this.collection.length == 0 && (this.collection.total == 0 || this.collection.total === -2)) {
                 this.reRender();
             }
-        }
+        },
     });
 });

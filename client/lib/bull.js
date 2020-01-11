@@ -281,7 +281,7 @@ var Bull = Bull || {};
             this._layout = this.options._layout || this._layout;
             this.layoutData = this.options.layoutData || this.layoutData;
 
-            this._template = this.templateContent || this._template;
+            this._template = this.templateContent || this.options.templateContent || this._template;
 
             if (this._template != null && this._templator.compilable) {
                 this._templateCompiled = this._templator.compileTemplate(this._template);
@@ -960,6 +960,7 @@ var Bull = Bull || {};
                 this.clearView(key);
             }
             this.trigger('remove');
+            this.onRemove();
             this.off();
             if (!dontEmpty) {
                 this.$el.empty();
@@ -979,6 +980,8 @@ var Bull = Bull || {};
             return this;
         },
 
+        onRemove: function () {},
+
         _setElement: function (el) {
             if (typeof el === 'string') {
                 var parentView = this.getParentView();
@@ -996,8 +999,16 @@ var Bull = Bull || {};
 
             this.$el = $(el).eq(0);
             this.el = this.$el[0];
-        }
+        },
 
+        propagateEvent: function () {
+            this.trigger.apply(this, arguments);
+
+            for (var key in this.nestedViews) {
+                var view = this.nestedViews[key];
+                view.propagateEvent.apply(view, arguments);
+            }
+        },
     });
 
 }).call(this, Bull, Backbone, _);

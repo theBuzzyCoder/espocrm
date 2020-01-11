@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/record/panels/activities', ['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
+define('crm:views/record/panels/activities', ['views/record/panels/relationship', 'multi-collection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -539,7 +539,8 @@ Espo.define('crm:views/record/panels/activities', ['views/record/panels/relation
 
         actionViewRelatedList: function (data) {
             data.url = 'Activities/' + this.model.name + '/' + this.model.id + '/' + this.name + '/list/' + data.scope;
-            data.title = this.translate(this.defs.label) + ' &raquo ' + this.translate(data.scope, 'scopeNamesPlural');
+            data.title = this.translate(this.defs.label) +
+            ' <span class="chevron-right"></span> ' + this.translate(data.scope, 'scopeNamesPlural');
 
             data.viewOptions = data.viewOptions || {};
             data.viewOptions.massUnlinkDisabled = true;

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -32,9 +32,18 @@ Espo.define('views/email/fields/compose-from-address', 'views/fields/base', func
         editTemplate: 'email/fields/compose-from-address/edit',
 
         data: function () {
+            var noSmtpMessage = this.translate('noSmtpSetup', 'messages', 'Email');
+
+            var linkHtml = '<a href="#EmailAccount">'+this.translate('EmailAccount', 'scopeNamesPlural')+'</a>';
+            if (!this.getAcl().check('EmailAccount')) {
+                linkHtml = '<a href="#Preferences">'+this.translate('Preferences')+'</a>';
+            }
+
+            noSmtpMessage = noSmtpMessage.replace('{link}', linkHtml);
+
             return _.extend({
                 list: this.list,
-                noSmtpMessage: this.translate('noSmtpSetup', 'messages', 'Email').replace('{link}', '<a href="#Preferences">'+this.translate('Preferences')+'</a>')
+                noSmtpMessage: noSmtpMessage,
             }, Dep.prototype.data.call(this));
         },
 

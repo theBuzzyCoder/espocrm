@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (Dep, FullCalendar) {
+define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (Dep, FullCalendar) {
 
     return Dep.extend({
 
@@ -56,7 +56,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
 
         titleFormat: {
             month: 'MMMM YYYY',
-            week: 'MMMM D, YYYY',
+            week: 'MMMM YYYY',
             day: 'dddd, MMMM D, YYYY'
         },
 
@@ -66,6 +66,8 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
                 header: this.header,
                 isCustomViewAvailable: this.isCustomViewAvailable,
                 isCustomView: this.isCustomView,
+                todayLabel: this.translate('Today', 'labels', 'Calendar'),
+                todayLabelShort: this.translate('Today', 'labels', 'Calendar').substr(0, 2),
             };
         },
 
@@ -148,6 +150,13 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             if (Object.prototype.toString.call(this.enabledScopeList) !== '[object Array]') {
                 this.enabledScopeList = [];
             }
+
+            this.enabledScopeList.forEach(function (item) {
+                var color = this.getMetadata().get(['clientDefs', item, 'color']);
+                if (color) {
+                    this.colors[item] = color;
+                }
+            }, this);
 
             if (this.header) {
                 this.createView('modeButtons', 'crm:views/calendar/mode-buttons', {
@@ -279,7 +288,7 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
             var title;
 
             if (viewName == 'week') {
-                title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' - ');
+                title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' – ');
             } else {
                 title = view.intervalStart.format(this.titleFormat[viewName]);
             }
@@ -451,6 +460,12 @@ Espo.define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], functi
         },
 
         getCalculatedHeight: function () {
+            if (this.$container && this.$container.length) {
+                return this.$container.height();
+            }
+
+            return this.getHelper().calculateContentContainerHeight(this.$el.find('.calendar'));
+
             var smallScreenWidth = this.smallScreenWidth = this.smallScreenWidth || this.getThemeManager().getParam('screenWidthXs');
             var $window = $(window);
 

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -87,9 +87,21 @@ class Email extends \Espo\Core\ORM\Repositories\RDB
     {
         if ($entity->get('fromEmailAddressName')) {
             $entity->set('from', $entity->get('fromEmailAddressName'));
-        } else {
-            $entity->set('from', null);
+            return;
         }
+        if ($entity->get('fromEmailAddressId')) {
+            $ea = $this->getEntityManager()->getRepository('EmailAddress')->get($entity->get('fromEmailAddressId'));
+            if ($ea) {
+                $entity->set('from', $ea->get('name'));
+                return;
+            }
+        }
+
+        if (!$entity->has('fromEmailAddressId')) {
+            return;
+        }
+
+        $entity->set('from', null);
     }
 
     public function loadToField(Entity $entity)

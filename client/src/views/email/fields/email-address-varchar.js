@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar', 'views/email/fields/from-address-varchar'], function (Dep, From) {
+define(
+    'views/email/fields/email-address-varchar',
+    ['views/fields/base', 'views/email/fields/from-address-varchar', 'views/email/fields/email-address'],
+    function (Dep, From, EmailAddress) {
 
     return Dep.extend({
 
@@ -48,6 +51,8 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                 this.deleteAddress(address);
             },
             'keyup input': function (e) {
+                if (this.mode === 'search') return;
+
                 if (e.keyCode == 188 || e.keyCode == 186 || e.keyCode == 13) {
                     var $input = $(e.currentTarget);
                     var address = $input.val().replace(',', '').replace(';', '').trim();
@@ -61,6 +66,8 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                 }
             },
             'change input': function (e) {
+                if (this.mode === 'search') return;
+
                 var $input = $(e.currentTarget);
                 var address = $input.val().replace(',','').replace(';','').trim();
                 if (~address.indexOf('@')) {
@@ -193,6 +200,10 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
                     this.$input.autocomplete('dispose');
                 }, this);
             }
+
+            if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
+                EmailAddress.prototype.initSearchAutocomplete.call(this);
+            }
         },
 
         checkEmailAddressInString: function (string) {
@@ -203,10 +214,6 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
         },
 
         addAddress: function (address, name, type, id) {
-            if (name) {
-                name = this.getHelper().escapeString(name);
-            }
-
             if (this.justAddedAddress) {
                 this.deleteAddress(this.justAddedAddress);
             }
@@ -277,6 +284,20 @@ Espo.define('views/email/fields/email-address-varchar', ['views/fields/varchar',
             data[this.name] = this.addressList.join(';');
 
             return data;
+        },
+
+        fetchSearch: function () {
+            var value = this.$element.val().trim();
+
+            if (value) {
+                var data = {
+                    type: 'equals',
+                    value: value,
+                }
+                return data;
+            }
+
+            return false;
         },
 
         getValueForDisplay: function () {

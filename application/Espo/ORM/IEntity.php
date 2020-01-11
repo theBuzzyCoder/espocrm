@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -56,37 +56,27 @@ interface IEntity
     const HAS_CHILDREN = 'hasChildren';
 
     /**
-     * Push values from the array.
-     * E.g. insert values into the bean from a request data.
-     * @param array $arr Array of field - value pairs
-     */
-    function populateFromArray(array $arr);
-
-    /**
-     * Resets all fields in the current model.
+     * Resets all attributes in the current model.
      */
     function reset();
 
     /**
-     * Set field.
+     * Set attribute.
      */
     function set($name, $value);
 
     /**
-     * Get field.
+     * Get attribute.
      */
-    function get($name);
+    function get(string $name);
 
     /**
-     * Check field is set.
+     * Check attribute is set.
      */
-    function has($name);
+    function has(string $name);
 
     /**
-     * Clear field.
+     * Clear attribute.
      */
-    function clear($name);
-
+    function clear(?string $name);
 }
-
-

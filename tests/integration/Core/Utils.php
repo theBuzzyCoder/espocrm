@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -124,6 +124,19 @@ class Utils
         } /*END: SET UNDEFINED VARIABLES*/
     }
 
+    public static function checkCreateDatabase(array $options)
+    {
+        if (!isset($options['dbname'])) {
+            throw new \Espo\Core\Exceptions\Error('Option "dbname" is not found.');
+        }
+
+        $dbname = $options['dbname'];
+        unset($options['dbname']);
+
+        $pdo = static::createPdoConnection($options);
+        $pdo->query("CREATE DATABASE IF NOT EXISTS `". $dbname ."`");
+    }
+
     public static function dropTables(array $options)
     {
         $pdo = static::createPdoConnection($options);
@@ -131,6 +144,16 @@ class Utils
         $result = $pdo->query("show tables");
         while ($row = $result->fetch(\PDO::FETCH_NUM)) {
             $pdo->query("DROP TABLE IF EXISTS `".$row[0]."`;");
+        }
+    }
+
+    public static function truncateTables(array $options)
+    {
+        $pdo = static::createPdoConnection($options);
+
+        $result = $pdo->query("show tables");
+        while ($row = $result->fetch(\PDO::FETCH_NUM)) {
+            $pdo->query("TRUNCATE TABLE `".$row[0]."`;");
         }
     }
 

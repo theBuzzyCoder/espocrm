@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -34,6 +34,8 @@ use Doctrine\DBAL\Schema\SchemaException;
 
 class Table extends \Doctrine\DBAL\Schema\Table
 {
+    protected $_quoted = true;
+
     /**
      * @param string $columnName
      * @param string $typeName
@@ -50,6 +52,18 @@ class Table extends \Doctrine\DBAL\Schema\Table
         return $column;
     }
 
+    public function setPrimaryKey(array $columns, $indexName = false)
+    {
+        $primaryKey = $this->_createIndex($columns, $indexName ?: "primary", true, true);
+
+        foreach ($columns as $columnName) {
+            $column = $this->getColumn($columnName);
+            $column->setNotnull(true);
+        }
+
+        return $primaryKey;
+    }
+
     public function addIndex(array $columnNames, $indexName = null, array $flags = array())
     {
         if($indexName == null) {
@@ -59,6 +73,17 @@ class Table extends \Doctrine\DBAL\Schema\Table
         }
 
         return $this->_createIndex($columnNames, $indexName, false, false, $flags);
+    }
+
+    public function addUniqueIndex(array $columnNames, $indexName = null)
+    {
+        if ($indexName === null) {
+            $indexName = $this->_generateIdentifierName(
+                array_merge(array($this->getName()), $columnNames), "uniq", $this->_getMaxIdentifierLength()
+            );
+        }
+
+        return $this->_createIndex($columnNames, $indexName, true, false);
     }
 
     private function _createIndex(array $columnNames, $indexName, $isUnique, $isPrimary, array $flags = array())

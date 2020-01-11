@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -143,6 +143,8 @@ class User extends Record
             }
         }
 
+        if (!$this->checkPasswordStrength($password)) throw new Forbidden("Change password: Password is weak.");
+
         $user->set('password', $this->hashPassword($password));
 
         $this->getEntityManager()->saveEntity($user);
@@ -150,8 +152,67 @@ class User extends Record
         return true;
     }
 
+    public function checkPasswordStrength(string $password) : bool
+    {
+        $minLength = $this->getConfig()->get('passwordStrengthLength');
+        if ($minLength) {
+            if (mb_strlen($password) < $minLength) {
+                return false;
+            }
+        }
+
+        $requiredLetterCount = $this->getConfig()->get('passwordStrengthLetterCount');
+        if ($requiredLetterCount) {
+            $letterCount = 0;
+            foreach (str_split($password) as $c) {
+                if (ctype_alpha($c)) {
+                    $letterCount++;
+                }
+            }
+            if ($letterCount < $requiredLetterCount) {
+                return false;
+            }
+        }
+
+        $requiredNumberCount = $this->getConfig()->get('passwordStrengthNumberCount');
+        if ($requiredNumberCount) {
+            $numberCount = 0;
+            foreach (str_split($password) as $c) {
+                if (is_numeric($c)) {
+                    $numberCount++;
+                }
+            }
+            if ($numberCount < $requiredNumberCount) {
+                return false;
+            }
+        }
+
+        $bothCases = $this->getConfig()->get('passwordStrengthBothCases');
+        if ($bothCases) {
+            $ucCount = 0;
+            $lcCount = 0;
+            foreach (str_split($password) as $c) {
+                if (ctype_alpha($c) && $c === mb_strtoupper($c)) {
+                    $ucCount++;
+                }
+                if (ctype_alpha($c) && $c === mb_strtolower($c)) {
+                    $lcCount++;
+                }
+            }
+            if (!$ucCount || !$lcCount) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public function passwordChangeRequest($userName, $emailAddress, $url = null)
     {
+        if ($this->getConfig()->get('passwordRecoveryDisabled')) {
+            throw new Forbidden("Password recovery disabled");
+        }
+
         $user = $this->getEntityManager()->getRepository('User')->where([
             'userName' => $userName,
             'emailAddress' => $emailAddress
@@ -165,6 +226,16 @@ class User extends Record
             throw new NotFound();
         }
 
+        if ($user->isApi()) {
+            throw new NotFound();
+        }
+
+        if ($this->getConfig()->get('passwordRecoveryForAdminDisabled')) {
+            if ($user->isAdmin()) {
+                throw new NotFound();
+            }
+        }
+
         $userId = $user->id;
 
         $passwordChangeRequest = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
@@ -174,7 +245,7 @@ class User extends Record
             throw new Forbidden(json_encode(['reason' => 'Already-Sent']));
         }
 
-        $requestId = Util::generateId();
+        $requestId = Util::generateId() . Util::generateKey();
 
         $passwordChangeRequest = $this->getEntityManager()->getEntity('PasswordChangeRequest');
         $passwordChangeRequest->set([
@@ -257,6 +328,7 @@ class User extends Record
         $newPassword = null;
         if (property_exists($data, 'password')) {
             $newPassword = $data->password;
+            if (!$this->checkPasswordStrength($newPassword)) throw new Forbidden("Password is weak.");
             $data->password = $this->hashPassword($data->password);
         }
 
@@ -281,6 +353,7 @@ class User extends Record
         $newPassword = null;
         if (property_exists($data, 'password')) {
             $newPassword = $data->password;
+            if (!$this->checkPasswordStrength($newPassword)) throw new Forbidden("Password is weak.");
             $data->password = $this->hashPassword($data->password);
         }
 
@@ -347,6 +420,52 @@ class User extends Record
         $this->prepareEntityForOutput($entity);
 
         return $entity;
+    }
+
+    public function generateNewPasswordForUser(string $id, bool $allowNonAdmin = false)
+    {
+        if (!$allowNonAdmin) {
+            if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        }
+
+        $user = $this->getEntity($id);
+        if (!$user) throw new NotFound();
+
+        if ($user->isApi()) throw new Forbidden();
+        if ($user->isSuperAdmin()) throw new Forbidden();
+        if ($user->isSystem()) throw new Forbidden();
+
+        if (!$user->get('emailAddress')) {
+            throw new Forbidden("Generate new password: Can't process because user desn't have email address.");
+        }
+
+        if (!$this->getConfig()->get('smtpServer') && !$this->getConfig()->get('internalSmtpServer')) {
+            throw new Forbidden("Generate new password: Can't process because SMTP is not configured.");
+        }
+
+        $length = $this->getConfig()->get('passwordStrengthLength');
+        $letterCount = $this->getConfig()->get('passwordStrengthLetterCount');
+        $numberCount = $this->getConfig()->get('passwordStrengthNumberCount');
+
+        $generateLength = $this->getConfig()->get('passwordGenerateLength', 10);
+        $generateLetterCount = $this->getConfig()->get('passwordGenerateLetterCount', 4);
+        $generateNumberCount = $this->getConfig()->get('passwordGenerateNumberCount', 2);
+
+        $length = is_null($length) ? $generateLength : $length;
+        $letterCount = is_null($letterCount) ? $generateLetterCount : $letterCount;
+        $numberCount = is_null($letterCount) ? $generateNumberCount : $numberCount;
+
+        if ($length < $generateLength) $length = $generateLength;
+        if ($letterCount < $generateLetterCount) $letterCount = $generateLetterCount;
+        if ($numberCount < $generateNumberCount) $numberCount = $generateNumberCount;
+
+        $password = Util::generatePassword($length, $letterCount, $numberCount, true);
+
+        $this->sendPassword($user, $password);
+
+        $passwordHash = new \Espo\Core\Utils\PasswordHash($this->getConfig());
+        $user->set('password', $passwordHash->hash($password));
+        $this->getEntityManager()->saveEntity($user);
     }
 
     protected function getInternalUserCount()
@@ -632,8 +751,26 @@ class User extends Record
     {
         parent::afterUpdateEntity($entity, $data);
 
-        if (property_exists($data, 'rolesIds') || property_exists($data, 'teamsIds') || property_exists($data, 'type')) {
+        if (
+            property_exists($data, 'rolesIds') ||
+            property_exists($data, 'teamsIds') ||
+            property_exists($data, 'type') ||
+            property_exists($data, 'portalRolesIds') ||
+            property_exists($data, 'portalsIds')
+        ) {
             $this->clearRoleCache($entity->id);
+        }
+
+        if (
+            property_exists($data, 'portalRolesIds')
+            ||
+            property_exists($data, 'portalsIds')
+            ||
+            property_exists($data, 'contactId')
+            ||
+            property_exists($data, 'accountsIds')
+        ) {
+            $this->clearPortalRolesCache();
         }
 
         if ($entity->isPortal() && $entity->get('contactId')) {
@@ -656,6 +793,12 @@ class User extends Record
     protected function clearRoleCache($id)
     {
         $this->getFileManager()->removeFile('data/cache/application/acl/' . $id . '.php');
+        $this->getContainer()->get('dataManager')->updateCacheTimestamp();
+    }
+
+    protected function clearPortalRolesCache()
+    {
+        $this->getInjection('fileManager')->removeInDir('data/cache/application/acl-portal');
     }
 
     public function massUpdate(array $params, $data)
@@ -673,10 +816,28 @@ class User extends Record
     {
         parent::afterMassUpdate($idList, $data);
 
-        if (array_key_exists('rolesIds', $data) || array_key_exists('teamsIds', $data) || array_key_exists('type', $data)) {
+        if (
+            property_exists($data, 'rolesIds') ||
+            property_exists($data, 'teamsIds') ||
+            property_exists($data, 'type') ||
+            property_exists($data, 'portalRolesIds') ||
+            property_exists($data, 'portalsIds')
+        ) {
             foreach ($idList as $id) {
                 $this->clearRoleCache($id);
             }
+        }
+
+        if (
+            property_exists($data, 'portalRolesIds')
+            ||
+            property_exists($data, 'portalsIds')
+            ||
+            property_exists($data, 'contactId')
+            ||
+            property_exists($data, 'accountsIds')
+        ) {
+            $this->clearPortalRolesCache();
         }
     }
 

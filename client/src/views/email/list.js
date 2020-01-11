@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/list', 'views/list', function (Dep) {
+define('views/email/list', 'views/list', function (Dep) {
 
     return Dep.extend({
 
@@ -65,12 +65,17 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
             }
 
             this.foldersDisabled = this.foldersDisabled ||
-                                   this.getMetadata().get(['scopes', this.folderScope, 'disabled']) ||
-                                   !this.getAcl().checkScope(this.folderScope);
+                this.getConfig().get('emailFoldersDisabled') ||
+                this.getMetadata().get(['scopes', this.folderScope, 'disabled']) ||
+                !this.getAcl().checkScope(this.folderScope);
 
             var params = this.options.params || {};
 
             this.selectedFolderId = params.folder || this.defaultFolderId;
+
+            if (this.foldersDisabled) {
+                this.selectedFolderId = null;
+            }
 
             this.applyFolder();
         },
@@ -109,8 +114,6 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                 collection.url = 'EmailFolder/action/listAll';
                 collection.maxSize = 200;
 
-                collection.folderCollection = collection;
-
                 this.listenToOnce(collection, 'sync', function () {
                     callback.call(this, collection);
                 }, this);
@@ -121,6 +124,7 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
         loadFolders: function () {
             var xhr = null;
             this.getFolderCollection(function (collection) {
+
                 this.createView('folders', 'views/email-folder/list-side', {
                     collection: collection,
                     emailCollection: this.collection,
@@ -137,7 +141,7 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                             xhr.abort();
                         }
 
-                        this.notify('Please wait...');
+                        this.notify(this.translate('pleaseWait', 'messages'));
                         xhr = this.collection.fetch({
                             success: function () {
                                 this.notify(false);
@@ -152,6 +156,7 @@ Espo.define('views/email/list', 'views/list', function (Dep) {
                         this.updateLastUrl();
                     }, this);
                 }, this);
+
             }, this);
         },
 

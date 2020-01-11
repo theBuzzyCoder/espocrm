@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
+define('views/preferences/record/edit', 'views/record/edit', function (Dep) {
 
     return Dep.extend({
 
@@ -44,39 +44,47 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             }
         ],
 
-        dependencyDefs: {
-            'smtpAuth': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['smtpUsername', 'smtpPassword']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['smtpUsername', 'smtpPassword']
+        dynamicLogicDefs: {
+            fields: {
+                'smtpUsername': {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'smtpAuth',
+                            },
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            }
+                        ]
                     }
-                ]
+                },
+                'smtpPassword': {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'smtpAuth',
+                            },
+                            {
+                                type: 'isNotEmpty',
+                                attribute: 'smtpServer',
+                            }
+                        ]
+                    }
+                },
+                'tabList': {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                type: 'isTrue',
+                                attribute: 'useCustomTabList',
+                            }
+                        ]
+                    }
+                },
             },
-            'useCustomTabList': {
-                map: {
-                    true: [
-                        {
-                            action: 'show',
-                            fields: ['tabList']
-                        }
-                    ]
-                },
-                default: [
-                    {
-                        action: 'hide',
-                        fields: ['tabList']
-                    }
-                ]
-            }
         },
 
         setup: function () {
@@ -123,6 +131,22 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
             var hideNotificationPanel = true;
             if (!this.getConfig().get('assignmentEmailNotifications') || this.model.isPortal()) {
                 this.hideField('receiveAssignmentEmailNotifications');
+                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+            } else {
+                hideNotificationPanel = false;
+
+                this.controlAssignmentEmailNotificationsVisibility();
+                this.listenTo(this.model, 'change:receiveAssignmentEmailNotifications', function () {
+                    this.controlAssignmentEmailNotificationsVisibility();
+                }, this);
+            }
+
+            if ((this.getConfig().get('assignmentEmailNotificationsEntityList') || []).length === 0) {
+                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+            }
+
+            if ((this.getConfig().get('assignmentNotificationsEntityList') || []).length === 0 || this.model.isPortal()) {
+                this.hideField('assignmentNotificationsIgnoreEntityTypeList');
             } else {
                 hideNotificationPanel = false;
             }
@@ -183,6 +207,19 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                     this.model.set('smtpPort', '25');
                 }
             }, this);
+
+            if (this.getAcl().checkScope('EmailAccount') && !this.model.get('smtpServer')) {
+                this.hideField('smtpServer');
+                this.hideField('smtpPort');
+                this.hideField('smtpSecurity');
+                this.hideField('smtpServer');
+                this.hideField('smtpAuth');
+                this.hideField('smtpUsername');
+                this.hideField('smtpPassword');
+                this.hideField('testSend');
+                this.hideField('smtpEmailAddress');
+                this.hidePanel('smtp');
+            }
         },
 
         controlFollowCreatedEntityListVisibility: function () {
@@ -198,6 +235,14 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
                 this.hideField('tabColorsDisabled');
             } else {
                 this.showField('tabColorsDisabled');
+            }
+        },
+
+        controlAssignmentEmailNotificationsVisibility: function () {
+            if (this.model.get('receiveAssignmentEmailNotifications')) {
+                this.showField('assignmentEmailNotificationsIgnoreEntityTypeList');
+            } else {
+                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
             }
         },
 
@@ -240,10 +285,12 @@ Espo.define('views/preferences/record/edit', 'views/record/edit', function (Dep)
 
         exit: function (after) {
             if (after == 'cancel') {
-                this.getRouter().navigate('#User/view/' + this.model.id, {trigger: true});
+                var url = '#User/view/' + this.model.id;
+                if (!this.getAcl().checkModel(this.getUser())) {
+                    url = '#';
+                }
+                this.getRouter().navigate(url, {trigger: true});
             }
         },
-
     });
-
 });

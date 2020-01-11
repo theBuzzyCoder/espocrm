@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -105,19 +105,23 @@ abstract class OAuth2Abstract implements IClient
 
     public function getAccessTokenFromAuthorizationCode($code)
     {
-        $r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_AUTHORIZATION_CODE, array(
+        $r = $this->client->getAccessToken($this->getParam('tokenEndpoint'), Client::GRANT_TYPE_AUTHORIZATION_CODE, [
             'code' => $code,
-            'redirect_uri' => $this->getParam('redirectUri')
-        ));
+            'redirect_uri' => $this->getParam('redirectUri'),
+        ]);
 
         if ($r['code'] == 200) {
-            $data = array();
+            $data = [];
             if (!empty($r['result'])) {
                 $data['accessToken'] = $r['result']['access_token'];
                 $data['tokenType'] = $r['result']['token_type'];
                 $data['refreshToken'] = $r['result']['refresh_token'];
+            } else {
+                $GLOBALS['log']->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . json_encode($r));
             }
             return $data;
+        } else {
+            $GLOBALS['log']->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . json_encode($r));
         }
         return null;
     }

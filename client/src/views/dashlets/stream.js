@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
+define('views/dashlets/stream', 'views/dashlets/abstract/base', function (Dep) {
 
     return Dep.extend({
 
@@ -44,6 +44,10 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
 
                 collection.url = 'Stream';
                 collection.maxSize = this.getOption('displayRecords');
+
+                if (this.getOption('skipOwn')) {
+                    collection.data.skipOwn = true;
+                }
 
                 this.listenToOnce(collection, 'sync', function () {
                     this.createView('list', 'views/stream/record/list', {
@@ -63,7 +67,7 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
         setupActionList: function () {
             this.actionList.unshift({
                 name: 'viewList',
-                html: this.translate('View List'),
+                html: this.translate('View'),
                 iconHtml: '<span class="fas fa-align-justify"></span>',
                 url: '#Stream'
             });
@@ -93,5 +97,3 @@ Espo.define('views/dashlets/stream', 'views/dashlets/abstract/base', function (D
 
     });
 });
-
-

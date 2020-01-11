@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -57,7 +57,7 @@ abstract class Base
         'customHaving',
         'skipTextColumns',
         'maxTextColumnsLength',
-        'useIndexList',
+        'useIndex',
     ];
 
     protected static $sqlOperators = [
@@ -162,6 +162,14 @@ abstract class Base
         'NOT',
         'IN',
         'NOT_IN',
+        'BINARY',
+        'UNIX_TIMESTAMP',
+        'TIMESTAMPDIFF_DAY',
+        'TIMESTAMPDIFF_MONTH',
+        'TIMESTAMPDIFF_YEAR',
+        'TIMESTAMPDIFF_WEEK',
+        'TIMESTAMPDIFF_HOUR',
+        'TIMESTAMPDIFF_MINUTE',
     ];
 
     protected $multipleArgumentsFunctionList = [
@@ -187,6 +195,12 @@ abstract class Base
         'MUL',
         'DIV',
         'MOD',
+        'TIMESTAMPDIFF_DAY',
+        'TIMESTAMPDIFF_MONTH',
+        'TIMESTAMPDIFF_YEAR',
+        'TIMESTAMPDIFF_WEEK',
+        'TIMESTAMPDIFF_HOUR',
+        'TIMESTAMPDIFF_MINUTE',
     ];
 
     protected $comparisonFunctionList = [
@@ -309,13 +323,15 @@ abstract class Base
 
             if (!empty($params['additionalColumns']) && is_array($params['additionalColumns']) && !empty($params['relationName'])) {
                 foreach ($params['additionalColumns'] as $column => $field) {
-                    $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." . $this->toDb($this->sanitize($column)) . " AS `{$field}`";
+                    $itemAlias = $this->sanitizeSelectAlias($field);
+                    $selectPart .= ", `" . $this->toDb($this->sanitize($params['relationName'])) . "`." . $this->toDb($this->sanitize($column)) . " AS `{$itemAlias}`";
                 }
             }
 
             if (!empty($params['additionalSelectColumns']) && is_array($params['additionalSelectColumns'])) {
                 foreach ($params['additionalSelectColumns'] as $column => $field) {
-                    $selectPart .= ", " . $column . " AS `{$field}`";
+                    $itemAlias = $this->sanitizeSelectAlias($field);
+                    $selectPart .= ", " . $column . " AS `{$itemAlias}`";
                 }
             }
 
@@ -383,9 +399,14 @@ abstract class Base
         }
 
         $indexKeyList = null;
-        if (!empty($params['useIndexList']) && $this->metadata) {
+        $indexList = $params['useIndex'] ?? null;
+
+        if (!empty($indexList) && $this->metadata) {
             $indexKeyList = [];
-            foreach ($params['useIndexList'] as $indexName) {
+            if (is_string($indexList)) {
+                $indexList = [$indexList];
+            }
+            foreach ($indexList as $indexName) {
                 $indexKey = $this->metadata->get($entityType, ['indexes', $indexName, 'key']);
                 if ($indexKey) {
                     $indexKeyList[] = $indexKey;
@@ -428,6 +449,7 @@ abstract class Base
             $havingPart,
             $indexKeyList
         );
+
         return $sql;
     }
 
@@ -545,6 +567,18 @@ abstract class Base
                 break;
             case 'NOT':
                 return 'NOT ' . $part;
+            case 'TIMESTAMPDIFF_YEAR':
+                return 'TIMESTAMPDIFF(YEAR, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_MONTH':
+                return 'TIMESTAMPDIFF(MONTH, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_WEEK':
+                return 'TIMESTAMPDIFF(WEEK, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_DAY':
+                return 'TIMESTAMPDIFF(DAY, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_HOUR':
+                return 'TIMESTAMPDIFF(HOUR, ' . implode(', ', $argumentPartList) . ')';
+            case 'TIMESTAMPDIFF_MINUTE':
+                return 'TIMESTAMPDIFF(MINUTE, ' . implode(', ', $argumentPartList) . ')';
         }
 
         if ($distinct) {
@@ -597,15 +631,30 @@ abstract class Base
             throw new \Exception("Empty MATCH parameters.");
         }
 
-        $delimiterPosition = strpos($rest, ':');
-        if ($delimiterPosition === false) {
-            throw new \Exception("Bad MATCH usage.");
+        if (substr($rest, 0, 1) === '(' && substr($rest, -1) === ')') {
+            $rest = substr($rest, 1, -1);
+
+            $argumentList = self::parseArgumentListFromFunctionContent($rest);
+            if (count($argumentList) < 2) {
+                throw new \Exception("Bad MATCH usage.");
+            }
+
+            $columnList = [];
+            for ($i = 0; $i < count($argumentList) - 1; $i++) {
+                $columnList[] = $argumentList[$i];
+            }
+            $query = $argumentList[count($argumentList) - 1];
+        } else {
+            $delimiterPosition = strpos($rest, ':');
+            if ($delimiterPosition === false) {
+                throw new \Exception("Bad MATCH usage.");
+            }
+
+            $columns = substr($rest, 0, $delimiterPosition);
+            $query = mb_substr($rest, $delimiterPosition + 1);
+
+            $columnList = explode(',', $columns);
         }
-
-        $columns = substr($rest, 0, $delimiterPosition);
-        $query = mb_substr($rest, $delimiterPosition + 1);
-
-        $columnList = explode(',', $columns);
 
         $tableName = $this->toDb($entity->getEntityType());
 
@@ -863,7 +912,7 @@ abstract class Base
                     $part = str_replace('{alias}', $alias, $part);
                 }
             } else {
-                $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($attribute);
+                $part = $this->toDb($entity->getEntityType()) . '.' . $this->toDb($this->sanitize($attribute));
                 if ($type === 'orderBy') {
                     $part .= ' {direction}';
                 }
@@ -921,15 +970,22 @@ abstract class Base
             $attributeList = array_keys($entity->fields);
         } else {
             $attributeList = $itemList;
-            foreach ($attributeList as $i => $attribute) {
-                if (is_string($attribute)) {
-                    if (strpos($attribute, ':')) {
-                        $attributeList[$i] = [
-                            $attribute,
-                            $attribute
-                        ];
-                        continue;
-                    }
+        }
+
+        if ($params && isset($params['additionalSelect'])) {
+            foreach ($params['additionalSelect'] as $item) {
+                $attributeList[] = $item;
+            }
+        }
+
+        foreach ($attributeList as $i => $attribute) {
+            if (is_string($attribute)) {
+                if (strpos($attribute, ':')) {
+                    $attributeList[$i] = [
+                        $attribute,
+                        $attribute
+                    ];
+                    continue;
                 }
             }
         }
@@ -961,7 +1017,10 @@ abstract class Base
                         if (!empty($fieldDefs['select'])) {
                             $part = $this->getAttributeSql($entity, $attribute[0], 'select', $params);
                         } else {
-                            if (!empty($fieldDefs['notStorable']) || !empty($fieldDefs['noSelect'])) {
+                            if (!empty($fieldDefs['noSelect'])) {
+                                continue;
+                            }
+                            if (!empty($fieldDefs['notStorable'])) {
                                 continue;
                             }
                             $part = $this->getFieldPath($entity, $attribute[0], $params);
@@ -986,7 +1045,7 @@ abstract class Base
             if (!empty($fieldDefs['select'])) {
                 $fieldPath = $this->getAttributeSql($entity, $attribute, 'select', $params);
             } else {
-                if (!empty($fieldDefs['notStorable'])) {
+                if (!empty($fieldDefs['notStorable']) && ($fieldDefs['type'] ?? null) !== 'foreign') {
                     continue;
                 }
                 if ($attributeType === null) {
@@ -1018,6 +1077,8 @@ abstract class Base
 
         if (!$alias) {
             $alias = $this->getAlias($entity, $relationName);
+        } else {
+            $alias = $this->sanitizeSelectAlias($alias);
         }
 
         if ($alias) {
@@ -1040,28 +1101,29 @@ abstract class Base
                 }
                 if ($entity->getAttributeType($field) == 'foreign' && $entity->getAttributeParam($field, 'relation')) {
                     $relationsToJoin[] = $entity->getAttributeParam($field, 'relation');
+                } else if (
+                    $entity->getAttributeParam($field, 'fieldType') == 'linkOne' && $entity->getAttributeParam($field, 'relation')
+                ) {
+                    $relationsToJoin[] = $entity->getAttributeParam($field, 'relation');
                 }
             }
         }
 
         foreach ($entity->relations as $relationName => $r) {
-            if ($r['type'] == IEntity::BELONGS_TO) {
-                if (!empty($r['noJoin'])) {
-                    continue;
-                }
-                if (in_array($relationName, $skipList)) {
-                    continue;
-                }
+            $type = $r['type'] ?? null;
+            if ($type == IEntity::BELONGS_TO || $type == IEntity::HAS_ONE) {
+                if (!empty($r['noJoin'])) continue;
 
-                if (is_array($select)) {
-                    if (!in_array($relationName, $relationsToJoin)) {
-                        continue;
-                    }
-                }
+                if (in_array($relationName, $skipList)) continue;
+                if (is_array($select) && !in_array($relationName, $relationsToJoin)) continue;
 
-                $join = $this->getBelongsToJoin($entity, $relationName, $r);
-                if ($join) {
+                if ($type == IEntity::BELONGS_TO) {
+                    $join = $this->getBelongsToJoin($entity, $relationName, $r);
+                    if (!$join) continue;
                     $joinsArr[] = 'LEFT ' . $join;
+                } else if ($type == IEntity::HAS_ONE) {
+                    $join =  $this->getJoin($entity, $relationName, true);
+                    $joinsArr[] = $join;
                 }
             }
         }
@@ -1082,7 +1144,7 @@ abstract class Base
                         if (!empty($item[1])) {
                             $orderInternal = $item[1];
                         }
-                        $arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal, false, $params);
+                        $arr[] = $this->getOrderPart($entity, $orderByInternal, $orderInternal, $useColumnAlias, $params);
                     }
                 }
                 return implode(", ", $arr);
@@ -1090,7 +1152,11 @@ abstract class Base
 
             if (strpos($orderBy, 'LIST:') === 0) {
                 list($l, $field, $list) = explode(':', $orderBy);
-                $fieldPath = $this->getFieldPathForOrderBy($entity, $field, $params);
+                if ($useColumnAlias) {
+                    $fieldPath = '`'. $this->sanitizeSelectAlias($field) . '`';
+                } else {
+                    $fieldPath = $this->getFieldPathForOrderBy($entity, $field, $params);
+                }
                 $listQuoted = [];
                 $list = array_reverse(explode(',', $list));
                 foreach ($list as $i => $listItem) {
@@ -1154,7 +1220,7 @@ abstract class Base
 
     protected function getFieldPathForOrderBy($entity, $orderBy, $params)
     {
-        if (strpos($orderBy, '.') !== false) {
+        if (strpos($orderBy, '.') !== false || strpos($orderBy, ':') !== false) {
             $fieldPath = $this->convertComplexExpression(
                 $entity,
                 $orderBy,
@@ -1235,7 +1301,7 @@ abstract class Base
         $occuranceHash = [];
 
         foreach ($entity->relations as $name => $r) {
-            if ($r['type'] == IEntity::BELONGS_TO) {
+            if ($r['type'] == IEntity::BELONGS_TO || $r['type'] == IEntity::HAS_ONE) {
 
                 if (!array_key_exists($name, $aliases)) {
                     if (array_key_exists($name, $occuranceHash)) {
@@ -1261,36 +1327,47 @@ abstract class Base
         if (isset($entity->fields[$field])) {
             $f = $entity->fields[$field];
 
+            $relationType = $f['type'];
+
             if (isset($f['source'])) {
                 if ($f['source'] != 'db') {
                     return false;
                 }
             }
 
-            if (!empty($f['notStorable'])) {
+            if (!empty($f['notStorable']) && $relationType !== 'foreign') {
                 return false;
             }
 
             $fieldPath = '';
 
-            switch ($f['type']) {
+            switch ($relationType) {
                 case 'foreign':
                     if (isset($f['relation'])) {
                         $relationName = $f['relation'];
 
-                        $foreigh = $f['foreign'];
+                        $foreign = $f['foreign'];
 
-                        if (is_array($foreigh)) {
-                            foreach ($foreigh as $i => $value) {
+                        if (is_array($foreign)) {
+                            $wsCount = 0;
+                            foreach ($foreign as $i => $value) {
                                 if ($value == ' ') {
-                                    $foreigh[$i] = '\' \'';
+                                    $foreign[$i] = '\' \'';
+                                    $wsCount ++;
                                 } else {
-                                    $foreigh[$i] = $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
+                                    $item =  $this->getAlias($entity, $relationName) . '.' . $this->toDb($value);
+
+                                    $foreign[$i] = "IFNULL({$item}, '')";
                                 }
                             }
-                            $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreigh). '))';
+
+                            $fieldPath = 'TRIM(CONCAT(' . implode(', ', $foreign). '))';
+
+                            if ($wsCount > 1) {
+                               $fieldPath = "REPLACE({$fieldPath}, '  ', ' ')";
+                            }
                         } else {
-                            $expression = $this->getAlias($entity, $relationName) . '.' . $foreigh;
+                            $expression = $this->getAlias($entity, $relationName) . '.' . $foreign;
                             $fieldPath = $this->convertComplexExpression($entity, $expression, false, $params);
                         }
                     }
@@ -1608,14 +1685,19 @@ abstract class Base
     protected function getJoins(IEntity $entity, array $joins, $isLeft = false, $joinConditions = [])
     {
         $joinSqlList = [];
+
         foreach ($joins as $item) {
             $itemConditions = [];
+            $params = [];
             if (is_array($item)) {
                 $relationName = $item[0];
                 if (count($item) > 1) {
-                    $alias = $item[1];
+                    $alias = $item[1] ?? $relationName;
                     if (count($item) > 2) {
-                        $itemConditions = $item[2];
+                        $itemConditions = $item[2] ?? [];
+                    }
+                    if (count($item) > 3) {
+                        $params = $item[3] ?? [];
                     }
                 } else {
                     $alias = $relationName;
@@ -1631,7 +1713,7 @@ abstract class Base
             foreach ($itemConditions as $left => $right) {
                 $conditions[$left] = $right;
             }
-            if ($sql = $this->getJoin($entity, $relationName, $isLeft, $conditions, $alias)) {
+            if ($sql = $this->getJoin($entity, $relationName, $isLeft, $conditions, $alias, $params)) {
                 $joinSqlList[] = $sql;
             }
         }
@@ -1747,13 +1829,15 @@ abstract class Base
         }
     }
 
-    protected function getJoin(IEntity $entity, $name, $isLeft = false, $conditions = [], $alias = null)
+    protected function getJoin(IEntity $entity, $name, $isLeft = false, $conditions = [], $alias = null, array $params = [])
     {
         $prefix = ($isLeft) ? 'LEFT ' : '';
 
         if (!$entity->hasRelation($name)) {
             if (!$alias) {
                 $alias = $this->sanitize($name);
+            } else {
+                $alias = $this->sanitizeSelectAlias($alias);
             }
             $table = $this->toDb($this->sanitize($name));
 
@@ -1803,8 +1887,34 @@ abstract class Base
 
                 $midAlias = $alias . 'Middle';
 
+                $indexKeyList = null;
+                $indexList = $params['useIndex'] ?? null;
+
+                if ($indexList && $this->metadata) {
+                    $indexKeyList = [];
+                    if (is_string($indexList)) {
+                        $indexList = [$indexList];
+                    }
+                    foreach ($indexList as $indexName) {
+                        $indexKey = $this->metadata->get($entity->getEntityType(), ['relations', $relationName, 'indexes', $indexName, 'key']);
+                        if ($indexKey) {
+                            $indexKeyList[] = $indexKey;
+                        }
+                    }
+                }
+
+                $indexPart = '';
+
+                if ($indexKeyList && count($indexKeyList)) {
+                    $sanitizedIndexList = [];
+                    foreach ($indexKeyList as $indexKey) {
+                        $sanitizedIndexList[] = '`' . $this->sanitizeIndexName($indexKey) . '`';
+                    }
+                    $indexPart = " USE INDEX (".implode(', ', $sanitizedIndexList).")";
+                }
+
                 $sql =
-                    "{$prefix}JOIN `{$relTable}` AS `{$midAlias}` ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
+                    "{$prefix}JOIN `{$relTable}` AS `{$midAlias}`{$indexPart} ON {$this->toDb($entity->getEntityType())}." . $this->toDb($key) . " = {$midAlias}." . $this->toDb($nearKey)
                     . " AND "
                     . "{$midAlias}.deleted = " . $this->pdo->quote(0);
 
@@ -1816,9 +1926,13 @@ abstract class Base
                     $sql .= " AND " . implode(" AND ", $joinSqlList);
                 }
 
-                $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
-                    . " AND "
-                    . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                $onlyMiddle = $params['onlyMiddle'] ?? false;
+
+                if (!$onlyMiddle) {
+                    $sql .= " {$prefix}JOIN `{$distantTable}` AS `{$alias}` ON {$alias}." . $this->toDb($foreignKey) . " = {$midAlias}." . $this->toDb($distantKey)
+                        . " AND "
+                        . "{$alias}.deleted = " . $this->pdo->quote(0) . "";
+                }
 
                 return $sql;
 

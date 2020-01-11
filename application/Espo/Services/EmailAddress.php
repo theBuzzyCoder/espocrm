@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -67,7 +67,16 @@ class EmailAddress extends Record
         $selectManager = $this->getSelectManagerFactory()->create($entityType);
         $selectManager->applyAccess($selectParams);
 
-        $collection = $this->getEntityManager()->getRepository($entityType)->find($selectParams);
+        $select = ['id', 'emailAddress', 'name'];
+
+        if ($this->getMetadata()->get(['entityDefs', $entityType, 'fields', 'name', 'type']) === 'personName') {
+            $select[] = 'firstName';
+            $select[] = 'lastName';
+        }
+
+        $collection = $this->getEntityManager()->getRepository($entityType)
+            ->select($select)
+            ->find($selectParams);
 
         foreach ($collection as $entity) {
             $emailAddress = $entity->get('emailAddress');

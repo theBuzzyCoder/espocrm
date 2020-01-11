@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -67,21 +67,12 @@ service apache2 restart',
         try_files /reset.html =404;
     }
 
-    location ^~ (data|api)/ {
+    location ^~ (api|client)/ {
         if (-e $request_filename){
             return 403;
         }
     }
-    location ^~ /data/logs/ {
-        deny all;
-    }
-    location ^~ /data/config.php {
-        deny all;
-    }
-    location ^~ /data/cache/ {
-        deny all;
-    }
-    location ^~ /data/upload/ {
+    location ^~ /data/ {
         deny all;
     }
     location ^~ /application/ {
@@ -98,8 +89,4 @@ service apache2 restart',
     }
 }',
     ],
-
-    'blog' => 'http://blog.espocrm.com',
-    'twitter' => 'https://twitter.com/espocrm',
-    'forum' => 'http://forum.espocrm.com',
 ];

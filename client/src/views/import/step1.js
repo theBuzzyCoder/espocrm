@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/import/step1', 'view', function (Dep) {
+define('views/import/step1', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -100,7 +100,9 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                     {key: "hh:mm:ss A", value: '11:00:00 PM'},
                     {key: "hh:mm:ssA", value: '11:00:00PM'},
                 ],
-                timezoneList: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'])
+                timezoneList: this.getMetadata().get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options']),
+
+                personNameFormatList: this.personNameFormatList,
             };
         },
 
@@ -116,6 +118,18 @@ Espo.define('views/import/step1', 'view', function (Dep) {
                 decimalMark: '.',
                 personNameFormat: 'f l',
             };
+
+            this.personNameFormatList = [
+                'f l',
+                'l f',
+                'l, f',
+            ];
+
+            var personNameFormat = this.getConfig().get('personNameFormat');
+            if (~personNameFormat.toString().toLowerCase().indexOf('middle')) {
+                this.personNameFormatList.push('f m l');
+                this.personNameFormatList.push('l f m');
+            }
         },
 
         afterRender: function () {
@@ -151,7 +165,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
 
             $('#import-idle-mode').get(0).checked = this.formData.idleMode || false;
 
-            $('#import-silent-mode').get(0).checked = this.formData.silentMode || false;
+            $('#import-silent-mode').get(0).checked = ('silentMode' in this.formData) ? this.formData.silentMode : true;
 
             $('#skip-duplicate-checking').get(0).checked = this.formData.skipDuplicateChecking || false;
 
@@ -274,7 +288,7 @@ Espo.define('views/import/step1', 'view', function (Dep) {
             }
 
             return arrData;
-        }
+        },
 
     });
 });

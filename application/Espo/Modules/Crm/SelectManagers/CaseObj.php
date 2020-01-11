@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,20 +33,22 @@ class CaseObj extends \Espo\Core\SelectManagers\Base
 {
     protected function boolFilterOpen(&$result)
     {
-        $this->filterOpen($result);
+        return [
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+        ];
     }
 
     protected function filterOpen(&$result)
     {
-        $result['whereClause'][] = array(
-            'status!=' => array('Duplicate', 'Rejected', 'Closed')
-        );
+        $result['whereClause'][] = [
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+        ];
     }
 
     protected function filterClosed(&$result)
     {
-        $result['whereClause'][] = array(
-            'status' => array('Closed')
-        );
+        $result['whereClause'][] = [
+            'status' => 'Closed'
+        ];
     }
 }

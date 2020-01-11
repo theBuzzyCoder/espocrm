@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -36,11 +36,11 @@ require_once 'tests/unit/testData/DB/Entities.php';
 
 class EntityTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
     }
 
@@ -98,12 +98,22 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($job->isAttributeChanged('array'));
 
         $job = new \Espo\Entities\Job();
-        $job->setFetched('array', [
+        $job->set('array', [
             (object) ['k1' => 'v1']
         ]);
+        $job->setAsFetched();
         $job->set('array', [
             (object) ['k1' => 'v1', 'k2' => 'v2'],
         ]);
+        $this->assertTrue($job->isAttributeChanged('array'));
+
+        $job = new \Espo\Entities\Job();
+        $v = [
+            (object) ['k1' => 'v1']
+        ];
+        $job->setFetched('array', $v);
+        $v[0]->k2 = 'v2';
+        $job->set('array', $v);
         $this->assertTrue($job->isAttributeChanged('array'));
 
         $job = new \Espo\Entities\Job();
@@ -144,13 +154,13 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($job->isAttributeChanged('arrayUnordered'));
 
         $job = new \Espo\Entities\Job();
-        $job->setFetched('object', (object) ['1' => 'value-1']);
-        $job->set('object', (object) ['1' => 'value-1']);
+        $job->setFetched('object', (object) ['a1' => 'value-1']);
+        $job->set('object', (object) ['a1' => 'value-1']);
         $this->assertFalse($job->isAttributeChanged('object'));
 
         $job = new \Espo\Entities\Job();
-        $job->setFetched('object', (object) ['1' => 'value-1']);
-        $job->set('object', ['1' => 'value-1']);
+        $job->setFetched('object', (object) ['a1' => 'value-1']);
+        $job->set('object', ['a1' => 'value-1']);
         $this->assertTrue($job->isAttributeChanged('object'));
 
         $job = new \Espo\Entities\Job();
@@ -197,5 +207,4 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         ]);
         $this->assertTrue($job->isAttributeChanged('object'));
     }
-
 }

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -43,7 +43,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
     protected $systemConfigPath = 'tests/unit/testData/Utils/Config/systemConfig.php';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
 
@@ -60,7 +60,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('systemConfigPath', $this->systemConfigPath);
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

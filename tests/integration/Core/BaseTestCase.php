@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -67,9 +67,9 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
 
     protected $initData = null;
 
-    protected function createApplication($clearCache = true)
+    protected function createApplication($clearCache = true, $portalId = null)
     {
-        return $this->espoTester->getApplication(true, $clearCache);
+        return $this->espoTester->getApplication(true, $clearCache, $portalId);
     }
 
     protected function auth($userName, $password = null, $portalId = null, $authenticationMethod = null)
@@ -114,10 +114,8 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         return $this->espoTester->sendRequest($method, $action, $data);
     }
 
-    protected function setUp()
+    protected function setUp() : void
     {
-        $this->beforeSetUp();
-
         $params = array(
             'className' => get_class($this),
             'dataFile' => $this->dataFile,
@@ -126,6 +124,9 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         );
 
         $this->espoTester = new Tester($params);
+
+        $this->beforeSetUp();
+
         $this->espoTester->initialize();
         $this->auth($this->userName, $this->password, null, $this->authenticationMethod);
 
@@ -134,7 +135,7 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
         $this->afterStartApplication();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->espoTester->terminate();
         $this->espoTester = NULL;
@@ -188,5 +189,10 @@ abstract class BaseTestCase extends \PHPUnit\Framework\TestCase
     protected function setData(array $data)
     {
         $this->espoTester->setData($data);
+    }
+
+    protected function fullReset()
+    {
+        $this->espoTester->setParam('fullReset', true);
     }
 }

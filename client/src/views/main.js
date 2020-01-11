@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -87,15 +87,21 @@ define('views/main', 'view', function (Dep) {
             if (this.menu) {
                 ['buttons', 'actions', 'dropdown'].forEach(function (type) {
                     (this.menu[type] || []).forEach(function (item) {
+                        item = Espo.Utils.clone(item);
                         menu[type] = menu[type] || [];
-                        if (item.configCheck) {
-                            if (!this.getConfig().getByPath(item.configCheck.split('.'))) return;
-                        }
-                        if (Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
-                            menu[type].push(item);
-                        }
+
+                        if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) return;
+                        if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) return;
+
                         item.name = item.name || item.action;
                         item.action = item.action || this.name;
+
+                        if (item.labelTranslation) {
+                            item.html = this.getHelper().escapeString(
+                                this.getLanguage().translatePath(item.labelTranslation)
+                            );
+                        }
+                        menu[type].push(item);
                     }, this);
                 }, this);
             }
@@ -111,7 +117,8 @@ define('views/main', 'view', function (Dep) {
                 a.push('<div class="breadcrumb-item">' + item + '</div>');
             }, this);
 
-            return '<div class="header-breadcrumbs">' + a.join('<div class="breadcrumb-separator"> &raquo </div>') + '</div>';
+            return '<div class="header-breadcrumbs">' +
+                a.join('<div class="breadcrumb-separator"><span class="chevron-right"></span></div>') + '</div>';
         },
 
         getHeaderIconHtml: function () {
@@ -190,6 +197,10 @@ define('views/main', 'view', function (Dep) {
 
             if (!doNotReRender && this.isRendered()) {
                 this.getView('header').reRender();
+            }
+
+            if (doNotReRender && this.isRendered()) {
+                this.$el.find('.header .header-buttons [data-name="'+name+'"]').remove();
             }
         },
 

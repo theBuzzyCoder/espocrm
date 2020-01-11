@@ -3,7 +3,6 @@
         "label": "System",
         "rows": [
             [{"name": "useCache"}, {"name": "siteUrl"}],
-            [{"name": "b2cMode"}, {"name": "aclStrictMode"}],
             [{"name": "maintenanceMode"}, {"name": "cronDisabled"}],
             [{"name": "useWebSocket"}, false]
         ]
@@ -19,7 +18,7 @@
         "rows": [
             [{"name": "followCreatedEntities"}, {"name": "emailAddressIsOptedOutByDefault"}],
             [{"name": "aclAllowDeleteCreated"}, {"name": "cleanupDeletedRecords"}],
-            [{"name": "exportDisabled"}, false]
+            [{"name": "exportDisabled"}, {"name": "b2cMode"}]
         ]
     },
     {
@@ -28,7 +27,8 @@
             [{"name": "language"}, {"name": "timeZone"}],
             [{"name": "dateFormat"}, {"name": "weekStart"}],
             [{"name": "timeFormat"},  {"name": "thousandSeparator"}],
-            [{"name": "fiscalYearShift"},  {"name": "decimalMark"}],
+            [{"name": "fiscalYearShift"}, {"name": "decimalMark"}],
+            [{"name": "personNameFormat"}, false],
             [{"name": "addressFormat"}, {"name": "addressPreview"}],
             [{"name": "addressCountryList"}, {"name": "addressCityList"}],
             [{"name": "addressStateList"}, false]

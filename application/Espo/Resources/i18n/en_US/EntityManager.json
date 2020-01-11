@@ -33,7 +33,10 @@
         "kanbanViewMode": "Kanban View",
         "kanbanStatusIgnoreList": "Ignored groups in Kanban view",
         "iconClass": "Icon",
-        "fullTextSearch": "Full-Text Search"
+        "countDisabled": "Disable record count",
+        "fullTextSearch": "Full-Text Search",
+        "parentEntityTypeList": "Parent Entity Types",
+        "foreignLinkEntityTypeList": "Foreign Links"
     },
     "options": {
         "type": {
@@ -49,6 +52,8 @@
             "manyToMany": "Many-to-Many",
             "oneToMany": "One-to-Many",
             "manyToOne": "Many-to-One",
+            "oneToOneRight": "One-to-One Right",
+            "oneToOneLeft": "One-to-One Left",
             "parentToChildren": "Parent-to-Children",
             "childrenToParent": "Children-to-Parent"
         },
@@ -70,6 +75,7 @@
         "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
         "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
         "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel.",
+        "countDisabled": "Total number won't be displayed on the list view. Can decrease loading time when the DB table is big.",
         "fullTextSearch": "Running rebuild is required."
     }
 }

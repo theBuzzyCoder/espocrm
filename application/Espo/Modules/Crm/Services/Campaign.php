@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -80,7 +80,19 @@ class Campaign extends \Espo\Services\Record
         $clickedCount = $this->getEntityManager()->getRepository('CampaignLogRecord')->where([
             'campaignId' => $entity->id,
             'action' => 'Clicked',
-            'isTest' => false
+            'isTest' => false,
+            'id=s' => [
+                'entityType' => 'CampaignLogRecord',
+                'selectParams' => [
+                    'select' => ['MIN:id'],
+                    'whereClause' => [
+                        'action' => 'Clicked',
+                        'isTest' => false,
+                        'campaignId' => $entity->id,
+                    ],
+                    'groupBy' => ['queueItemId'],
+                ],
+            ],
         ])->count();
         $entity->set('clickedCount', $clickedCount);
 

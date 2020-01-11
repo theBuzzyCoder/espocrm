@@ -21,8 +21,14 @@
       {
          "name": "rows",
          "type": "int",
-         "default": 30,
          "min": 1
+      },
+      {
+         "name": "rowsMin",
+         "type": "int",
+         "default": 2,
+         "min": 1,
+         "hidden": true
       },
       {
          "name": "cutHeight",

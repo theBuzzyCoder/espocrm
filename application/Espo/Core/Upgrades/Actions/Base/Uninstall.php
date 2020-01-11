@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -76,7 +76,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
 
         if (!isset($data['skipSystemRebuild']) || !$data['skipSystemRebuild']) {
             if (!$this->systemRebuild()) {
-                $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild.');
+                $this->throwErrorAndRemovePackage('Error occurred while EspoCRM rebuild. Please see the log for more detail.');
             }
         }
 
@@ -155,7 +155,7 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base
         return $res;
     }
 
-    protected function throwErrorAndRemovePackage($errorMessage = '')
+    public function throwErrorAndRemovePackage($errorMessage = '')
     {
         $this->restoreFiles();
         throw new Error($errorMessage);

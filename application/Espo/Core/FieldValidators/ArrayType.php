@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -42,6 +42,13 @@ class ArrayType extends BaseType
         $list = $entity->get($field);
         if (count($list) > $validationValue) return false;
         return true;
+    }
+
+    public function checkArray(\Espo\ORM\Entity $entity, string $field, $validationValue, $data) : bool
+    {
+        if (!$entity->has($field) || $entity->get($field) === null) return true;
+
+        return is_array($entity->get($field));
     }
 
     protected function isNotEmpty(\Espo\ORM\Entity $entity, $field)

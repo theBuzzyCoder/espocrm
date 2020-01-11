@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
     protected $filesPath= 'tests/unit/testData/FileManager';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['fileManager'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\File\\Manager')->disableOriginalConstructor()->getMock();
         $this->objects['metadata'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Metadata')->disableOriginalConstructor()->getMock();
@@ -51,16 +51,12 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
         $this->object = new \Espo\Core\Utils\Layout($this->objects['fileManager'], $this->objects['metadata'], $this->objects['user']);
 
         $this->reflection = new ReflectionHelper($this->object);
-        $this->reflection->setProperty('params', array(
-            'application/Espo/Core/defaults',
-        ) );
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }
-
 
     function testGetLayoutPathCore()
     {
@@ -101,9 +97,4 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals($result, $this->object->get('Note', 'detail'));
     }
-
-
-
 }
-
-?>

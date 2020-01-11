@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -29,10 +29,11 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 
 use Espo\ORM\Entity;
+use Espo\Entities\User;
 
 class Stream extends \Espo\Core\Services\Base
 {
@@ -60,7 +61,7 @@ class Stream extends \Espo\Core\Services\Base
 
     protected $emailsWithContentEntityList = ['Case'];
 
-    protected $auditedFieldsCache = array();
+    protected $auditedFieldsCache = [];
 
     private $notificationService = null;
 
@@ -105,7 +106,7 @@ class Stream extends \Espo\Core\Services\Base
     protected function getStatusStyles()
     {
         if (empty($this->statusStyles)) {
-            $this->statusStyles = $this->getMetadata()->get('entityDefs.Note.statusStyles', array());
+            $this->statusStyles = $this->getMetadata()->get('entityDefs.Note.statusStyles', []);
         }
         return $this->statusStyles;
     }
@@ -114,7 +115,7 @@ class Stream extends \Espo\Core\Services\Base
     {
         if (is_null($this->statusFields)) {
             $this->statusFields = array();
-            $scopes = $this->getMetadata()->get('scopes', array());
+            $scopes = $this->getMetadata()->get('scopes', []);
             foreach ($scopes as $scope => $data) {
                 if (empty($data['statusField'])) continue;
                 $this->statusFields[$scope] = $data['statusField'];
@@ -142,7 +143,8 @@ class Stream extends \Espo\Core\Services\Base
 
         foreach ($userIdList as $i => $userId) {
             $user = $this->getEntityManager()->getEntity('User', $userId);
-            if (!$user){
+            if (!$user) {
+                unset($userIdList[$i]);
                 continue;
             }
             if (!$this->getAclManager()->check($user, $entity, 'stream')) {
@@ -164,10 +166,10 @@ class Stream extends \Espo\Core\Services\Base
 
         $this->followEntityMass($entity, $userIdList);
 
-        $noteList = $this->getEntityManager()->getRepository('Note')->where(array(
+        $noteList = $this->getEntityManager()->getRepository('Note')->where([
             'parentType' => $entityType,
             'parentId' => $entityId
-        ))->order('number', 'ASC')->find();
+        ])->order('number', 'ASC')->find();
 
         foreach ($noteList as $note) {
             $this->getNotificationService()->notifyAboutNote($userIdList, $note);
@@ -196,9 +198,9 @@ class Stream extends \Espo\Core\Services\Base
         return false;
     }
 
-    public function followEntityMass(Entity $entity, array $sourceUserIdList)
+    public function followEntityMass(Entity $entity, array $sourceUserIdList, bool $skipAclCheck = false)
     {
-        if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
+        if (!$this->getMetadata()->get(['scopes', $entity->getEntityType(), 'stream'])) {
             return false;
         }
 
@@ -211,6 +213,27 @@ class Stream extends \Espo\Core\Services\Base
         }
 
         $userIdList = array_unique($userIdList);
+
+        if (!$skipAclCheck) {
+            foreach ($userIdList as $i => $userId) {
+                $user = $this->getEntityManager()->getRepository('User')
+                    ->select(['id', 'type', 'isActive'])
+                    ->where([
+                        'id' => $userId,
+                        'isActive' => true,
+                    ])->findOne();
+
+                if (!$user) {
+                    unset($userIdList[$i]);
+                    continue;
+                }
+
+                if (!$this->getAclManager()->check($user, $entity, 'stream')) {
+                    unset($userIdList[$i]);
+                }
+            }
+            $userIdList = array_values($userIdList);
+        }
 
         if (empty($userIdList)) {
             return;
@@ -252,6 +275,16 @@ class Stream extends \Espo\Core\Services\Base
         if (!$this->getMetadata()->get('scopes.' . $entity->getEntityName() . '.stream')) {
             return false;
         }
+
+        $user = $this->getEntityManager()->getRepository('User')
+            ->select(['id', 'type', 'isActive'])
+            ->where([
+                'id' => $userId,
+                'isActive' => true,
+            ])->findOne();
+
+        if (!$user) return false;
+        if (!$this->getAclManager()->check($user, $entity, 'stream')) return false;
 
         $pdo = $this->getEntityManager()->getPDO();
 
@@ -302,10 +335,12 @@ class Stream extends \Espo\Core\Services\Base
         $sth = $pdo->prepare($sql)->execute();
     }
 
-    public function findUserStream($userId, $params = array())
+    public function findUserStream($userId, $params = [])
     {
         $offset = intval($params['offset']);
         $maxSize = intval($params['maxSize']);
+
+        $sqLimit = $offset + $maxSize + 1;
 
         if ($userId === $this->getUser()->id) {
             $user = $this->getUser();
@@ -318,6 +353,8 @@ class Stream extends \Espo\Core\Services\Base
                 throw new Forbidden();
             }
         }
+
+        $skipOwn = $params['skipOwn'] ?? false;
 
         $teamIdList = $user->getTeamIdList();
 
@@ -336,7 +373,7 @@ class Stream extends \Espo\Core\Services\Base
             $selectManager = $this->getSelectMangerFactory()->create('Note');
             $additionalSelectParams = $selectManager->getSelectParams([
                 'where' => $params['where']
-            ], false, true);
+            ], false, true, true);
         }
 
         $selectParamsList = [];
@@ -344,19 +381,22 @@ class Stream extends \Espo\Core\Services\Base
         $selectParamsSubscription = [
             'select' => $select,
             'leftJoins' => ['createdBy'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    (
-                        (
-                            note.parent_type = subscription.entity_type AND
-                            note.parent_id = subscription.entity_id
-                        )
-                    ) AND
-                    subscription.user_id = ". $pdo->quote($user->id) ."
-            ",
+            'joins' => [
+                [
+                    'Subscription',
+                    'subscription',
+                    [
+                        'entityType:' => 'parentType',
+                        'entityId:' => 'parentId',
+                        'subscription.userId' => $user->id,
+                    ]
+                ]
+            ],
             'whereClause' => [],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'limit' => $sqLimit,
+            'useIndex' => 'number',
         ];
 
         if ($user->isPortal()) {
@@ -366,17 +406,33 @@ class Stream extends \Espo\Core\Services\Base
 
             $notAllEntityTypeList = $this->getNotAllEntityTypeList($user);
 
-            $selectParamsSubscription['whereClause'][] = [
-                'OR' => [
-                    [
-                        'relatedId' => null
-                    ],
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => $notAllEntityTypeList
-                    ]
-                ]
+            $orGroup = [
+                [
+                    'relatedId' => null,
+                ],
+                [
+                    'relatedId!=' => null,
+                    'relatedType!=' => $notAllEntityTypeList,
+                ],
             ];
+
+            $aclManager = $this->getUserAclManager($user);
+            if ($aclManager && $aclManager->check($user, 'Email', 'read')) {
+                $selectParamsSubscription['leftJoins'][] = [
+                    'noteUser', 'noteUser', [
+                        'noteUser.noteId=:' => 'id',
+                        'noteUser.deleted' => false,
+                        'note.relatedType' => 'Email',
+                    ]
+                ];
+                $orGroup[] = [
+                    'relatedId!=' => null,
+                    'relatedType' => 'Email',
+                    'noteUser.userId' => $user->id,
+                ];
+            }
+
+            $selectParamsSubscription['whereClause'][] = ['OR' => $orGroup];
 
             $selectParamsList[] = $selectParamsSubscription;
         } else {
@@ -432,25 +488,29 @@ class Stream extends \Espo\Core\Services\Base
         $selectParamsSubscriptionSuper = [
             'select' => $select,
             'leftJoins' => ['createdBy'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    (
-                        (
-                            note.super_parent_type = subscription.entity_type AND
-                            note.super_parent_id = subscription.entity_id
-                        )
-                    ) AND
-                    subscription.user_id = ".$pdo->quote($user->id)."
-            ",
-            'customWhere' => ' AND (
-                    note.parent_id <> note.super_parent_id
-                    OR
-                    note.parent_type <> note.super_parent_type
-                )
-            ',
-            'whereClause' => [],
+            'joins' => [
+                [
+                    'Subscription',
+                    'subscription',
+                    [
+                        'entityType:' => 'superParentType',
+                        'entityId:' => 'superParentId',
+                        'subscription.userId' => $user->id,
+                    ]
+                ]
+            ],
+            'whereClause' => [
+                [
+                    'OR' => [
+                        'parentId!=:' => 'superParentId',
+                        'parentType!=:' => 'superParentType',
+                    ],
+                ]
+            ],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'limit' => $sqLimit,
+            'useIndex' => 'number',
         ];
 
         if ($user->isPortal()) {
@@ -528,7 +588,9 @@ class Stream extends \Espo\Core\Services\Base
                 'isGlobal' => false
             ],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'limit' => $sqLimit,
+            '_name' => 'selfPost',
         ];
 
         $selectParamsList[] = [
@@ -542,7 +604,8 @@ class Stream extends \Espo\Core\Services\Base
                 'isGlobal' => false
             ],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'limit' => $sqLimit,
         ];
 
         if ((!$user->isPortal() || $user->isAdmin()) && !$user->isApi()) {
@@ -555,7 +618,9 @@ class Stream extends \Espo\Core\Services\Base
                     'isGlobal' => true
                 ],
                 'orderBy' => 'number',
-                'order' => 'DESC'
+                'order' => 'DESC',
+                'limit' => $sqLimit,
+                '_name' => 'globalPost',
             ];
         }
 
@@ -576,7 +641,8 @@ class Stream extends \Espo\Core\Services\Base
                         'isGlobal' => false
                     ],
                     'orderBy' => 'number',
-                    'order' => 'DESC'
+                    'order' => 'DESC',
+                    'limit' => $sqLimit,
                 ];
             }
         }
@@ -592,7 +658,8 @@ class Stream extends \Espo\Core\Services\Base
                     'isGlobal' => false
                 ],
                 'orderBy' => 'number',
-                'order' => 'DESC'
+                'order' => 'DESC',
+                'limit' => $sqLimit,
             ];
         }
 
@@ -646,10 +713,20 @@ class Stream extends \Espo\Core\Services\Base
                 $selectParams['whereClause'] = [];
             }
             $selectParams['whereClause'][] = $whereClause;
+
+            if ($skipOwn) {
+                $itemName = $selectParams['_name'] ?? null;
+                if ($itemName !== 'selfPost' && $itemName !== 'globalPost') {
+                    $selectParams['whereClause'][] = [
+                        'createdById!=' => $this->getUser()->id,
+                    ];
+                }
+            }
+
             $sqlPartList[] = "(\n" . $this->getEntityManager()->getQuery()->createSelectQuery('Note', $selectParams) . "\n)";
         }
 
-        $sql = implode("\n UNION \n", $sqlPartList) . "
+        $sql = implode("\n UNION ALL \n", $sqlPartList) . "
             ORDER BY number DESC
         ";
 
@@ -658,44 +735,46 @@ class Stream extends \Espo\Core\Services\Base
         $collection = $this->getEntityManager()->getRepository('Note')->findByQuery($sql);
 
         foreach ($collection as $e) {
-            if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
-                $e->loadAttachments();
-            }
+            $this->loadNoteAdditionalFields($e);
         }
 
-        foreach ($collection as $e) {
-            if ($e->get('parentId') && $e->get('parentType')) {
-                $e->loadParentNameField('parent');
-            }
-            if ($e->get('relatedId') && $e->get('relatedType')) {
-                $e->loadParentNameField('related');
-            }
-            if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
-                $targetType = $e->get('targetType');
-                if (!$targetType || $targetType === 'users' || $targetType === 'self') {
-                    $e->loadLinkMultipleField('users');
-                }
-                if ($targetType !== 'users' && $targetType !== 'self') {
-                    if (!$targetType || $targetType === 'teams') {
-                        $e->loadLinkMultipleField('teams');
-                    } else if ($targetType === 'portals') {
-                        $e->loadLinkMultipleField('portals');
-                    }
-                }
-            }
-        }
-
+        $total = -2;
         if (count($collection) > $maxSize) {
             $total = -1;
             unset($collection[count($collection) - 1]);
-        } else {
-            $total = -2;
         }
 
         return (object) [
             'total' => $total,
             'collection' => $collection,
         ];
+    }
+
+    protected function loadNoteAdditionalFields(Entity $e)
+    {
+        if ($e->get('type') == 'Post' || $e->get('type') == 'EmailReceived') {
+            $e->loadAttachments();
+        }
+
+        if ($e->get('parentId') && $e->get('parentType')) {
+            $e->loadParentNameField('parent');
+        }
+        if ($e->get('relatedId') && $e->get('relatedType')) {
+            $e->loadParentNameField('related');
+        }
+        if ($e->get('type') == 'Post' && $e->get('parentId') === null && !$e->get('isGlobal')) {
+            $targetType = $e->get('targetType');
+            if (!$targetType || $targetType === 'users' || $targetType === 'self') {
+                $e->loadLinkMultipleField('users');
+            }
+            if ($targetType !== 'users' && $targetType !== 'self') {
+                if (!$targetType || $targetType === 'teams') {
+                    $e->loadLinkMultipleField('teams');
+                } else if ($targetType === 'portals') {
+                    $e->loadLinkMultipleField('portals');
+                }
+            }
+        }
     }
 
     public function find($scope, $id, $params = [])
@@ -723,7 +802,8 @@ class Stream extends \Espo\Core\Services\Base
             'offset' => $params['offset'],
             'limit' => $params['maxSize'],
             'orderBy' => 'number',
-            'order' => 'DESC'
+            'order' => 'DESC',
+            'leftJoins' => [],
         ];
 
         $where = [
@@ -741,28 +821,43 @@ class Stream extends \Espo\Core\Services\Base
 
         if ($this->getUser()->isPortal()) {
             $where = [
-                'OR' => [
-                    [
-                        'parentType' => $scope,
-                        'parentId' => $id
-                    ]
-                ]
+                'parentType' => $scope,
+                'parentId' => $id,
             ];
+
             $notAllEntityTypeList = $this->getNotAllEntityTypeList($this->getUser());
-            $where[] = [
-                'OR' => [
-                    [
-                        'relatedId' => null
-                    ],
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => $notAllEntityTypeList
+
+            $orGroup = [
+                [
+                    'relatedId' => null
+                ],
+                [
+                    'relatedId!=' => null,
+                    'relatedType!=' => $notAllEntityTypeList,
+                ],
+            ];
+
+            if ($this->getAcl()->check('Email', 'read')) {
+                $selectParams['leftJoins'][] = [
+                    'noteUser', 'noteUser', [
+                        'noteUser.noteId=:' => 'id',
+                        'noteUser.deleted' => false,
+                        'note.relatedType' => 'Email',
                     ]
-                ]
+                ];
+                $orGroup[] = [
+                    'relatedId!=' => null,
+                    'relatedType' => 'Email',
+                    'noteUser.userId' => $this->getUser()->id,
+                ];
+            }
+            $where[] = [
+                'OR' => $orGroup,
             ];
         } else {
             if (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList)) {
-                $selectParams['leftJoins'] = ['teams', 'users'];
+                $selectParams['leftJoins'][] = ['teams'];
+                $selectParams['leftJoins'][] = ['users'];
                 $selectParams['distinct'] = true;
                 $where[] = [
                     'OR' => [
@@ -908,9 +1003,111 @@ class Stream extends \Espo\Core\Services\Base
         ];
     }
 
+    protected function findUserStreamNotified(User $user, $params = [])
+    {
+        $offset = $params['offset'] ?? 0;
+        $maxSize = $params['maxSize'] ?? 0;
+        $where = $params['where'] ?? null;
+        $after = $params['after'] ?? null;
+        $filter = $params['filter'] ?? null;
+
+        $selectManager = $this->getSelectMangerFactory()->create('Note');
+        $selectParams = $selectManager->getEmptySelectParams();
+
+        if ($where) {
+            $selectManager->checkWhere($where, true, true);
+            $selectManager->applyWhere($where, $selectParams);
+        }
+
+        if ($filter) {
+            switch ($filter) {
+                case 'posts':
+                    $whereClause[]['type'] = 'Post';
+                    break;
+                  case 'updates':
+                    $whereClause[]['type'] = ['Update', 'Status'];
+                    break;
+            }
+        }
+
+        if ($after) {
+            $selectParams['whereClause'][] = [
+                'createdAt>=' => $after,
+            ];
+        }
+
+        $selectManager->applyOrder('number', true, $selectParams);
+
+        $selectManager->addJoin([
+            'Notification',
+            'notification',
+            [
+                'note.id:' => 'notification.relatedId',
+                'notification.relatedType' => 'Note',
+            ]
+        ], $selectParams);
+
+        $selectParams['whereClause'][] = [
+            'notification.userId' => $user->id,
+        ];
+
+        $selectManager->addLeftJoin([
+            'Subscription',
+            'subscription',
+            [
+                'entityType:' => 'parentType',
+                'entityId:' => 'parentId',
+                'userId' => $user->id,
+            ]
+        ], $selectParams);
+
+        $selectManager->addLeftJoin([
+            'Subscription',
+            'subscriptionSuper',
+            [
+                'entityType:' => 'superParentType',
+                'entityId:' => 'superParentId',
+                'userId' => $user->id,
+            ]
+        ], $selectParams);
+
+        $selectManager->setDistinct(true, $selectParams);
+
+        $selectParams['whereClause'][] = [
+            'OR' => [
+                'subscription.id!=' => null,
+                'subscriptionSuper.id!=' => null,
+                'parentId' => null,
+            ],
+        ];
+
+        $selectManager->applyLimit($offset, $maxSize + 1, $selectParams);
+
+        $sql = $this->getEntityManager()->getQuery()->createSelectQuery('Note', $selectParams);
+
+        $collection = $this->getEntityManager()->getRepository('Note')->findByQuery($sql);
+
+        foreach ($collection as $e) {
+            $this->loadNoteAdditionalFields($e);
+        }
+
+        $total = -2;
+        if (count($collection) > $maxSize) {
+            $total = -1;
+            unset($collection[count($collection) - 1]);
+        }
+
+        return (object) [
+            'total' => $total,
+            'collection' => $collection,
+        ];
+    }
+
     protected function loadAssignedUserName(Entity $entity)
     {
-        $user = $this->getEntityManager()->getEntity('User', $entity->get('assignedUserId'));
+        $user = $this->getEntityManager()->getRepository('User')->select(['name'])->where([
+            'id' =>  $entity->get('assignedUserId'),
+        ])->findOne();
         if ($user) {
             $entity->set('assignedUserName', $user->get('name'));
         }
@@ -1057,7 +1254,7 @@ class Stream extends \Espo\Core\Services\Base
         $this->getEntityManager()->saveEntity($note);
     }
 
-    public function noteCreate(Entity $entity)
+    public function noteCreate(Entity $entity, array $options = [])
     {
         $entityType = $entity->getEntityType();
 
@@ -1097,7 +1294,12 @@ class Stream extends \Espo\Core\Services\Base
 
         $note->set('data', (object) $data);
 
-        $this->getEntityManager()->saveEntity($note);
+        $o = [];
+        if (!empty($options['createdById'])) {
+            $o['createdById'] = $options['createdById'];
+        }
+
+        $this->getEntityManager()->saveEntity($note, $o);
     }
 
     protected function getStatusStyle($entityType, $field, $value)
@@ -1122,7 +1324,7 @@ class Stream extends \Espo\Core\Services\Base
         return $style;
     }
 
-    public function noteCreateRelated(Entity $entity, $parentType, $parentId)
+    public function noteCreateRelated(Entity $entity, $parentType, $parentId, array $options = [])
     {
         $note = $this->getEntityManager()->getEntity('Note');
 
@@ -1143,10 +1345,48 @@ class Stream extends \Espo\Core\Services\Base
             $note->set('superParentType', 'Account');
         }
 
-        $this->getEntityManager()->saveEntity($note);
+        $o = [];
+        if (!empty($options['createdById'])) {
+            $o['createdById'] = $options['createdById'];
+        }
+
+        $this->getEntityManager()->saveEntity($note, $o);
     }
 
-    public function noteAssign(Entity $entity)
+    public function noteRelate(Entity $entity, $parentType, $parentId, array $options = [])
+    {
+        $entityType = $entity->getEntityType();
+
+        $existing = $this->getEntityManager()->getRepository('Note')->select(['id'])->where([
+            'type' => 'Relate',
+            'parentId' => $parentId,
+            'parentType' => $parentType,
+            'relatedId' => $entity->id,
+            'relatedType' => $entityType,
+        ])->findOne();
+        if ($existing) return false;
+
+        $note = $this->getEntityManager()->getEntity('Note');
+
+        $note->set([
+            'type' => 'Relate',
+            'parentId' => $parentId,
+            'parentType' => $parentType,
+            'relatedType' => $entityType,
+            'relatedId' => $entity->id,
+        ]);
+
+        $this->processNoteTeamsUsers($note, $entity);
+
+        $o = [];
+        if (!empty($options['createdById'])) {
+            $o['createdById'] = $options['createdById'];
+        }
+
+        $this->getEntityManager()->saveEntity($note, $o);
+    }
+
+    public function noteAssign(Entity $entity, array $options = [])
     {
         $note = $this->getEntityManager()->getEntity('Note');
 
@@ -1175,10 +1415,18 @@ class Stream extends \Espo\Core\Services\Base
             ]);
         }
 
-        $this->getEntityManager()->saveEntity($note);
+        $o = [];
+        if (!empty($options['createdById'])) {
+            $o['createdById'] = $options['createdById'];
+        }
+        if (!empty($options['modifiedById'])) {
+            $o['createdById'] = $options['modifiedById'];
+        }
+
+        $this->getEntityManager()->saveEntity($note, $o);
     }
 
-    public function noteStatus(Entity $entity, $field)
+    public function noteStatus(Entity $entity, $field, array $options = [])
     {
         $note = $this->getEntityManager()->getEntity('Note');
 
@@ -1204,7 +1452,17 @@ class Stream extends \Espo\Core\Services\Base
             'style' => $style
         ]);
 
-        $this->getEntityManager()->saveEntity($note);
+        $o = [];
+
+        if (!empty($options['createdById'])) {
+            $o['createdById'] = $options['createdById'];
+        }
+
+        if (!empty($options['modifiedById'])) {
+            $o['createdById'] = $options['modifiedById'];
+        }
+
+        $this->getEntityManager()->saveEntity($note, $o);
     }
 
     protected function getAuditedFieldsData(Entity $entity)
@@ -1233,13 +1491,13 @@ class Stream extends \Espo\Core\Services\Base
         return $this->auditedFieldsCache[$entityType];
     }
 
-    public function handleAudited($entity)
+    public function handleAudited($entity, array $options = [])
     {
         $auditedFields = $this->getAuditedFieldsData($entity);
 
         $updatedFieldList = [];
-        $was = array();
-        $became = array();
+        $was = [];
+        $became = [];
 
         foreach ($auditedFields as $field => $item) {
             $updated = false;
@@ -1289,7 +1547,12 @@ class Stream extends \Espo\Core\Services\Base
                 ]
             ]);
 
-            $this->getEntityManager()->saveEntity($note);
+            $o = [];
+            if (!empty($options['modifiedById'])) {
+                $o['createdById'] = $options['modifiedById'];
+            }
+
+            $this->getEntityManager()->saveEntity($note, $o);
         }
     }
 
@@ -1297,18 +1560,23 @@ class Stream extends \Espo\Core\Services\Base
     {
         $query = $this->getEntityManager()->getQuery();
         $pdo = $this->getEntityManager()->getPDO();
-        $sql = $query->createSelectQuery('User', array(
+        $sql = $query->createSelectQuery('User', [
             'select' => ['id'],
-            'customJoin' => "
-                JOIN subscription AS `subscription` ON
-                    subscription.user_id = user.id AND
-                    subscription.entity_id = ".$query->quote($entity->id)." AND
-                    subscription.entity_type = ".$query->quote($entity->getEntityType())."
-            ",
-            'whereClause' => array(
+            'joins' => [
+                [
+                    'Subscription',
+                    'subscription',
+                    [
+                        'subscription.userId=:' => 'user.id',
+                        'subscription.entityId' => $entity->id,
+                        'subscription.entityType' => $entity->getEntityType(),
+                    ]
+                ]
+            ],
+            'whereClause' => [
                 'isActive' => true
-            )
-        ));
+            ]
+        ]);
 
         $sth = $pdo->prepare($sql);
         $sth->execute();
@@ -1452,9 +1720,28 @@ class Stream extends \Espo\Core\Services\Base
         return $list;
     }
 
+    protected function getUserAclManager(\Espo\Entities\User $user)
+    {
+        $aclManager = $this->getAclManager();
+
+        if ($user->isPortal() && !$this->getUser()->isPortal()) {
+            $aclManager = new \Espo\Core\Portal\AclManager($this->getInjection('container'));
+            $portals = $user->get('portals');
+            if (count($portals)) {
+                $aclManager->setPortal($portals[0]);
+            } else {
+                $aclManager = null;
+            }
+        }
+
+        return $aclManager;
+    }
+
     protected function getNotAllEntityTypeList(\Espo\Entities\User $user)
     {
         if (!$user->isPortal()) return [];
+
+        $aclManager = $this->getUserAclManager($user);
 
         $list = [];
         $scopes = $this->getMetadata()->get('scopes', []);
@@ -1463,7 +1750,7 @@ class Stream extends \Espo\Core\Services\Base
             if (empty($item['entity'])) continue;
             if (empty($item['object'])) continue;
             if (
-                $this->getAclManager()->getLevel($user, $scope, 'read') !== 'all'
+                !$aclManager || $aclManager->getLevel($user, $scope, 'read') !== 'all'
             ) {
                 $list[] = $scope;
             }
@@ -1475,17 +1762,23 @@ class Stream extends \Espo\Core\Services\Base
     {
         $ignoreScopeList = [];
         $scopes = $this->getMetadata()->get('scopes', []);
+
+        $aclManager = $this->getUserAclManager($user);
+
         foreach ($scopes as $scope => $item) {
             if (empty($item['entity'])) continue;
             if (empty($item['object'])) continue;
             if (
-                !$this->getAclManager()->checkScope($user, $scope, 'read')
+                !$aclManager
                 ||
-                !$this->getAclManager()->checkScope($user, $scope, 'stream')
+                !$aclManager->checkScope($user, $scope, 'read')
+                ||
+                !$aclManager->checkScope($user, $scope, 'stream')
             ) {
                 $ignoreScopeList[] = $scope;
             }
         }
+
         return $ignoreScopeList;
     }
 

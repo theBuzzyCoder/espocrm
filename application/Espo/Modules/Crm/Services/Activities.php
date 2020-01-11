@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -631,39 +631,60 @@ class Activities extends \Espo\Core\Services\Base
             $onlyScope = $params['scope'];
         }
 
+        $maxSize = $params['maxSize'] ?? null;
+
         if (!$onlyScope) {
             $sql = implode(" UNION ", $parts);
         } else {
             $sql = $parts[$onlyScope];
         }
 
-        $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
-        $sth = $pdo->prepare($sqlCount);
-        $sth->execute();
+        if ($scope !== 'User') {
+            $sqlCount = "SELECT COUNT(*) AS 'count' FROM ({$sql}) AS c";
+            $sth = $pdo->prepare($sqlCount);
+            $sth->execute();
 
-        $row = $sth->fetch(PDO::FETCH_ASSOC);
-        $totalCount = $row['count'];
+            $row = $sth->fetch(PDO::FETCH_ASSOC);
+            $totalCount = $row['count'];
+        }
 
-        $sql .= "
-            ORDER BY dateStart DESC, createdAt DESC
-        ";
+        $maxSizeQ = $maxSize;
+        $offset = $params['offset'] ?? 0;
+
+        if (!$onlyScope && $scope === 'User') {
+            $skipUnion = false;
+            foreach ($parts as &$part) {
+                if (strpos($part, 'UNION') !== false) {
+                    $skipUnion = true;
+                    break;
+                }
+                $part .= " ORDER BY dateStart DESC";
+                if ($maxSize) {
+                    $part .= " LIMIT " . intval($offset + $maxSize + 1);
+                }
+                $part = '(' . $part . ')';
+            }
+            if (!$skipUnion) {
+                $sql = "SELECT * FROM (\n" . implode(" UNION ", $parts) . "\n) t";
+            }
+        }
+
+        if ($scope === 'User') {
+            $maxSizeQ++;
+            $sql .= "\nORDER BY dateStart DESC";
+        } else {
+            $sql .= "\nORDER BY dateStart DESC, createdAt DESC";
+        }
 
         if (!empty($params['maxSize'])) {
-            $sql .= "
-                LIMIT :offset, :maxSize
-            ";
+            $sql .= "\nLIMIT :offset, :maxSize";
         }
 
         $sth = $pdo->prepare($sql);
 
-        if (!empty($params['maxSize'])) {
-            $offset = 0;
-            if (!empty($params['offset'])) {
-                $offset = $params['offset'];
-            }
-
+        if ($maxSize) {
             $sth->bindParam(':offset', $offset, PDO::PARAM_INT);
-            $sth->bindParam(':maxSize', $params['maxSize'], PDO::PARAM_INT);
+            $sth->bindParam(':maxSize', $maxSizeQ, PDO::PARAM_INT);
         }
 
         $sth->execute();
@@ -681,9 +702,18 @@ class Activities extends \Espo\Core\Services\Base
             $list[] = $row;
         }
 
+        if ($scope === 'User') {
+            if ($maxSize && count($list) > $maxSize) {
+                $totalCount = -1;
+                unset($list[count($list) - 1]);
+            } else {
+                $totalCount = -2;
+            }
+        }
+
         return [
             'list' => $list,
-            'total' => $totalCount
+            'total' => $totalCount,
         ];
     }
 
@@ -724,6 +754,13 @@ class Activities extends \Espo\Core\Services\Base
         $service = $this->getServiceFactory()->create($entityType);
         $selectManager = $this->getSelectManagerFactory()->create($entityType);
 
+
+        if ($entityType === 'Email') {
+            if ($params['orderBy'] ?? null === 'dateStart') {
+                $params['orderBy'] = 'dateSent';
+            }
+        }
+
         $selectParams = $selectManager->getSelectParams($params, false, true);
 
         $selectAttributeList = $service->getSelectAttributeList($params);
@@ -739,7 +776,7 @@ class Activities extends \Espo\Core\Services\Base
         $orderBy = null;
         $order = null;
         if (!empty($selectParams['orderBy'])) {
-            $order = $selectParams['order'];
+            $order = $selectParams['order'] ?? null;
             $orderBy = $selectParams['orderBy'];
         }
 
@@ -747,13 +784,6 @@ class Activities extends \Espo\Core\Services\Base
         unset($selectParams['limit']);
         unset($selectParams['order']);
         unset($selectParams['orderBy']);
-
-        if ($entityType === 'Email') {
-            if ($orderBy === 'dateStart') {
-                $orderBy = 'dateSent';
-                $order = 'desc';
-            }
-        }
 
         $sql = $this->getActivitiesQuery($entity, $entityType, $statusList, $isHistory, $selectParams);
 
@@ -764,11 +794,10 @@ class Activities extends \Espo\Core\Services\Base
         $sqlBase = $sql;
 
         if ($orderBy) {
-            $sql = $query->order($sql, $seed, $orderBy, $order, true);
+            $sql = $query->order($sql, $seed, $orderBy, $order, strpos($sql, 'UNION') !== false);
         }
 
         $sql = $query->limit($sql, $offset, $limit);
-
 
         $collection = $this->getEntityManager()->getRepository($entityType)->findByQuery($sql);
 

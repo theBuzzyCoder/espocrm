@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -84,6 +84,7 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
         $foreignSelectManager = $this->getInjection('selectManagerFactory')->create($foreignEntityType);
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
+        $foreignLinkAlias = $foreignLink . 'SumRelated';
 
         if (empty($foreignLink)) {
             throw new Error("No foreign link for link {$link}.");
@@ -95,15 +96,49 @@ class SumRelatedType extends \Espo\Core\Formula\Functions\Base
             $foreignSelectManager->applyFilter($filter, $selectParams);
         }
 
-        $selectParams['select'] = [[$foreignLink . '.id', 'foreignId'], 'SUM:' . $field];
+        $selectParams['select'] = [[$foreignLinkAlias . '.id', 'foreignId'], 'SUM:' . $field];
 
-        $foreignSelectManager->addJoin($foreignLink, $selectParams);
+        if ($entity->getRelationType($link) === 'hasChildren') {
+            $foreignSelectManager->addJoin([
+                $entity->getEntityType(),
+                $foreignLinkAlias,
+                [
+                     $foreignLinkAlias . '.id:' => $foreignLink . 'Id',
+                    'deleted' => false,
+                    $foreignLinkAlias . '.id!=' => null,
+                ]
+            ], $selectParams);
+            $selectParams['whereClause'][] = [$foreignLink . 'Type'  => $entity->getEntityType()];
 
-        $selectParams['groupBy'] = [$foreignLink . '.id'];
+        } else {
+            $foreignSelectManager->addJoin([$foreignLink, $foreignLinkAlias], $selectParams);
+        }
 
-        $selectParams['whereClause'][] = [
-            $foreignLink . '.id' => $entity->id
-        ];
+        if (!empty($selectParams['distinct'])) {
+            $sqSelectParams = $selectParams;
+
+            $sqSelectParams['whereClause'][] = [
+                $foreignLinkAlias . '.id' => $entity->id
+            ];
+
+            $sqSelectParams['select'] = ['id'];
+            unset($sqSelectParams['distinct']);
+            unset($sqSelectParams['orderBy']);
+            unset($sqSelectParams['order']);
+
+            $selectParams['whereClause'][] = [
+                'id=s' => [
+                    'entityType' => $foreignEntityType,
+                    'selectParams' => $sqSelectParams,
+                ]
+            ];
+        } else {
+            $selectParams['whereClause'][] = [
+                $foreignLinkAlias . '.id' => $entity->id
+            ];
+        }
+
+        $selectParams['groupBy'] = [$foreignLinkAlias . '.id'];
 
         $entityManager->getRepository($foreignEntityType)->handleSelectParams($selectParams);
 

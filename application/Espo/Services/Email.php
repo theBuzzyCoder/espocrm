@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -198,8 +198,8 @@ class Email extends Record
         }
 
         if ($smtpParams) {
-            if ($emailAddress) {
-                $this->applySmtpHandler($this->getUser()->id, $emailAddress, $smtpParams);
+            if ($fromAddress) {
+                $this->applySmtpHandler($this->getUser()->id, $fromAddress, $smtpParams);
             }
             $emailSender->useSmtp($smtpParams);
         }
@@ -253,7 +253,7 @@ class Email extends Record
             }
         }
 
-        $message = null;
+        $message = new \Zend\Mail\Message();
 
         $this->validateEmailAddresses($entity);
 
@@ -261,11 +261,11 @@ class Email extends Record
             $emailSender->send($entity, $params, $message);
         } catch (\Exception $e) {
             $entity->set('status', 'Failed');
-            $this->getEntityManager()->saveEntity($entity, array(
-                'silent' => true
-            ));
+            $this->getEntityManager()->saveEntity($entity, ['silent' => true]);
             throw new Error($e->getMessage(), $e->getCode());
         }
+
+        $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);
 
         if ($message) {
             if ($inboundEmail) {
@@ -295,10 +295,6 @@ class Email extends Record
         if ($parent) {
             $this->getStreamService()->noteEmailSent($parent, $entity);
         }
-
-        $entity->set('isJustSent', true);
-
-        $this->getEntityManager()->saveEntity($entity, ['isJustSent' => true]);
     }
 
     protected function applySmtpHandler(string $userId, string $emailAddress, array &$params)
@@ -384,6 +380,12 @@ class Email extends Record
         }
 
         $this->loadAdditionalFields($entity);
+
+        if (!isset($data->from) && !isset($data->to) && !isset($data->cc)) {
+            $entity->clear('nameHash');
+            $entity->clear('idHash');
+            $entity->clear('typeHash');
+        }
     }
 
     public function loadFromField(Entity $entity)
@@ -779,31 +781,6 @@ class Email extends Record
         $this->getEntityManager()->getRepository('Email')->loadNameHash($entity, $fieldList);
     }
 
-    protected function getSelectParams($params)
-    {
-        $searchByEmailAddress = false;
-        if (!empty($params['where']) && is_array($params['where'])) {
-            foreach ($params['where'] as $i => $p) {
-                if (!empty($p['attribute']) && $p['attribute'] == 'emailAddress') {
-                    $searchByEmailAddress = true;
-                    $emailAddress = $p['value'];
-                    unset($params['where'][$i]);
-                }
-
-            }
-        }
-
-        $selectManager = $this->getSelectManager($this->getEntityType());
-
-        $selectParams = $selectManager->getSelectParams($params, true);
-
-        if ($searchByEmailAddress) {
-            $selectManager->whereEmailAddress($emailAddress, $selectParams);
-        }
-
-        return $selectParams;
-    }
-
     public function copyAttachments($emailId, $parentType, $parentId)
     {
         return $this->getCopiedAttachments($emailId, $parentType, $parentId);
@@ -811,7 +788,7 @@ class Email extends Record
 
     public function getCopiedAttachments($id, $parentType = null, $parentId = null)
     {
-        $ids = array();
+        $ids = [];
         $names = new \stdClass();
 
         if (empty($id)) {
@@ -867,6 +844,7 @@ class Email extends Record
         if (empty($smtpParams['auth'])) {
             unset($smtpParams['username']);
             unset($smtpParams['password']);
+            unset($smtpParams['smtpAuthMechanism']);
         }
 
         $userId = $data['userId'] ?? null;
@@ -941,7 +919,7 @@ class Email extends Record
 
     public function getFoldersNotReadCounts()
     {
-        $data = array();
+        $data = [];
 
         $selectManager = $this->getSelectManager($this->getEntityType());
         $selectParams = $selectManager->getEmptySelectParams();

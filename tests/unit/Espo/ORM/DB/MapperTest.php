@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     protected $comment;
     protected $entityFactory;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->pdo = $this->createMock('MockPDO');
         $this->pdo
@@ -98,7 +98,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
 
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($this->pdo, $this->db, $this->post, $this->comment);
     }
@@ -120,7 +120,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectById()
     {
         $query =
-            "SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(createdBy.salutation_name, createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
+            "SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "WHERE post.id = '1' AND post.deleted = '0'";
@@ -140,7 +140,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     public function testSelect()
     {
         $query =
-            "SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(createdBy.salutation_name, createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
+            "SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = '0' ".
@@ -290,7 +290,7 @@ class DBMapperTest extends \PHPUnit\Framework\TestCase
     public function testSelectRelatedBelongsTo()
     {
         $query =
-            "SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(createdBy.salutation_name, createdBy.first_name, ' ', createdBy.last_name)) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
+            "SELECT post.id AS `id`, post.name AS `name`, TRIM(CONCAT(IFNULL(createdBy.salutation_name, ''), IFNULL(createdBy.first_name, ''), ' ', IFNULL(createdBy.last_name, ''))) AS `createdByName`, post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
             "WHERE post.id = '1' AND post.deleted = '0' ".

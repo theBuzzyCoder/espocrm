@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -116,7 +116,8 @@ define('language', ['ajax'], function (Ajax) {
         },
 
         load: function (callback, disableCache, loadDefault) {
-            this.once('sync', callback);
+            if (callback)
+                this.once('sync', callback);
 
             if (!disableCache) {
                 if (this.loadFromCache(loadDefault)) {
@@ -129,7 +130,7 @@ define('language', ['ajax'], function (Ajax) {
         },
 
         fetch: function (disableCache, loadDefault) {
-            Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
+            return Ajax.getRequest(this.url, {default: loadDefault}).then(function (data) {
                 this.data = data;
                 if (!disableCache) {
                     this.storeToCache(loadDefault);
@@ -152,7 +153,22 @@ define('language', ['ajax'], function (Ajax) {
             return entityList.sort(function (v1, v2) {
                  return this.translate(v1, category).localeCompare(this.translate(v2, category));
             }.bind(this));
-        }
+        },
+
+        translatePath: function (path) {
+            if (typeof path === 'string' || path instanceof String) {
+                path = path.split('.');
+            }
+            var pointer = this.data;
+
+            path.forEach(function (key) {
+                if (key in pointer) {
+                    pointer = pointer[key];
+                }
+            }, this);
+
+            return pointer;
+        },
 
     }, Backbone.Events);
 

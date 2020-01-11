@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -69,24 +69,28 @@ class User extends \Espo\Core\Controllers\Record
             throw new BadRequest();
         }
 
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
-            'requestId' => $data->requestId
-        ))->findOne();
+        if ($this->getConfig()->get('passwordRecoveryDisabled')) {
+            throw new Forbidden("Password recovery disabled");
+        }
 
-        if (!$p) {
+        $request = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
+            'requestId' => $data->requestId
+        ])->findOne();
+
+        if (!$request) {
             throw new Forbidden();
         }
-        $userId = $p->get('userId');
+
+        $userId = $request->get('userId');
         if (!$userId) {
             throw new Error();
         }
 
-        $this->getEntityManager()->removeEntity($p);
-
         if ($this->getService('User')->changePassword($userId, $data->password)) {
-            return array(
-                'url' => $p->get('url')
-            );
+            $this->getEntityManager()->removeEntity($request);
+            return [
+                'url' => $request->get('url')
+            ];
         }
     }
 
@@ -111,6 +115,14 @@ class User extends \Espo\Core\Controllers\Record
         if (empty($data->id)) throw new BadRequest();
         if (!$this->getUser()->isAdmin()) throw new Forbidden();
         return $this->getRecordService()->generateNewApiKeyForEntity($data->id)->getValueMap();
+    }
+
+    public function postActionGenerateNewPassword($params, $data, $request)
+    {
+        if (empty($data->id)) throw new BadRequest();
+        if (!$this->getUser()->isAdmin()) throw new Forbidden();
+        $this->getRecordService()->generateNewPasswordForUser($data->id);
+        return true;
     }
 
     public function beforeCreateLink()

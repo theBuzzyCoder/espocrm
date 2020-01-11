@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,6 +33,13 @@ class Email extends \Espo\Core\SelectManagers\Base
 {
     protected $textFilterUseContainsAttributeList = ['name'];
 
+    protected $fullTextOrderType = self::FT_ORDER_ORIGINAL;
+
+    protected $selectAttributesDependancyMap = [
+        'subject' => ['name'],
+        'personStringData' => ['fromString', 'fromEmailAddressId'],
+    ];
+
     public function applyAdditional(array $params, array &$result)
     {
         parent::applyAdditional($params, $result);
@@ -43,17 +50,23 @@ class Email extends \Espo\Core\SelectManagers\Base
             $this->applyFolder($folderId, $result);
         }
 
-        if (empty($params['textFilter']) && !empty($result['orderBy']) && $result['orderBy'] === 'dateSent') {
+        $textFilter = $params['textFilter'] ?? null;
+
+        if (!$textFilter && !empty($result['orderBy']) && $result['orderBy'] === 'dateSent') {
             $skipIndex = false;
             if (isset($params['where'])) {
                 foreach ($params['where'] as $item) {
-                    if ($item['type'] === 'textFilter') {
+                    $type = $item['type'] ?? null;
+                    $value = $item['value'] ?? null;
+                    if ($type === 'textFilter') {
                         $skipIndex = true;
                         break;
                     } else {
-                        if (isset($item['attribute']) && $this->getSeed()->getAttributeParam($item['attribute'], 'type') === 'foreignId') {
-                            $skipIndex = true;
-                            break;
+                        if (isset($item['attribute'])) {
+                            if (!in_array($item['attribute'], ['teams', 'users', 'status'])) {
+                                $skipIndex = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -61,16 +74,24 @@ class Email extends \Espo\Core\SelectManagers\Base
             if ($folderId === 'important' || $folderId === 'drafts') {
                 $skipIndex = true;
             }
-            if (!$skipIndex && $this->hasLinkJoined('teams', $result)) {
+
+            $actualDatabaseType = $this->getConfig()->get('actualDatabaseType');
+            $actualDatabaseVersion = $this->getConfig()->get('actualDatabaseVersion');
+
+            if (
+                !$skipIndex &&
+                ($actualDatabaseType !== 'mysql' || version_compare($actualDatabaseVersion, '8.0.0') < 0) &&
+                $this->hasLinkJoined('teams', $result)
+            ) {
                 $skipIndex = true;
             }
             if (!$skipIndex) {
-                $result['useIndexList'] = ['dateSent'];
+                $result['useIndex'] = 'dateSent';
             }
         }
 
         if ($folderId === 'drafts') {
-            $result['useIndexList'] = ['createdById'];
+            $result['useIndex'] = 'createdById';
         }
 
         if ($folderId !== 'drafts') {
@@ -124,10 +145,10 @@ class Email extends \Espo\Core\SelectManagers\Base
             'usersMiddle.inTrash' => false,
             'usersMiddle.folderId' => $folderId
         ];
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
-    protected function boolFilterOnlyMy(&$result)
+    protected function filterOnlyMy(&$result)
     {
         if (!$this->hasJoin('users', $result) && !$this->hasLeftJoin('users', $result)) {
             $this->addJoin('users', $result);
@@ -138,6 +159,16 @@ class Email extends \Espo\Core\SelectManagers\Base
         ];
 
         $this->addUsersColumns($result);
+    }
+
+    protected function boolFilterOnlyMy(&$result)
+    {
+        $this->addLeftJoin(['users', 'usersOnlyMyFilter'], $result);
+        $this->setDistinct(true, $result);
+
+        return [
+            'usersOnlyMyFilterMiddle.userId' => $this->getUser()->id
+        ];
     }
 
     protected function addUsersColumns(&$result)
@@ -180,13 +211,13 @@ class Email extends \Espo\Core\SelectManagers\Base
         }
         $result['whereClause'][] = $group;
 
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function filterImportant(&$result)
     {
         $result['whereClause'][] = $this->getWherePartIsImportantIsTrue();
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function filterSent(&$result)
@@ -217,7 +248,7 @@ class Email extends \Espo\Core\SelectManagers\Base
         $result['whereClause'][] = [
             'usersMiddle.inTrash=' => true
         ];
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function filterDrafts(&$result)
@@ -237,12 +268,12 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected function accessOnlyOwn(&$result)
     {
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function accessPortalOnlyOwn(&$result)
     {
-        $this->boolFilterOnlyMy($result);
+        $this->filterOnlyMy($result);
     }
 
     protected function accessOnlyTeam(&$result)
@@ -314,12 +345,21 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected function applyAdditionalToTextFilterGroup(string $textFilter, array &$group, array &$result)
     {
-        if (strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH) {
+        if (
+            strlen($textFilter) >= self::MIN_LENGTH_FOR_CONTENT_SEARCH
+            &&
+            strpos($textFilter, '@') !== false
+            &&
+            empty($result['hasFullTextSearch'])
+        ) {
             $emailAddressId = $this->getEmailAddressIdByValue($textFilter);
             if ($emailAddressId) {
                 $this->leftJoinEmailAddress($result);
+                $group = [];
                 $group['fromEmailAddressId'] = $emailAddressId;
                 $group['emailEmailAddress.emailAddressId'] = $emailAddressId;
+            } else {
+                $group = [];
             }
         }
     }
@@ -342,103 +382,159 @@ class Email extends \Espo\Core\SelectManagers\Base
 
     protected function leftJoinEmailAddress(&$result)
     {
-        if (empty($result['customJoin'])) {
-            $result['customJoin'] = '';
-        }
-        if (stripos($result['customJoin'], 'emailEmailAddress') === false) {
-            $result['customJoin'] .= "
-                LEFT JOIN email_email_address AS `emailEmailAddress`
-                    ON
-                    emailEmailAddress.email_id = email.id AND
-                    emailEmailAddress.deleted = 0
-            ";
-        }
+        if ($this->hasLeftJoin('emailEmailAddress', $result)) return;
+
+        $this->setDistinct(true, $result);
+
+        $this->addLeftJoin([
+            'EmailEmailAddress',
+            'emailEmailAddress',
+            [
+                'emailId:' => 'id',
+                'deleted' => false,
+            ]
+        ], $result);
     }
 
-
-    public function whereEmailAddress(string $value, array &$result)
+    protected function getWherePartEmailAddressEquals($value, array &$result)
     {
-        $orItem = [];
+        if (!$value) {
+            return ['id' => null];
+        }
 
         $emailAddressId = $this->getEmailAddressIdByValue($value);
 
-        if ($emailAddressId) {
-            $this->leftJoinEmailAddress($result);
-
-            $orItem['fromEmailAddressId'] = $emailAddressId;
-            $orItem['emailEmailAddress.emailAddressId'] = $emailAddressId;
-            $result['whereClause'][] = [
-                'OR' => $orItem
-            ];
-        } else {
-            if (empty($result['customWhere'])) {
-                $result['customWhere'] = '';
-            }
-            $result['customWhere'] .= ' AND 0';
+        if (!$emailAddressId) {
+            return ['id' => null];
         }
+
+        $this->setDistinct(true, $result);
+        $alias = 'emailEmailAddress' . strval(rand(10000, 99999));
+
+        $this->addLeftJoin([
+            'EmailEmailAddress',
+            $alias,
+            [
+                'emailId:' => 'id',
+                'deleted' => false,
+            ]
+        ], $result);
+
+        return [
+            'OR' => [
+                'fromEmailAddressId' => $emailAddressId,
+                $alias . '.emailAddressId' => $emailAddressId,
+            ],
+        ];
+    }
+
+    protected function getWherePartFromEquals($value, array &$result)
+    {
+        if (!$value) {
+            return ['id' => null];
+        }
+
+        $emailAddressId = $this->getEmailAddressIdByValue($value);
+
+        if (!$emailAddressId) {
+            return ['id' => null];
+        }
+
+        return [
+            'fromEmailAddressId' => $emailAddressId,
+        ];
+    }
+
+    protected function getWherePartToEquals($value, array &$result)
+    {
+        if (!$value) {
+            return ['id' => null];
+        }
+
+        $emailAddressId = $this->getEmailAddressIdByValue($value);
+
+        if (!$emailAddressId) {
+            return ['id' => null];
+        }
+
+        $alias = 'emailEmailAddress' . strval(rand(10000, 99999));
+
+        $this->addLeftJoin([
+            'EmailEmailAddress',
+            $alias,
+            [
+                'emailId:' => 'id',
+                'deleted' => false,
+            ]
+        ], $result);
+
+        return [
+            $alias . '.emailAddressId' => $emailAddressId,
+            $alias . '.addressType' => 'to',
+        ];
     }
 
     protected function getWherePartIsNotRepliedIsTrue()
     {
-        return array(
+        return [
             'isReplied' => false
-        );
+        ];
     }
 
     protected function getWherePartIsNotRepliedIsFalse()
     {
-        return array(
+        return [
             'isReplied' => true
-        );
+        ];
     }
 
     public function getWherePartIsNotReadIsTrue()
     {
-        return array(
+        return [
             'usersMiddle.isRead' => false,
-            'OR' => array(
+            'OR' => [
                 'sentById' => null,
                 'sentById!=' => $this->getUser()->id
-            )
-        );
+            ]
+        ];
     }
 
     protected function getWherePartIsNotReadIsFalse()
     {
-        return array(
+        return [
             'usersMiddle.isRead' => true
-        );
+        ];
     }
 
     protected function getWherePartIsReadIsTrue()
     {
-        return array(
+        return [
             'usersMiddle.isRead' => true
-        );
+        ];
     }
 
     protected function getWherePartIsReadIsFalse()
     {
-        return array(
+        return [
             'usersMiddle.isRead' => false,
-            'OR' => array(
+            'OR' => [
                 'sentById' => null,
                 'sentById!=' => $this->getUser()->id
-            )
-        );
+            ]
+        ];
     }
 
     protected function getWherePartIsImportantIsTrue()
     {
-        return array(
+        return [
             'usersMiddle.isImportant' => true
-        );
+        ];
     }
 
     protected function getWherePartIsImportantIsFalse()
     {
-        return array(
+        return [
             'usersMiddle.isImportant' => false
-        );
+        ];
     }
 }

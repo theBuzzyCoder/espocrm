@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,17 +33,20 @@ class Team extends \Espo\Core\SelectManagers\Base
 {
     protected function boolFilterOnlyMy(&$result)
     {
-        if (!in_array('users', $result['joins'])) {
-        	$result['joins'][] = 'users';
-        }
-        $result['whereClause'][] = array(
-        	'usersMiddle.userId' => $this->getUser()->id
-        );
-        $result['distinct'] = true;
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin(['users', 'usersOnlyMyFilter'], $result);
+
+        return [
+            'usersOnlyMyFilterMiddle.userId' => $this->getUser()->id
+        ];
     }
 
     protected function accessOnlyTeam(&$result)
     {
-        $this->boolFilterOnlyMy($result);
+        $this->setDistinct(true, $result);
+        $this->addLeftJoin(['users', 'usersOnlyMyAccess'], $result);
+        $result['whereClause'][] = [
+            'usersOnlyMyAccessMiddle.userId' => $this->getUser()->id
+        ];
     }
 }

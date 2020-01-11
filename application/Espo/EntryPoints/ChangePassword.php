@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -39,25 +39,34 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
 
     public function run()
     {
-        $requestId = $_GET['id'];
-        if (empty($requestId)) {
-            throw new BadRequest();
-        }
+        $requestId = $_GET['id'] ?? null;
+
+        if (!$requestId) throw new BadRequest();
 
         $config = $this->getConfig();
         $themeManager = $this->getThemeManager();
 
-        $p = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where(array(
+        $request = $this->getEntityManager()->getRepository('PasswordChangeRequest')->where([
             'requestId' => $requestId
-        ))->findOne();
+        ])->findOne();
 
-        if (!$p) {
-            throw new NotFound();
-        }
+        $strengthParams = [
+            'passwordStrengthLength' => $this->getConfig()->get('passwordStrengthLength'),
+            'passwordStrengthLetterCount' => $this->getConfig()->get('passwordStrengthLetterCount'),
+            'passwordStrengthNumberCount' => $this->getConfig()->get('passwordStrengthNumberCount'),
+            'passwordStrengthBothCases' => $this->getConfig()->get('passwordStrengthBothCases'),
+        ];
+
+        if (!$request) throw new NotFound();
+
+        $options = [
+            'id' => $requestId,
+            'strengthParams' => $strengthParams,
+        ];
 
         $runScript = "
             app.getController('PasswordChangeRequest', function (controller) {
-                controller.doAction('passwordChange', '{$requestId}');
+                controller.doAction('passwordChange', ".json_encode($options).");
             });
         ";
 
@@ -69,4 +78,3 @@ class ChangePassword extends \Espo\Core\EntryPoints\Base
         return $this->getContainer()->get('themeManager');
     }
 }
-

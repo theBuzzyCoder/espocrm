@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ class HelperTest extends \PHPUnit\Framework\TestCase
 
     protected $reflection;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['config'] = $this->getMockBuilder('\\Espo\\Core\\Utils\\Config')->disableOriginalConstructor()->getMock();
 
@@ -58,7 +58,7 @@ class HelperTest extends \PHPUnit\Framework\TestCase
         ]));
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

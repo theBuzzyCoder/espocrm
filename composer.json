@@ -4,7 +4,7 @@
     "homepage": "https://github.com/espocrm/espocrm.git",
     "license": "GPL-3.0-only",
     "require": {
-        "php": ">=7.1.0",
+        "php": ">=7.2.0",
         "ext-pdo_mysql": "*",
         "ext-openssl": "*",
         "ext-json": "*",
@@ -22,14 +22,14 @@
         "zendframework/zend-servicemanager": "3.3.2",
         "monolog/monolog": "1.*",
         "yzalis/identicon": "*",
-        "zordius/lightncandy": "0.*",
+        "zordius/lightncandy": "1.*",
         "composer/semver": "^1.4",
         "tecnickcom/tcpdf": "^6.2",
-        "php-mime-mail-parser/php-mime-mail-parser": "3.*",
-        "zbateson/mail-mime-parser": "0.4.*",
-        "phpoffice/phpspreadsheet": "^1.1",
+        "zbateson/mail-mime-parser": "1.1.*",
+        "phpoffice/phpspreadsheet": "^1.10",
         "spatie/async": "dev-for-espocrm",
         "symfony/process": "4.1.7",
+        "symfony/http-foundation": "4.4.1",
         "cboden/ratchet": "^0.4.1",
         "react/zmq": "^0.4.0",
         "guzzlehttp/psr7": "^1.5",
@@ -37,7 +37,8 @@
         "container-interop/container-interop": "1.2.0",
         "zendframework/zend-mime": "^2.7.1",
         "zendframework/zend-stdlib": "^3.1",
-        "robthree/twofactorauth": "^1.6"
+        "robthree/twofactorauth": "^1.6",
+        "nesbot/carbon": "^2.26"
     },
     "autoload": {
         "psr-0": {

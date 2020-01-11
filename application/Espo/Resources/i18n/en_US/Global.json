@@ -50,6 +50,7 @@
         "LeadCaptureLogRecord": "Lead Capture Log Record",
         "ArrayValue": "Array Value",
         "DashboardTemplate": "Dashboard Template",
+        "Currency": "Currency",
         "Webhook": "Webhook"
     },
     "scopeNamesPlural": {
@@ -67,6 +68,8 @@
         "Extension": "Extensions",
         "Dashboard": "Dashboard",
         "InboundEmail": "Group Email Accounts",
+        "EmailAddress": "Email Addresses",
+        "PhoneNumber": "Phone Numbers",
         "Stream": "Stream",
         "Import": "Import",
         "Template": "Templates",
@@ -90,6 +93,7 @@
         "LeadCaptureLogRecord": "Lead Capture Log",
         "ArrayValue": "Array Values",
         "DashboardTemplate": "Dashboard Templates",
+        "Currency": "Currency",
         "Webhook": "Webhooks"
     },
     "labels": {
@@ -194,6 +198,7 @@
         "Person": "Person",
         "First Name": "First Name",
         "Last Name": "Last Name",
+        "Middle Name": "Middle Name",
         "Original": "Original",
         "You": "You",
         "you": "you",
@@ -247,6 +252,8 @@
         "Personal Data": "Personal Data",
         "Erase": "Erase",
         "View Followers": "View Followers",
+        "Convert Currency": "Convert Currency",
+        "View on Map": "View on Map",
         "Move Over": "Move Over"
     },
     "messages": {
@@ -299,6 +306,7 @@
         "internalPost": "Post will be seen only by internal users",
         "internalPostTitle": "Post is seen only by internal users",
         "done": "Done",
+        "notUpdated": "Not updated",
         "confirmMassFollow": "Are you sure you want to follow selected records?",
         "confirmMassUnfollow": "Are you sure you want to unfollow selected records?",
         "massFollowResult": "{count} records now are followed",
@@ -308,10 +316,12 @@
         "massFollowZeroResult": "Nothing got followed",
         "massUnfollowZeroResult": "Nothing got unfollowed",
         "erasePersonalDataConfirmation": "Checked fields will be erased permanently. Are you sure?",
+        "maintenanceMode": "The application currently is in maintenance mode. Only admin users have access.\n\nMaintenance mode can be disabled at Administration → Settings.",
         "massPrintPdfMaxCountError": "Can't print more that {maxCount} records."
     },
     "boolFilters": {
         "onlyMy": "Only My",
+        "onlyMyTeam": "My Team",
         "followed": "Followed"
     },
     "presetFilters": {
@@ -334,6 +344,7 @@
         "name": "Name",
         "firstName": "First Name",
         "lastName": "Last Name",
+        "middleName": "Middle Name",
         "salutationName": "Salutation",
         "assignedUser": "Assigned User",
         "assignedUsers": "Assigned Users",
@@ -380,6 +391,7 @@
     "dashlets": {
         "Stream": "Stream",
         "Emails": "My Inbox",
+        "Iframe": "Iframe",
         "Records": "Record List"
     },
     "notificationMessages": {
@@ -604,7 +616,9 @@
             "isNot": "Is Not",
             "isNotOneOf": "None Of",
             "anyOf": "Any Of",
-            "noneOf": "None Of"
+            "allOf": "All Of",
+            "noneOf": "None Of",
+            "any": "Any"
         },
         "varcharSearchRanges": {
             "equals": "Equals",

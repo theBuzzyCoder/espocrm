@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -31,7 +31,6 @@ namespace Espo\Core\Utils\Database\DBAL\Schema;
 
 class Column extends \Doctrine\DBAL\Schema\Column
 {
-
     /**
      * @var boolean
      */
@@ -42,6 +41,7 @@ class Column extends \Doctrine\DBAL\Schema\Column
      */
     protected $_unique = false;
 
+    protected $_quoted = true;
 
     /**
      * @param boolean $unique

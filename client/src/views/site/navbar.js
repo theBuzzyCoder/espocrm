@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -206,14 +206,25 @@ define('views/site/navbar', 'view', function (Dep) {
             var scopes = this.getMetadata().get('scopes') || {};
 
             this.tabList = tabList.filter(function (scope) {
-                if ((scopes[scope] || {}).disabled) return;
-                if ((scopes[scope] || {}).acl) {
+                if (scope === '_delimiter_' || scope === 'Home') return true;
+                if (!scopes[scope]) return false;
+
+                var defs = scopes[scope] || {};
+
+                if (defs.disabled) return;
+
+                if (defs.acl) {
                     return this.getAcl().check(scope);
+                }
+                if (defs.tabAclPermission) {
+                    var level = this.getAcl().get(defs.tabAclPermission);
+                    return level && level !== 'no';
                 }
                 return true;
             }, this);
 
             this.quickCreateList = this.getQuickCreateList().filter(function (scope) {
+                if (!scopes[scope]) return false;
                 if ((scopes[scope] || {}).disabled) return;
                 if ((scopes[scope] || {}).acl) {
                     return this.getAcl().check(scope, 'create');

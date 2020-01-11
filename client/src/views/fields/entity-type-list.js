@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/entity-type-list', 'views/fields/multi-enum', function (Dep) {
+define('views/fields/entity-type-list', 'views/fields/multi-enum', function (Dep) {
 
     return Dep.extend({
 
@@ -46,7 +46,6 @@ Espo.define('views/fields/entity-type-list', 'views/fields/multi-enum', function
             }.bind(this)).sort(function (v1, v2) {
                  return this.translate(v1, 'scopeNames').localeCompare(this.translate(v2, 'scopeNames'));
             }.bind(this));
-            this.params.options.unshift('');
         },
 
         setup: function () {
@@ -55,8 +54,7 @@ Espo.define('views/fields/entity-type-list', 'views/fields/multi-enum', function
             }
             this.setupOptions();
             Dep.prototype.setup.call(this);
-        }
+        },
 
     });
 });
-

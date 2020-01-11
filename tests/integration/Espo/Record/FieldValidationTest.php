@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -89,7 +89,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test'
         ]);
 
-        $result = $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
+        $result = (object) $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
             [
                 'ids' => [$entity->id]
             ],
@@ -114,7 +114,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             'name' => 'test'
         ]);
 
-        $result = $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
+        $result = (object) $app->getContainer()->get('serviceFactory')->create('Account')->massUpdate(
             [
                 'ids' => [$entity->id]
             ],

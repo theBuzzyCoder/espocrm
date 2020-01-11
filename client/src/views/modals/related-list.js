@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -156,14 +156,16 @@ Espo.define('views/modals/related-list', ['views/modal', 'search-manager'], func
             if (this.model) {
                 this.headerHtml += Handlebars.Utils.escapeExpression(this.model.get('name'));
                 if (this.headerHtml) {
-                    this.headerHtml += ' &raquo ';
+                    this.headerHtml += ' <span class="chevron-right"></span> ';
                 }
             }
 
             var title = this.options.title;
             if (title) {
                 title = Handlebars.Utils.escapeExpression(this.options.title);
-                title = title.replace(/&amp;raquo/, '&raquo;');
+                console.log(title);
+                title = title.replace(/@right/, '<span class="chevron-right"></span>');
+                console.log(title);
             }
             this.headerHtml += title || this.getLanguage().translate(this.link, 'links', this.model.name);
 

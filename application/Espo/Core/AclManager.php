@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -134,7 +134,7 @@ class AclManager
     public function getLevel(User $user, $scope, $action)
     {
         if ($user->isAdmin()) {
-            return $this->getTable($user)->getHighestLevel($action);
+            return $this->getTable($user)->getHighestLevel($scope, $action);
         }
         return $this->getTable($user)->getLevel($scope, $action);
     }

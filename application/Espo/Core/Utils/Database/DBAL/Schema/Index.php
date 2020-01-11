@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Database\DBAL\Schema;
 
 use Doctrine\DBAL\Schema\Index as DBALIndex;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class Index extends \Doctrine\DBAL\Schema\Index
 {
@@ -62,7 +63,7 @@ class Index extends \Doctrine\DBAL\Schema\Index
             $flags = $this->getFlags();
             $otherFlags = $other->getFlags();
 
-            if ( ! $this->isUnique() && !$this->isPrimary() && $flags === $otherFlags) {
+        if ( ! $this->isUnique() && !$this->isPrimary() /*espo*/ && $flags === $otherFlags /*espo*/) {
                 return true;
             } else if ($other->isPrimary() != $this->isPrimary()) {
                 return false;
@@ -70,10 +71,45 @@ class Index extends \Doctrine\DBAL\Schema\Index
                 return false;
             }
 
+            /*espo*/
             if (count($flags) != count($otherFlags) || array_diff($flags, $otherFlags) !== array_diff($otherFlags, $flags)) {
                 return false;
             }
+            /*espo*/
 
+            return true;
+        }
+
+        return false;
+    }
+
+    public function getQuotedColumns(AbstractPlatform $platform)
+    {
+        $columns = array();
+
+        foreach ($this->_columns as $column) {
+            $column->_quoted = true;
+            $columns[] = $column->getQuotedName($platform);
+        }
+
+        return $columns;
+    }
+
+    public function overrules(DBALIndex $other)
+    {
+        if ($other->isPrimary()) {
+            return false;
+        } else if ($this->isSimpleIndex() && $other->isUnique()) {
+            return false;
+        }
+
+        /*espo*/
+        if (count($other->getColumns()) != count($this->getColumns())) {
+            return false;
+        }
+        /*espo*/
+
+        if ($this->spansColumns($other->getColumns()) && ($this->isPrimary() || $this->isUnique())) {
             return true;
         }
 

@@ -1,4 +1,6 @@
-<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a> &raquo {{translate 'System Requirements' scope='Admin'}}</h3></div>
+<div class="page-header"><h3><a href="#Admin">{{translate 'Administration'}}</a> 
+<span class="breadcrumb-separator"><span class="chevron-right"></span></span>
+{{translate 'System Requirements' scope='Admin'}}</h3></div>
 
 <div class="panel panel-default">
     <table class="table table-striped">
@@ -77,7 +79,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="pull-right">
-            <a target="_blank" href="https://www.espocrm.com/documentation/administration/server-configuration/" style="font-weight:bold;">Configuration Instructions</a>
+            <a target="_blank" href="https://www.espocrm.com/documentation/administration/server-configuration/" style="font-weight:600;">Configuration Instructions</a>
         </div>
     </div>
 </div>

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -84,15 +84,23 @@ class ActionManager
         return $object->run($data);
     }
 
+    public function getActionClass($actionName)
+    {
+        return $this->getObject($actionName);
+    }
+
     public function getManifest()
     {
         return $this->getObject()->getManifest();
     }
 
-    protected function getObject()
+    protected function getObject($actionName = null)
     {
         $managerName = $this->getManagerName();
-        $actionName = $this->getAction();
+
+        if (!$actionName) {
+            $actionName = $this->getAction();
+        }
 
         if (!isset($this->objects[$managerName][$actionName])) {
             $class = '\Espo\Core\Upgrades\Actions\\' . ucfirst($managerName) . '\\' . ucfirst($actionName);

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -238,20 +238,7 @@ class Converter
             $tables[$entityName]->setPrimaryKey($primaryColumns);
 
             if (!empty($indexList[$entityName])) {
-                foreach($indexList[$entityName] as $indexName => $indexParams) {
-
-                    switch ($indexParams['type']) {
-                        case 'index':
-                        case 'fulltext':
-                            $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
-                            $tables[$entityName]->addIndex($indexParams['columns'], $indexName, $indexFlagList);
-                            break;
-
-                        case 'unique':
-                            $tables[$entityName]->addUniqueIndex($indexParams['columns'], $indexName);
-                            break;
-                    }
-                }
+                $this->addIndexes($tables[$entityName], $indexList[$entityName]);
             }
         }
 
@@ -338,6 +325,26 @@ class Converter
             }
         } //END: add additionalColumns
 
+        $table->addColumn('deleted', 'bool', $this->getDbFieldParams(array(
+            'type' => 'bool',
+            'default' => false,
+        )));
+
+        $table->setPrimaryKey(array("id"));
+
+        //add defined indexes
+        if (!empty($relationParams['indexes'])) {
+            $normalizedIndexes = SchemaUtils::getIndexList([
+                $entityName => [
+                    'fields' => [],
+                    'indexes' => $relationParams['indexes'],
+                ]
+            ]);
+
+            $this->addIndexes($table, $normalizedIndexes[$entityName]);
+        }
+        //END: add defined indexes
+
         //add unique indexes
         if (!empty($relationParams['conditions'])) {
             foreach ($relationParams['conditions'] as $fieldName => $fieldParams) {
@@ -346,18 +353,31 @@ class Converter
         }
 
         if (!empty($uniqueIndex)) {
-            $table->addUniqueIndex($uniqueIndex, SchemaUtils::generateIndexName($columnName, 'unique'));
+            $uniqueIndexName = implode('_', $uniqueIndex);
+            $table->addUniqueIndex($uniqueIndex, SchemaUtils::generateIndexName($uniqueIndexName, 'unique'));
         }
         //END: add unique indexes
 
-        $table->addColumn('deleted', 'bool', $this->getDbFieldParams(array(
-            'type' => 'bool',
-            'default' => false,
-        )));
-
-        $table->setPrimaryKey(array("id"));
-
         return $table;
+    }
+
+    protected function addIndexes($table, array $indexes)
+    {
+        foreach($indexes as $indexName => $indexParams) {
+            $indexType = !empty($indexParams['type']) ? $indexParams['type'] : SchemaUtils::getIndexTypeByIndexDefs($indexParams);
+
+            switch ($indexType) {
+                case 'index':
+                case 'fulltext':
+                    $indexFlagList = isset($indexParams['flags']) ? $indexParams['flags'] : array();
+                    $table->addIndex($indexParams['columns'], $indexName, $indexFlagList);
+                    break;
+
+                case 'unique':
+                    $table->addUniqueIndex($indexParams['columns'], $indexName);
+                    break;
+            }
+        }
     }
 
     protected function getDbFieldParams($fieldParams)
@@ -408,9 +428,15 @@ class Converter
             $dbFieldParams['unsigned'] = true;
         }
 
+        if (isset($fieldParams['binary']) && $fieldParams['binary']) {
+            $dbFieldParams['platformOptions'] = array(
+                'collation' => 'utf8mb4_bin',
+            );
+        }
+
         if (isset($fieldParams['utf8mb3']) && $fieldParams['utf8mb3']) {
             $dbFieldParams['platformOptions'] = array(
-                'collation' => 'utf8_unicode_ci',
+                'collation' => (isset($fieldParams['binary']) && $fieldParams['binary']) ? 'utf8_bin' : 'utf8_unicode_ci',
             );
         }
 

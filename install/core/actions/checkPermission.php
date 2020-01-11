@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -50,7 +50,7 @@ if (!$installer->checkPermission()) {
             $changeOwner = false;
         }
     }
-    $result['errorMsg'] = $langs['messages']['Permission denied to'] . ':<br><pre>/'.implode('<br>/', $urls).'</pre>';
+    $result['errorMsg'] = $langs['messages']['Permission denied to'] . ':<br><pre>'.implode('<br>', $urls).'</pre>';
     $result['errorFixInstruction'] = str_replace( '"{C}"' , $instruction, $langs['messages']['permissionInstruction']) . "<br>" .
                                         str_replace( '{CSU}' , $instructionSU, $langs['messages']['operationNotPermitted']);
 }

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,12 +33,12 @@ use Espo\Core\Utils\Json;
 
 class JsonTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         $GLOBALS['log'] = $this->getMockBuilder('\Espo\Core\Utils\Log')->disableOriginalConstructor()->getMock();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }

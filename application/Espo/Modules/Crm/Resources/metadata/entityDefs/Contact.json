@@ -273,10 +273,8 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
             "link": "meetings",
@@ -285,9 +283,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
@@ -344,18 +340,13 @@
             "directAccessDisabled": true
         },
         "portalUser": {
-            "type": "link",
-            "layoutMassUpdateDisabled": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
+            "type": "linkOne",
             "readOnly": true,
             "notStorable": true,
             "view": "views/fields/link-one"
         },
         "originalLead": {
-            "type": "link",
-            "layoutMassUpdateDisabled": true,
-            "layoutListDisabled": true,
+            "type": "linkOne",
             "readOnly": true,
             "view": "views/fields/link-one"
         },
@@ -410,6 +401,12 @@
             "type": "hasMany",
             "entity": "Opportunity",
             "foreign": "contacts"
+        },
+        "opportunitiesPrimary": {
+            "type": "hasMany",
+            "entity": "Opportunity",
+            "foreign": "contact",
+            "layoutRelationshipsDisabled": true
         },
         "casesPrimary": {
             "type": "hasMany",

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,22 +33,22 @@ class Lead extends \Espo\Core\SelectManagers\Base
 {
     protected function filterActive(&$result)
     {
-        $result['whereClause'][] = array(
-            'status!=' => ['Converted', 'Recycled', 'Dead']
-        );
+        $result['whereClause'][] = [
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+        ];
     }
 
     protected function filterActual(&$result)
     {
-        $result['whereClause'][] = array(
-            'status!=' => ['Converted', 'Recycled', 'Dead']
-        );
+        $result['whereClause'][] = [
+            'status!=' => $this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', 'status', 'notActualOptions']) ?? []
+        ];
     }
 
     protected function filterConverted(&$result)
     {
-        $result['whereClause'][] = array(
+        $result['whereClause'][] = [
             'status=' => 'Converted'
-        );
+        ];
     }
  }

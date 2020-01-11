@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -51,10 +51,10 @@ describe('collection', function () {
 		collection.total = 15;
 	},
 
-	it ('#sort should set sort params', function () {
+	it ('#sort should set order params', function () {
 		collection.sort('test', true);
-		expect(collection.sortBy).toBe('test');
-		expect(collection.asc).toBe(true);
+		expect(collection.orderBy).toBe('test');
+		expect(collection.order).toBe('desc');
 	});
 
 	it ('#nextPage and #previousPage should change offset to the next and previous pages', function () {
@@ -80,6 +80,4 @@ describe('collection', function () {
 		collection.lastPage();
 		expect(collection.offset).toBe(15);
 	});
-
-
 });

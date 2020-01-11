@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/fields/email-address', ['views/fields/base'], function (Dep) {
+define('views/email/fields/email-address', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,51 +42,56 @@ Espo.define('views/email/fields/email-address', ['views/fields/base'], function 
 
             this.$input = this.$el.find('input');
 
-            if (this.mode == 'search') {
-                this.$input.autocomplete({
-                    serviceUrl: function (q) {
-                        return 'EmailAddress/action/searchInAddressBook?maxSize=' + this.getAutocompleteMaxCount();
-                    }.bind(this),
-                    paramName: 'q',
-                    minChars: 1,
-                    autoSelectFirst: true,
-                    triggerSelectOnValidInput: false,
-                    formatResult: function (suggestion) {
-                        return this.getHelper().escapeString(suggestion.name) + ' &#60;' + this.getHelper().escapeString(suggestion.id) + '&#62;';
-                    }.bind(this),
-                    transformResult: function (response) {
-                        var response = JSON.parse(response);
-                        var list = [];
-                        response.forEach(function(item) {
-                            list.push({
-                                id: item.emailAddress,
-                                name: item.entityName,
-                                emailAddress: item.emailAddress,
-                                entityId: item.entityId,
-                                entityName: item.entityName,
-                                entityType: item.entityType,
-                                data: item.emailAddress,
-                                value: item.emailAddress
-                            });
-                        }, this);
-                        return {
-                            suggestions: list
-                        };
-                    }.bind(this),
-                    onSelect: function (s) {
-                        this.$input.val(s.emailAddress);
-                    }.bind(this)
-                });
-
-                this.once('render', function () {
-                    this.$input.autocomplete('dispose');
-                }, this);
-                this.once('remove', function () {
-                    this.$input.autocomplete('dispose');
-                }, this);
+            if (this.mode == 'search' && this.getAcl().check('Email', 'create')) {
+                this.initSearchAutocomplete();
             }
         },
 
+        initSearchAutocomplete: function () {
+            this.$input = this.$input || this.$el.find('input');
+
+            this.$input.autocomplete({
+                serviceUrl: function (q) {
+                    return 'EmailAddress/action/searchInAddressBook?maxSize=' + this.getAutocompleteMaxCount();
+                }.bind(this),
+                paramName: 'q',
+                minChars: 1,
+                autoSelectFirst: true,
+                triggerSelectOnValidInput: false,
+                formatResult: function (suggestion) {
+                    return this.getHelper().escapeString(suggestion.name) + ' &#60;' + this.getHelper().escapeString(suggestion.id) + '&#62;';
+                }.bind(this),
+                transformResult: function (response) {
+                    var response = JSON.parse(response);
+                    var list = [];
+                    response.forEach(function(item) {
+                        list.push({
+                            id: item.emailAddress,
+                            name: item.entityName,
+                            emailAddress: item.emailAddress,
+                            entityId: item.entityId,
+                            entityName: item.entityName,
+                            entityType: item.entityType,
+                            data: item.emailAddress,
+                            value: item.emailAddress,
+                        });
+                    }, this);
+                    return {
+                        suggestions: list
+                    };
+                }.bind(this),
+                onSelect: function (s) {
+                    this.$input.val(s.emailAddress);
+                }.bind(this)
+            });
+
+            this.once('render', function () {
+                this.$input.autocomplete('dispose');
+            }, this);
+            this.once('remove', function () {
+                this.$input.autocomplete('dispose');
+            }, this);
+        },
 
         fetchSearch: function () {
             var value = this.$element.val();
@@ -101,8 +106,7 @@ Espo.define('views/email/fields/email-address', ['views/fields/base'], function 
                 return data;
             }
             return false;
-        }
+        },
 
     });
-
 });

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -220,7 +220,7 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                     attributeList.push(field + 'Id');
                 }
 
-                if (~['linkMultiple', 'foreign'].indexOf(d.type)) {
+                if (~['foreign'].indexOf(d.type)) {
                     continue;
                 }
 
@@ -287,6 +287,11 @@ Espo.define('views/import/step2', 'view', function (Dep) {
                     } else if (field.indexOf('emailAddress') === 0 && parseInt(field.substr(12)).toString() === field.substr(12)) {
                         var emailAddressNum = field.substr(12);
                         label = this.translate('emailAddress', 'fields', scope) + ' ' + emailAddressNum.toString();;
+                    } else if (field.indexOf('Ids') === field.length - 3) {
+                        var baseField = field.substr(0, field.length - 3);
+                        if (this.getMetadata().get(['entityDefs', scope, 'fields', baseField])) {
+                            label = this.translate(baseField, 'fields', scope) + ' (' + this.translate('ids', 'fields') + ')';
+                        }
                     }
                 }
 

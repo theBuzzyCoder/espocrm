@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -38,6 +38,7 @@ use \Espo\Core\Exceptions\Conflict;
 use \Espo\Core\Exceptions\NotFound;
 use \Espo\Core\Exceptions\NotFoundSilent;
 use \Espo\Core\Exceptions\ForbiddenSilent;
+use \Espo\Core\Exceptions\ConflictSilent;
 
 use \Espo\Core\Utils\Util;
 
@@ -95,6 +96,8 @@ class Record extends \Espo\Core\Services\Base
 
     protected $noEditAccessRequiredLinkList = [];
 
+    protected $noEditAccessRequiredForLink = false;
+
     protected $exportSkipAttributeList = [];
 
     protected $exportAdditionalAttributeList = [];
@@ -128,6 +131,10 @@ class Record extends \Espo\Core\Services\Base
     protected $duplicateIgnoreFieldList = [];
 
     protected $duplicateIgnoreAttributeList = [];
+
+    private $acl = null;
+
+    private $user = null;
 
     const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 5000;
 
@@ -210,7 +217,26 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getAcl()
     {
+        if ($this->acl) return $this->acl;
+
         return $this->getInjection('acl');
+    }
+
+    protected function getUser()
+    {
+        if ($this->user) return $this->user;
+
+        return $this->getInjection('user');
+    }
+
+    public function setAcl(\Espo\Core\Acl $acl)
+    {
+        $this->acl = $acl;
+    }
+
+    public function setUser(\Espo\Entities\User $user)
+    {
+        $this->user = $user;
     }
 
     protected function getAclManager()
@@ -534,7 +560,6 @@ class Record extends \Espo\Core\Services\Base
         $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
         $fieldValidatorManager = $this->getInjection('container')->get('fieldValidatorManager');
 
-
         foreach ($validationList as $type) {
             $value = $this->getFieldManagerUtil()->getEntityTypeFieldParam($this->entityType, $field, $type);
             if (is_null($value)) {
@@ -546,7 +571,7 @@ class Record extends \Espo\Core\Services\Base
             $skipPropertyName = 'validate' . ucfirst($type) . 'SkipFieldList';
             if (property_exists($this, $skipPropertyName)) {
                 $skipList = $this->$skipPropertyName;
-                if (!in_array($type, $skipList)) {
+                if (in_array($type, $skipList)) {
                     continue;
                 }
             }
@@ -819,7 +844,7 @@ class Record extends \Espo\Core\Services\Base
 
     protected function processDuplicateCheck(Entity $entity, $data)
     {
-        if (empty($data->skipDuplicateCheck) && empty($data->forceDuplicate)) {
+        if (empty($data->_skipDuplicateCheck) && empty($data->skipDuplicateCheck) && empty($data->forceDuplicate)) {
             $duplicateList = $this->findDuplicates($entity, $data);
             if (!empty($duplicateList)) {
                 $data = [];
@@ -830,7 +855,7 @@ class Record extends \Espo\Core\Services\Base
                     'reason' => 'Duplicate',
                     'data' => $data
                 ];
-                throw new Conflict(json_encode($reason));
+                throw new ConflictSilent(json_encode($reason));
             }
         }
     }
@@ -1041,7 +1066,13 @@ class Record extends \Espo\Core\Services\Base
 
     protected function getSelectParams($params)
     {
-        $selectParams = $this->getSelectManager($this->entityType)->getSelectParams($params, true, true, true);
+        $selectManager = $this->getSelectManager($this->entityType);
+
+        $selectParams = $selectManager->getSelectParams($params, true, true, true);
+
+        if (empty($selectParams['orderBy'])) {
+            $selectManager->applyDefaultOrder($selectParams);
+        }
 
         return $selectParams;
     }
@@ -1057,7 +1088,7 @@ class Record extends \Espo\Core\Services\Base
         if (
             $this->listCountQueryDisabled
             ||
-            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+            $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'countDisabled'])
         ) {
             $disableCount = true;
         }
@@ -1117,7 +1148,7 @@ class Record extends \Espo\Core\Services\Base
         if (
             $this->listCountQueryDisabled
             ||
-            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+            $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'countDisabled'])
         ) {
             $disableCount = true;
         }
@@ -1293,22 +1324,23 @@ class Record extends \Espo\Core\Services\Base
             return $this->$methodName($id, $params);
         }
 
-        $foreignEntityName = $entity->relations[$link]['entity'];
+        $foreignEntityType = $entity->relations[$link]['entity'];
 
         $linkParams = $this->linkParams[$link] ?? [];
         $skipAcl = $linkParams['skipAcl'] ?? false;
 
         if (!$skipAcl) {
-            if (!$this->getAcl()->check($foreignEntityName, 'read')) {
+            if (!$this->getAcl()->check($foreignEntityType, 'read')) {
                 throw new Forbidden();
             }
         }
 
-        $recordService = $this->getRecordService($foreignEntityName);
+        $recordService = $this->getRecordService($foreignEntityType);
 
         $disableCount = false;
+        $disableCountPropertyName = 'findLinked' . ucfirst($link) . 'CountQueryDisabled';
         if (
-            in_array($this->entityType, $this->getConfig()->get('disabledCountQueryEntityList', []))
+            !empty($this->$disableCountPropertyName)
         ) {
             $disableCount = true;
         }
@@ -1321,7 +1353,13 @@ class Record extends \Espo\Core\Services\Base
             }
         }
 
-        $selectParams = $this->getSelectManager($foreignEntityName)->getSelectParams($params, !$skipAcl, true);
+        $selectManager = $this->getSelectManager($foreignEntityType);
+
+        $selectParams = $selectManager->getSelectParams($params, !$skipAcl, true);
+
+        if (empty($selectParams['orderBy'])) {
+            $selectManager->applyDefaultOrder($selectParams);
+        }
 
         if (array_key_exists($link, $this->linkSelectParams)) {
             $selectParams = array_merge($selectParams, $this->linkSelectParams[$link]);
@@ -1402,8 +1440,11 @@ class Record extends \Espo\Core\Services\Base
         if (!$entity) {
             throw new NotFound();
         }
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
+
+        if ($this->noEditAccessRequiredForLink) {
+            if (!$this->getAcl()->check($entity, 'read')) throw new Forbidden();
+        } else {
+            if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
         }
 
         $methodName = 'link' . ucfirst($link);
@@ -1468,8 +1509,11 @@ class Record extends \Espo\Core\Services\Base
         if (!$entity) {
             throw new NotFound();
         }
-        if (!$this->getAcl()->check($entity, 'edit')) {
-            throw new Forbidden();
+
+        if ($this->noEditAccessRequiredForLink) {
+            if (!$this->getAcl()->check($entity, 'read')) throw new Forbidden();
+        } else {
+            if (!$this->getAcl()->check($entity, 'edit')) throw new Forbidden();
         }
 
         $methodName = 'unlink' . ucfirst($link);
@@ -1620,7 +1664,9 @@ class Record extends \Espo\Core\Services\Base
 
     public function massUpdate(array $params, $data)
     {
-        $updatedIdList = [];
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
+
+        $resultIdList = [];
         $repository = $this->getRepository();
 
         $count = 0;
@@ -1628,79 +1674,35 @@ class Record extends \Espo\Core\Services\Base
         $data = $data;
         $this->filterInput($data);
 
-        if (array_key_exists('ids', $params) && is_array($params['ids'])) {
-            $ids = $params['ids'];
-            foreach ($ids as $id) {
-                $entity = $this->getEntity($id);
-                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                    $entity->set($data);
-                    try {
-                        $this->processValidation($entity, $data);
-                    } catch (\Exception $e) {
-                        continue;
-                    }
-                    if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity, ['massUpdate' => true])) {
-                            $updatedIdList[] = $entity->id;
-                            $count++;
+        $selectParams = $this->convertMassActionSelectParams($params);
 
-                            $this->processActionHistoryRecord('update', $entity);
-                        }
+        $collection = $this->getRepository()->find($selectParams);
+
+        foreach ($collection as $entity) {
+            if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
+                $entity->set($data);
+                try {
+                    $this->processValidation($entity, $data);
+                } catch (\Exception $e) {
+                    continue;
+                }
+                if ($this->checkAssignment($entity)) {
+                    if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
+                        $resultIdList[] = $entity->id;
+                        $count++;
+
+                        $this->processActionHistoryRecord('update', $entity);
                     }
                 }
             }
         }
 
-        if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-            $p = [];
-            $p['where'] = $where;
+        $this->afterMassUpdate($resultIdList, $data);
 
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
+        $result = ['count' => $count];
+        if (isset($params['ids'])) $result['ids'] = $resultIdList;
 
-            $selectParams = $this->getSelectParams($p);
-
-            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
-
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
-            $sth->execute();
-
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                if ($this->getAcl()->check($entity, 'edit') && $this->checkEntityForMassUpdate($entity, $data)) {
-                    $entity->set($data);
-                    if ($this->checkAssignment($entity)) {
-                        if ($repository->save($entity, ['massUpdate' => true, 'skipStreamNotesAcl' => true])) {
-                            $updatedIdList[] = $entity->id;
-                            $count++;
-
-                            $this->processActionHistoryRecord('update', $entity);
-                        }
-                    }
-                }
-            }
-
-            $this->afterMassUpdate($updatedIdList, $data);
-
-            return (object) [
-                'count' => $count
-            ];
-        }
-
-        $this->afterMassUpdate($updatedIdList, $data);
-
-        return (object) [
-            'count' => $count,
-            'ids' => $updatedIdList
-        ];
+        return $result;
     }
 
     protected function checkEntityForMassRemove(Entity $entity)
@@ -1720,74 +1722,32 @@ class Record extends \Espo\Core\Services\Base
 
     public function massDelete(array $params)
     {
-        $removedIdList = [];
+        $resultIdList = [];
         $repository = $this->getRepository();
 
         $count = 0;
 
-        if (array_key_exists('ids', $params)) {
-            $ids = $params['ids'];
-            foreach ($ids as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
-                    if ($repository->remove($entity)) {
-                        $removedIdList[] = $entity->id;
-                        $count++;
+        $selectParams = $this->convertMassActionSelectParams($params);
+        $selectParams['skipTextColumns'] = true;
 
-                        $this->processActionHistoryRecord('delete', $entity);
-                    }
+        $collection = $this->getRepository()->find($selectParams);
+
+        foreach ($collection as $entity) {
+            if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
+                if ($repository->remove($entity)) {
+                    $resultIdList[] = $entity->id;
+                    $count++;
+                    $this->processActionHistoryRecord('delete', $entity);
                 }
             }
         }
 
-        if (array_key_exists('where', $params)) {
-            $where = $params['where'];
-            $p = array();
-            $p['where'] = $where;
+        $this->afterMassDelete($resultIdList);
 
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
+        $result = ['count' => $count];
+        if (isset($params['ids'])) $result['ids'] = $resultIdList;
 
-            $selectParams = $this->getSelectParams($p);
-            $selectParams['skipTextColumns'] = true;
-
-            $this->getEntityManager()->getRepository($this->getEntityType())->handleSelectParams($selectParams);
-
-            $sql = $this->getEntityManager()->getQuery()->createSelectQuery($this->getEntityType(), $selectParams);
-            $sth = $this->getEntityManager()->getPdo()->prepare($sql);
-            $sth->execute();
-
-            while ($dataRow = $sth->fetch(\PDO::FETCH_ASSOC)) {
-                $entity = $this->getEntityManager()->getEntityFactory()->create($this->getEntityType());
-                $entity->set($dataRow);
-                $entity->setAsFetched();
-
-                if ($this->getAcl()->check($entity, 'delete') && $this->checkEntityForMassRemove($entity)) {
-                    if ($repository->remove($entity)) {
-                        $removedIdList[] = $entity->id;
-                        $count++;
-
-                        $this->processActionHistoryRecord('delete', $entity);
-                    }
-                }
-            }
-
-            $this->afterMassDelete($removedIdList);
-
-            return [
-                'count' => $count
-            ];
-        }
-
-        $this->afterMassDelete($removedIdList);
-
-        return [
-            'count' => $count,
-            'ids' => $removedIdList
-        ];
+        return $result;
     }
 
     public function massRecalculateFormula(array $params)
@@ -1795,24 +1755,8 @@ class Record extends \Espo\Core\Services\Base
         if (!$this->getUser()->isAdmin()) throw new Forbidden();
 
         $count = 0;
-        if (array_key_exists('ids', $params)) {
-            if (!is_array($params['ids'])) throw new BadRequest();
-            $selectParams = $this->getSelectParams([]);
-            $selectParams['whereClause'][] = [
-                'id' => $params['ids']
-            ];
 
-        } else if (array_key_exists('where', $params)) {
-            $p = ['where' => $params['where']];
-            if (!empty($params['selectData']) && is_array($params['selectData'])) {
-                foreach ($params['selectData'] as $k => $v) {
-                    $p[$k] = $v;
-                }
-            }
-            $selectParams = $this->getSelectParams($p);
-        } else {
-            throw new BadRequest();
-        }
+        $selectParams = $this->convertMassActionSelectParams($params);
 
         $collection = $this->getRepository()->find($selectParams);
         foreach ($collection as $entity) {
@@ -1821,13 +1765,14 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return [
-            'count' => $count
+            'count' => $count,
         ];
     }
 
     public function follow($id, $userId = null)
     {
         $entity = $this->getRepository()->get($id);
+        if (!$entity) throw new NotFoundSilent();
 
         if (!$this->getAcl()->check($entity, 'stream')) {
             throw new Forbidden();
@@ -1843,6 +1788,7 @@ class Record extends \Espo\Core\Services\Base
     public function unfollow($id, $userId = null)
     {
         $entity = $this->getRepository()->get($id);
+        if (!$entity) throw new NotFoundSilent();
 
         if (empty($userId)) {
             $userId = $this->getUser()->id;
@@ -1855,56 +1801,80 @@ class Record extends \Espo\Core\Services\Base
     {
         $resultIdList = [];
 
-        if (empty($userId)) {
-            $userId = $this->getUser()->id;
-        }
+        if (empty($userId)) $userId = $this->getUser()->id;
 
         $streamService = $this->getStreamService();
 
-        if (array_key_exists('ids', $params)) {
-            $idList = $params['ids'];
-            foreach ($idList as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity && $this->getAcl()->check($entity, 'stream')) {
-                    if ($streamService->followEntity($entity, $userId)) {
-                        $resultIdList[] = $entity->id;
-                    }
-                }
+        if (empty($userId)) $userId = $this->getUser()->id;
+
+        $selectParams = $this->convertMassActionSelectParams($params);
+
+        $collection = $this->getRepository()->find($selectParams);
+        foreach ($collection as $entity) {
+            if (!$this->getAcl()->check($entity, 'stream') || !$this->getAcl()->check($entity, 'read')) continue;
+            if ($streamService->followEntity($entity, $userId)) {
+                $resultIdList[] = $entity->id;
             }
         }
 
-        return [
-            'ids' => $resultIdList,
-            'count' => count($resultIdList)
+        $result = [
+            'count' => count($resultIdList),
         ];
+
+        if (isset($params['ids'])) $result['ids'] = $resultIdList;
+
+        return $result;
     }
 
     public function massUnfollow(array $params, $userId = null)
     {
         $resultIdList = [];
 
-        if (empty($userId)) {
-            $userId = $this->getUser()->id;
-        }
-
         $streamService = $this->getStreamService();
 
-        if (array_key_exists('ids', $params)) {
-            $idList = $params['ids'];
-            foreach ($idList as $id) {
-                $entity = $this->getEntity($id);
-                if ($entity) {
-                    if ($streamService->unfollowEntity($entity, $userId)) {
-                        $resultIdList[] = $entity->id;
-                    }
-                }
+        if (empty($userId)) $userId = $this->getUser()->id;
+
+        $selectParams = $this->convertMassActionSelectParams($params);
+
+        $collection = $this->getRepository()->find($selectParams);
+        foreach ($collection as $entity) {
+            if ($streamService->unfollowEntity($entity, $userId)) {
+                $resultIdList[] = $entity->id;
             }
         }
 
-        return [
-            'ids' => $resultIdList,
-            'count' => count($resultIdList)
+        $result = [
+            'count' => count($resultIdList),
         ];
+
+        if (isset($params['ids'])) $result['ids'] = $resultIdList;
+
+        return $result;
+    }
+
+    protected function convertMassActionSelectParams($params)
+    {
+        if (array_key_exists('ids', $params)) {
+            if (!is_array($params['ids'])) throw new BadRequest();
+            $selectParams = $this->getSelectParams([]);
+            $selectParams['whereClause'][] = [
+                'id' => $params['ids']
+            ];
+        } else if (array_key_exists('where', $params)) {
+            $p = ['where' => $params['where']];
+            if (!empty($params['selectData']) && is_array($params['selectData'])) {
+                foreach ($params['selectData'] as $k => $v) {
+                    $p[$k] = $v;
+                }
+            }
+            $selectParams = $this->getSelectParams($p);
+        } else {
+            throw new BadRequest();
+        }
+
+        $selectParams['returnSthCollection'] = true;
+
+        return $selectParams;
     }
 
     protected function getDuplicateWhereClause(Entity $entity, $data)
@@ -2552,5 +2522,158 @@ class Record extends \Espo\Core\Services\Base
         }
 
         return $attributeList;
+    }
+
+    public function massConvertCurrency($params, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
+    {
+        if ($this->getAcl()->get('massUpdatePermission') !== 'yes') throw new Forbidden();
+
+        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden();
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+
+        $allFields = !$fieldList;
+        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
+
+        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
+            throw new Error("Convert currency: targetCurrency rate is not specified.");
+
+        foreach ($fieldList as $i => $field) {
+            if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency')
+                throw new Error("Can't convert not currency field.");
+        }
+
+        $fieldList = array_values($fieldList);
+
+        if (empty($fieldList)) throw new Forbidden();
+
+        $count = 0;
+
+        $idUpdatedList = [];
+
+        $selectParams = $this->convertMassActionSelectParams($params);
+
+        $collection = $this->getRepository()->find($selectParams);
+
+        foreach ($collection as $entity) {
+            $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
+
+            if ($result) {
+                $idUpdatedList[] = $entity->id;
+                $count++;
+            }
+        }
+
+        return [
+            'count' => $count,
+        ];
+    }
+
+    public function convertCurrency(string $id, string $targetCurrency, string $baseCurrency, $rates, ?array $fieldList = null)
+    {
+        if (!$this->getAcl()->checkScope($this->entityType, 'edit')) throw new Forbidden();
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+
+        $allFields = !$fieldList;
+        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
+
+        if ($targetCurrency !== $baseCurrency && !property_exists($rates, $targetCurrency))
+            throw new Error("Convert currency: targetCurrency rate is not specified.");
+
+        foreach ($fieldList as $i => $field) {
+            if (in_array($field, $forbiddenFieldList)) unset($fieldList[$i]);
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency')
+                throw new Error("Can't convert not currency field.");
+        }
+
+        $fieldList = array_values($fieldList);
+
+        if (empty($fieldList)) throw new Forbidden();
+
+        $entity = $this->getEntity($id);
+
+        $initialValueMap = $entity->getValueMap();
+
+        $result = $this->convertEntityCurrency($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
+
+        if ($result) {
+            $valueMap = (object) [];
+            foreach ($entity->getAttributeList() as $a) {
+                if (in_array($a, ['modifiedAt', 'modifiedById', 'modifiedByName'])) continue;
+                if ($entity->get($a) !== ($initialValueMap->$a ?? null)) {
+                    $valueMap->$a = $entity->get($a);
+                }
+            }
+            return $valueMap;
+        }
+
+        return null;
+    }
+
+    protected function getConvertCurrencyFieldList()
+    {
+        if (isset($this->convertCurrencyFieldList)) return $this->convertCurrencyFieldList;
+
+        $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($this->entityType, 'edit');
+
+        $list = [];
+        foreach ($this->getFieldManagerUtil()->getEntityTypeFieldList($this->entityType) as $field) {
+            if ($this->getMetadata()->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency') continue;
+            if (in_array($field, $forbiddenFieldList)) continue;
+            $list[] = $field;
+        }
+
+        return $list;
+    }
+
+    protected function convertEntityCurrency(Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null)
+    {
+        if (!$this->getAcl()->check($entity, 'edit')) return;
+
+        $data = $this->getConvertCurrencyValues($entity, $targetCurrency, $baseCurrency, $rates, $allFields, $fieldList);
+
+        $entity->set($data);
+        if ($this->getRepository()->save($entity)) {
+            $this->processActionHistoryRecord('update', $entity);
+            return true;
+        }
+    }
+
+    public function getConvertCurrencyValues(Entity $entity, string $targetCurrency, string $baseCurrency, $rates, bool $allFields = false, ?array $fieldList = null)
+    {
+        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
+
+        $data = (object) [];
+
+        foreach ($fieldList as $field) {
+            $currencyAttribute = $field . 'Currency';
+
+            $currentCurrency = $entity->get($currencyAttribute);
+            $value = $entity->get($field);
+
+            if ($value === null) continue;
+
+            if ($currentCurrency === $targetCurrency) continue;
+
+            if ($currentCurrency !== $baseCurrency && !property_exists($rates, $currentCurrency)) {
+                continue;
+            }
+
+            $rate1 = property_exists($rates, $currentCurrency) ? $rates->$currentCurrency : 1.0;
+            $value = $value * $rate1;
+
+            $rate2 = property_exists($rates, $targetCurrency) ? $rates->$targetCurrency : 1.0;
+            $value = $value / $rate2;
+
+            if (!$rate2) continue;
+
+            $value = round($value, 2);
+
+            $data->$currencyAttribute = $targetCurrency;
+
+            $data->$field = $value;
+        }
+
+        return $data;
     }
 }

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -18,6 +18,15 @@
  * You should have received a copy of the GNU General Public License
  * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
  ************************************************************************/
+
+ /**
+  * * `grunt` - full build
+  * * `grunt dev` - build only items needed for development
+  * * `grunt offline` - skips *composer install*
+  * * `grant release` - full build plus upgrade packages`
+  * * `grant tests` - build and run tests
+  */
+
 module.exports = function (grunt) {
 
     var jsFilesToMinify = [
@@ -83,6 +92,10 @@ module.exports = function (grunt) {
     }
 
     var fs = require('fs');
+    var cp = require('child_process');
+    var path = require('path');
+
+    var currentPath = path.dirname(fs.realpathSync(__filename));
 
     var themeList = [];
     fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(function (file) {
@@ -108,8 +121,10 @@ module.exports = function (grunt) {
         lessData[theme] = o;
     });
 
+    var pkg = grunt.file.readJSON('package.json');
+
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+        pkg: pkg,
 
         mkdir: {
             tmp: {
@@ -125,8 +140,13 @@ module.exports = function (grunt) {
         clean: {
             start: ['build/EspoCRM-*'],
             final: ['build/tmp'],
+            release: ['build/EspoCRM-' + pkg.version],
             beforeFinal: {
-                src: ['build/tmp/custom/Espo/Custom/*', '!build/tmp/custom/Espo/Custom/.htaccess', 'build/tmp/install/config.php']
+                src: [
+                    'build/tmp/custom/Espo/Custom/*',
+                    '!build/tmp/custom/Espo/Custom/.htaccess',
+                    'build/tmp/install/config.php',
+                ]
             }
         },
         less: lessData,
@@ -146,6 +166,9 @@ module.exports = function (grunt) {
             })
         },
         copy: {
+            options: {
+                mode: true,
+            },
             frontendFolders: {
                 expand: true,
                 cwd: 'client',
@@ -190,6 +213,7 @@ module.exports = function (grunt) {
                     'extension.php',
                     'websocket.php',
                     'command.php',
+                    'oauth-callback.php',
                     'index.php',
                     'LICENSE.txt',
                     '.htaccess',
@@ -206,9 +230,6 @@ module.exports = function (grunt) {
             },
         },
         chmod: {
-            options: {
-                mode: '755'
-            },
             php: {
                 options: {
                     mode: '644'
@@ -237,7 +258,21 @@ module.exports = function (grunt) {
                     'build/EspoCRM-<%= pkg.version %>/api/v1/portal-access',
                     'build/EspoCRM-<%= pkg.version %>',
                 ]
-            }
+            },
+            foldersWritable: {
+                options: {
+                    mode: '775'
+                },
+                src: [
+                    'build/EspoCRM-<%= pkg.version %>/data',
+                    'build/EspoCRM-<%= pkg.version %>/custom',
+                    'build/EspoCRM-<%= pkg.version %>/custom/Espo',
+                    'build/EspoCRM-<%= pkg.version %>/custom/Espo/Custom',
+                    'build/EspoCRM-<%= pkg.version %>/client/custom',
+                    'build/EspoCRM-<%= pkg.version %>/client/modules',
+                    'build/EspoCRM-<%= pkg.version %>/application/Espo/Modules',
+                ]
+            },
         },
         replace: {
             version: {
@@ -257,17 +292,53 @@ module.exports = function (grunt) {
                 ]
             }
         },
-        compress: {
-            final: {
-                options: {
-                    archive: 'build/EspoCRM-<%= pkg.version %>.zip',
-                    mode: 'zip'
-                },
-                src: ['**'],
-                cwd: 'build/EspoCRM-<%= pkg.version %>',
-                dest: 'EspoCRM-<%= pkg.version %>'
-            }
-        }
+    });
+
+    grunt.registerTask("chmod-folders", function() {
+        cp.execSync("find . -type d -exec chmod 755 {} + ", {stdio: 'ignore', cwd: 'build/EspoCRM-' + pkg.version});
+    });
+
+    grunt.registerTask("composer", function() {
+        cp.execSync("composer install", {stdio: 'ignore'});
+    });
+
+    grunt.registerTask("upgrade", function() {
+        cp.execSync("node diff --all --vendor", {stdio: 'inherit'});
+    });
+
+    grunt.registerTask("unit-tests", function() {
+        cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/unit", {stdio: 'inherit'});
+    });
+
+    grunt.registerTask("integration-tests", function() {
+        cp.execSync("phpunit --bootstrap=vendor/autoload.php tests/integration", {stdio: 'inherit'});
+    });
+
+    grunt.registerTask("zip", function() {
+        var fs = require('fs');
+
+        var resolve = this.async();
+
+        var folder = 'EspoCRM-' + pkg.version;
+
+        var zipPath = 'build/' + folder +'.zip';
+        if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
+
+        var archiver = require('archiver');
+        var archive = archiver('zip');
+
+        archive.on('error', function (err) {
+            grunt.fail.warn(err);
+        });
+        var zipOutput = fs.createWriteStream(zipPath);
+        zipOutput.on('close', function () {
+            console.log("EspoCRM package has been built.");
+            resolve();
+        });
+
+        archive.directory(currentPath + '/build/' + folder, folder).pipe(zipOutput);
+
+        archive.finalize();
     });
 
     grunt.loadNpmTasks('grunt-contrib-clean');
@@ -277,10 +348,9 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-replace');
-    grunt.loadNpmTasks('grunt-contrib-compress');
     grunt.loadNpmTasks('grunt-chmod');
 
-    grunt.registerTask('default', [
+    grunt.registerTask('offline', [
         'clean:start',
         'mkdir:tmp',
         'less',
@@ -292,7 +362,33 @@ module.exports = function (grunt) {
         'replace',
         'clean:beforeFinal',
         'copy:final',
-        'chmod',
-        'clean:final'
+        'chmod-folders',
+        'chmod:php',
+        'chmod:folders',
+        'chmod:foldersWritable',
+        'clean:final',
+    ]);
+
+    grunt.registerTask('default', [
+        'composer',
+        'offline',
+    ]);
+
+    grunt.registerTask('release', [
+        'default',
+        'upgrade',
+        'zip',
+        'clean:release',
+    ]);
+
+    grunt.registerTask('tests', [
+        'default',
+        'unit-tests',
+        'integration-tests',
+    ]);
+
+    grunt.registerTask('dev', [
+        'composer',
+        'less',
     ]);
 };

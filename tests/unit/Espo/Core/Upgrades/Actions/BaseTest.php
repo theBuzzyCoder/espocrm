@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -56,7 +56,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     protected $currentVersion = '11.5.2';
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['container'] = $this->getMockBuilder('\Espo\Core\Container')->disableOriginalConstructor()->getMock();
         $this->objects['actionManager'] = $this->getMockBuilder('\Espo\Core\Upgrades\ActionManager')->disableOriginalConstructor()->getMock();
@@ -98,7 +98,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         /* END */
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
 
@@ -144,6 +144,11 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->expects($this->once())
             ->method('getContents')
             ->will($this->returnValue($manifest));
+
+        $this->objects['config']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue([]));
 
         $this->reflection->invokeMethod('getManifest', array());
     }
@@ -222,6 +227,11 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $this->expectException('\Espo\Core\Exceptions\Error');
 
+        $this->objects['config']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue([]));
+
         $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error'));
     }
 
@@ -262,7 +272,13 @@ class BaseTest extends \PHPUnit\Framework\TestCase
     {
         $this->expectException('\Espo\Core\Exceptions\Error');
 
+        $this->objects['config']
+            ->expects($this->once())
+            ->method('get')
+            ->will($this->returnValue([]));
+
         $this->reflection->setProperty('data', array('manifest' => array('type' => 'upgrade')));
+
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );
     }
 }

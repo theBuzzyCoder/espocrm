@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -197,10 +197,10 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     protected function afterMassRelate(Entity $entity, $relationName, array $params = [], array $options = [])
     {
         if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-            $hookData = array(
+            $hookData = [
                 'relationName' => $relationName,
-                'relationParams' => $params
-            );
+                'relationParams' => $params,
+            ];
             $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterMassRelate', $entity, $options, $hookData);
         }
     }
@@ -215,14 +215,24 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
 
-        if ($foreign instanceof Entity) {
-            $foreignEntity = $foreign;
-            if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-                $hookData = array(
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
+            if (is_string($foreign)) {
+                $foreignId = $foreign;
+                $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+                if ($foreignEntityType) {
+                    $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
+                    $foreign->id = $foreignId;
+                    $foreign->setAsFetched();
+                }
+            }
+
+            if ($foreign instanceof Entity) {
+                $hookData = [
                     'relationName' => $relationName,
                     'relationData' => $data,
-                    'foreignEntity' => $foreignEntity
-                );
+                    'foreignEntity' => $foreign,
+                    'foreignId' => $foreign->id,
+                ];
                 $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterRelate', $entity, $options, $hookData);
             }
         }
@@ -232,13 +242,23 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
     {
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
 
-        if ($foreign instanceof Entity) {
-            $foreignEntity = $foreign;
-            if (!$this->hooksDisabled && empty($options['skipHooks'])) {
-                $hookData = array(
+        if (!$this->hooksDisabled && empty($options['skipHooks'])) {
+            if (is_string($foreign)) {
+                $foreignId = $foreign;
+                $foreignEntityType = $entity->getRelationParam($relationName, 'entity');
+                if ($foreignEntityType) {
+                    $foreign = $this->getEntityManager()->getEntity($foreignEntityType);
+                    $foreign->id = $foreignId;
+                    $foreign->setAsFetched();
+                }
+            }
+
+            if ($foreign instanceof Entity) {
+                $hookData = [
                     'relationName' => $relationName,
-                    'foreignEntity' => $foreignEntity
-                );
+                    'foreignEntity' => $foreign,
+                    'foreignId' => $foreign->id,
+                ];
                 $this->getEntityManager()->getHookManager()->process($this->entityType, 'afterUnrelate', $entity, $options, $hookData);
             }
         }
@@ -301,7 +321,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                     $entity->set('modifiedAt', $nowString);
                 }
                 if ($entity->hasAttribute('createdById')) {
-                    if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
+                    if (!empty($options['createdById'])) {
+                        $entity->set('createdById', $options['createdById']);
+                    } else if (empty($options['skipCreatedBy']) && (empty($options['import']) || !$entity->has('createdById'))) {
                         if ($this->getEntityManager()->getUser()) {
                             $entity->set('createdById', $this->getEntityManager()->getUser()->id);
                         }
@@ -313,7 +335,9 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                         $entity->set('modifiedAt', $nowString);
                     }
                     if ($entity->hasAttribute('modifiedById')) {
-                        if ($this->getEntityManager()->getUser()) {
+                        if (!empty($options['modifiedById'])) {
+                            $entity->set('modifiedById', $options['modifiedById']);
+                        } else if ($this->getEntityManager()->getUser()) {
                             $entity->set('modifiedById', $this->getEntityManager()->getUser()->id);
                             $entity->set('modifiedByName', $this->getEntityManager()->getUser()->get('name'));
                         }
@@ -611,14 +635,17 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
 
                 $where = [];
                 $where[$foreignKey] = $entity->id;
-                $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)->where($where)->findOne();
+
+                $previousForeignEntity = $this->getEntityManager()->getRepository($foreignEntityType)
+                    ->select(['id'])->where($where)->findOne();
+
                 if ($previousForeignEntity) {
                     if (!$entity->isNew()) {
                         $entity->setFetched($idAttribute, $previousForeignEntity->id);
                     }
-                    if ($previousForeignEntity->id !== $entity->get($idAttribute)) {
+                    if (!$entity->get($idAttribute)) {
                         $previousForeignEntity->set($foreignKey, null);
-                        $this->getEntityManager()->saveEntity($previousForeignEntity);
+                        $this->getEntityManager()->saveEntity($previousForeignEntity, ['skipAll' => true]);
                     }
                 } else {
                     if (!$entity->isNew()) {
@@ -627,12 +654,29 @@ class RDB extends \Espo\ORM\Repositories\RDB implements Injectable
                 }
 
                 if ($entity->get($idAttribute)) {
-                    $newForeignEntity = $this->getEntityManager()->getEntity($foreignEntityType, $entity->get($idAttribute));
-                    if ($newForeignEntity) {
-                        $newForeignEntity->set($foreignKey, $entity->id);
-                        $this->getEntityManager()->saveEntity($newForeignEntity);
-                    } else {
+                    $relateResult = $this->relate($entity, $name, $entity->get($idAttribute));
+                    if (!$relateResult) {
                         $entity->set($idAttribute, null);
+                    }
+                }
+            } else if ($defs['type'] === $entity::BELONGS_TO) {
+                if (!$entity->get($name . 'Id')) continue;
+                if (!$entity->isAttributeChanged($name . 'Id')) continue;
+
+                $foreignEntityType = $defs['entity'] ?? null;
+                $foreignLink = $defs['foreign'] ?? null;
+
+                if (
+                    $this->getMetadata()->get(['entityDefs', $foreignEntityType, 'links', $foreignLink, 'type']) === $entity::HAS_ONE
+                ) {
+                    $anotherEntity = $this->select(['id'])->where([
+                        $name . 'Id' => $entity->get($name . 'Id'),
+                        'id!=' => $entity->id,
+                    ])->findOne();
+
+                    if ($anotherEntity) {
+                        $anotherEntity->set($name . 'Id', null);
+                        $this->getEntityManager()->saveEntity($anotherEntity, ['skipAll' => true]);
                     }
                 }
             }

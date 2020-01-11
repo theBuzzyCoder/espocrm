@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -60,8 +60,8 @@ class Call extends \Espo\Core\SelectManagers\Base
 
     protected function boolFilterOnlyMy(&$result)
     {
-        $this->addJoin(['users', 'usersFilterOnlyMy'], $result);
-        $result['whereClause'][] = [
+        $this->addLeftJoin(['users', 'usersFilterOnlyMy'], $result);
+        return [
             'usersFilterOnlyMyMiddle.userId' => $this->getUser()->id,
             'OR' => [
                 'usersFilterOnlyMyMiddle.status!=' => 'Declined',

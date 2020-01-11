@@ -134,6 +134,9 @@
             "additionalAttributeList": ["columns"],
             "orderBy": "name"
         },
+        "contact": {
+            "type": "link"
+        },
         "stage": {
             "type": "enum",
             "options": ["Prospecting", "Qualification", "Proposal", "Negotiation", "Closed Won", "Closed Lost"],
@@ -190,9 +193,7 @@
             "type": "link"
         },
         "originalLead": {
-            "type": "link",
-            "layoutMassUpdateDisabled": true,
-            "layoutListDisabled": true,
+            "type": "linkOne",
             "readOnly": true,
             "view": "views/fields/link-one"
         },
@@ -298,6 +299,11 @@
                 }
             }
         },
+        "contact": {
+            "type": "belongsTo",
+            "entity": "Contact",
+            "foreign": "opportunitiesPrimary"
+        },
         "meetings": {
             "type": "hasChildren",
             "entity": "Meeting",
@@ -334,8 +340,7 @@
         "campaign": {
             "type": "belongsTo",
             "entity": "Campaign",
-            "foreign": "opportunities",
-            "noJoin": true
+            "foreign": "opportunities"
         },
         "originalLead": {
             "type": "hasOne",

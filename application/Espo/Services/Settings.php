@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -29,8 +29,9 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\BadRequest;
 
 use Espo\ORM\Entity;
 
@@ -111,6 +112,47 @@ class Settings extends \Espo\Core\Services\Base
             }
         }
 
+        if (!$this->getUser()->isAdmin() && !$this->getUser()->isSystem()) {
+            $entityTypeListParamList = [
+                'tabList',
+                'quickCreateList',
+                'globalSearchEntityList',
+                'assignmentEmailNotificationsEntityList',
+                'assignmentNotificationsEntityList',
+                'calendarEntityList',
+                'streamEmailNotificationsEntityList',
+                'activitiesEntityList',
+                'historyEntityList',
+                'streamEmailNotificationsTypeList',
+                'emailKeepParentTeamsEntityList',
+            ];
+            $scopeList = array_keys($this->getMetadata()->get(['entityDefs'], []));
+            foreach ($scopeList as $scope) {
+                if (!$this->getMetadata()->get(['scopes', $scope, 'acl'])) continue;
+                if (!$this->getAcl()->check($scope)) {
+                    foreach ($entityTypeListParamList as $param) {
+                        $list = $data->$param ?? [];
+                        foreach ($list as $i => $item) {
+                            if ($item === $scope) {
+                                unset($list[$i]);
+                            }
+                        }
+                        $list = array_values($list);
+
+                        $data->$param = $list;
+                    }
+                }
+            }
+        }
+
+        if (
+            ($this->getConfig()->get('smtpServer') || $this->getConfig()->get('internalSmtpServer'))
+            &&
+            !$this->getConfig()->get('passwordRecoveryDisabled')
+        ) {
+            $data->passwordRecoveryEnabled = true;
+        }
+
         $fieldDefs = $this->getMetadata()->get(['entityDefs', 'Settings', 'fields']);
 
         foreach ($fieldDefs as $field => $fieldParams) {
@@ -149,10 +191,12 @@ class Settings extends \Espo\Core\Services\Base
             unset($data->$item);
         }
 
+        $entity = $this->getEntityManager()->getEntity('Settings');
+        $entity->set($data);
+        $this->processValidation($entity, $data);
+
         if (
             (isset($data->useCache) && $data->useCache !== $this->getConfig()->get('useCache'))
-            ||
-            (isset($data->aclStrictMode) && $data->aclStrictMode !== $this->getConfig()->get('aclStrictMode'))
         ) {
             $this->getContainer()->get('dataManager')->clearCache();
         }
@@ -163,6 +207,10 @@ class Settings extends \Espo\Core\Services\Base
 
         if ($result === false) {
             throw new Error('Cannot save settings');
+        }
+
+        if (isset($data->personNameFormat)) {
+            $this->getContainer()->get('dataManager')->clearCache();
         }
 
         if (isset($data->defaultCurrency) || isset($data->baseCurrency) || isset($data->currencyRates)) {
@@ -255,5 +303,45 @@ class Settings extends \Espo\Core\Services\Base
         }
 
         return $itemList;
+    }
+
+    protected function processValidation(Entity $entity, $data)
+    {
+        $fieldList = $this->getFieldManagerUtil()->getEntityTypeFieldList('Settings');
+
+        foreach ($fieldList as $field) {
+            if (!$this->isFieldSetInData($data, $field)) continue;
+            $this->processValidationField($entity, $field, $data);
+        }
+    }
+
+    protected function processValidationField(Entity $entity, string $field, $data)
+    {
+        $fieldType = $this->getFieldManagerUtil()->getEntityTypeFieldParam('Settings', $field, 'type');
+        $validationList = $this->getMetadata()->get(['fields', $fieldType, 'validationList'], []);
+        $mandatoryValidationList = $this->getMetadata()->get(['fields', $fieldType, 'mandatoryValidationList'], []);
+        $fieldValidatorManager = $this->getInjection('container')->get('fieldValidatorManager');
+
+        foreach ($validationList as $type) {
+            $value = $this->getFieldManagerUtil()->getEntityTypeFieldParam('Settings', $field, $type);
+            if (is_null($value) && !in_array($type, $mandatoryValidationList)) continue;
+
+            if (!$fieldValidatorManager->check($entity, $field, $type, $data)) {
+                throw new BadRequest("Not valid data. Field: '{$field}', type: {$type}.");
+            }
+        }
+    }
+
+    protected function isFieldSetInData($data, $field)
+    {
+        $attributeList = $this->getFieldManagerUtil()->getActualAttributeList('Settings', $field);
+        $isSet = false;
+        foreach ($attributeList as $attribute) {
+            if (property_exists($data, $attribute)) {
+                $isSet = true;
+                break;
+            }
+        }
+        return $isSet;
     }
 }

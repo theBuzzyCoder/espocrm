@@ -33,7 +33,14 @@
                 "Recycled": "danger",
                 "Dead": "danger"
             },
-            "audited": true
+            "audited": true,
+            "fieldManagerAdditionalParamList": [
+                {
+                    "name": "notActualOptions",
+                    "view": "views/admin/field-manager/fields/not-actual-options"
+                }
+            ],
+            "notActualOptions": ["Converted", "Recycled", "Dead"]
         },
         "source": {
             "type": "enum",
@@ -100,6 +107,11 @@
         "description": {
             "type": "text"
         },
+        "convertedAt": {
+            "type": "datetime",
+            "layoutMassUpdateDisabled": true,
+            "readOnly": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
@@ -134,9 +146,7 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
@@ -146,9 +156,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
-            "layoutListDisabled": true,
-            "layoutDetailDisabled": true,
-            "layoutMassUpdateDisabled": true,
+            "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
             "exportDisabled": true,
             "view": "crm:views/lead/fields/acceptance-status",
@@ -260,26 +268,22 @@
         "createdAccount": {
             "type": "belongsTo",
             "entity": "Account",
-            "noJoin": true,
             "foreign": "originalLead"
         },
         "createdContact": {
             "type": "belongsTo",
             "entity": "Contact",
-            "noJoin": true,
             "foreign": "originalLead"
         },
         "createdOpportunity": {
             "type": "belongsTo",
             "entity": "Opportunity",
-            "noJoin": true,
             "foreign": "originalLead"
         },
         "campaign": {
             "type": "belongsTo",
             "entity": "Campaign",
-            "foreign": "leads",
-            "noJoin": true
+            "foreign": "leads"
         },
         "campaignLogRecords": {
             "type": "hasChildren",

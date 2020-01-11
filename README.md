@@ -1,15 +1,15 @@
 ## EspoCRM
 
-<a href='http://www.espocrm.com'>EspoCRM is an Open Source CRM</a> (Customer Relationship Management) software that allows you to see, enter and evaluate all your company relationships regardless of the type. People, companies or opportunities - all in an easy and intuitive interface.
+<a href='https://www.espocrm.com'>EspoCRM is an Open Source CRM</a> (Customer Relationship Management) software that allows you to see, enter and evaluate all your company relationships regardless of the type. People, companies or opportunities - all in an easy and intuitive interface.
 
 It's a web application with a frontend designed as a single page application based on backbone.js and a REST API backend written in PHP.
 
-Download the latest release from our [website](http://www.espocrm.com).
+Download the latest release from our [website](https://www.espocrm.com).
 
 ### Requirements
 
-* PHP 7.1 or above (with pdo, json, gd, openssl, zip, imap, mbstring, curl extensions);
-* MySQL 5.5.3 or above, or MariaDB.
+* PHP 7.2 and later (with pdo, json, gd, openssl, zip, imap, mbstring, curl extensions);
+* MySQL 5.7 (and later), or MariaDB 10.1 (and later).
 
 For more information about server configuration see [this article](https://www.espocrm.com/documentation/administration/server-configuration/).
 
@@ -25,7 +25,7 @@ Create an issue [here](https://github.com/espocrm/espocrm/issues) or post on our
 
 [Download](https://www.espocrm.com/download/) the latest version. See the [instructions](https://www.espocrm.com/documentation/administration/installation/) about installation.
 
-### How to get started (for developers)
+### Getting started (for developers)
 
 1. Clone repository to your local computer.
 2. Change to the project's root directory.
@@ -48,15 +48,33 @@ You need to have nodejs and Grunt CLI installed.
 
 The build will be created in the `build` directory.
 
-### How to contribute
+Upgrade packages can be built with `grunt upgrade`.
+
+### How to contribute (for developers)
 
 Before we can merge your pull request you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
 
 Branches:
 
-* hotfix/* – upcoming maintenance release; fixes should be pushed to this branch;
-* master – develop branch; new features should be pushed to this branch;
-* stable – last stable release.
+* *hotfix/** – upcoming maintenance release; fixes should be pushed to this branch;
+* *master* – develop branch; new features should be pushed to this branch;
+* *stable* – last stable release.
+
+### Running tests (for developers)
+
+You need to have *phpunit* installed.
+
+Unit tests:
+
+```
+phpunit --bootstrap=vendor/autoload.php tests/unit
+```
+
+Integration tests:
+
+```
+phpunit --bootstrap=vendor/autoload.php tests/integration
+```
 
 ### How to make a translation
 

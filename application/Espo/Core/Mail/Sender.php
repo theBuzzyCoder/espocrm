@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -29,17 +29,18 @@
 
 namespace Espo\Core\Mail;
 
-use \Espo\Entities\Email;
+use Espo\Entities\Email;
 
-use \Zend\Mime\Message as MimeMessage;
-use \Zend\Mime\Part as MimePart;
-use \Zend\Mime\Mime as Mime;
+use Zend\Mime\Message as MimeMessage;
+use Zend\Mime\Part as MimePart;
+use Zend\Mime\Mime as Mime;
 
-use \Zend\Mail\Message;
-use \Zend\Mail\Transport\Smtp as SmtpTransport;
-use \Zend\Mail\Transport\SmtpOptions;
+use Zend\Mail\Message;
+use Zend\Mail\Transport\Smtp as SmtpTransport;
+use Zend\Mail\Transport\SmtpOptions;
+use Zend\Mail\Transport\Envelope;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
 
 class Sender
 {
@@ -70,19 +71,19 @@ class Sender
         return $this->entityManager;
     }
 
-    public function resetParams()
+    public function resetParams() : self
     {
         $this->params = [];
         return $this;
     }
 
-    public function setParams(array $params = [])
+    public function setParams(array $params = []) : self
     {
         $this->params = array_merge($this->params, $params);
         return $this;
     }
 
-    public function useSmtp(array $params = [])
+    public function useSmtp(array $params = []) : self
     {
         $this->isGlobal = false;
         $this->params = $params;
@@ -107,7 +108,12 @@ class Sender
 
         if ($params['auth']) {
             if (!empty($params['smtpAuthMechanism'])) {
-                $options['connectionClass'] = $params['smtpAuthMechanism'];
+                $smtpAuthMechanism = preg_replace("([\.]{2,})", '', $params['smtpAuthMechanism']);
+                if (in_array($smtpAuthMechanism, ['login', 'crammd5', 'plain'])) {
+                    $options['connectionClass'] = $smtpAuthMechanism;
+                } else {
+                    $options['connectionClass'] = 'login';
+                }
             } else {
                 $options['connectionClass'] = 'login';
             }
@@ -172,13 +178,15 @@ class Sender
         return $this;
     }
 
-    public function send(Email $email, $params = [], &$message = null, $attachmentList = [])
+    public function send(Email $email, ?array $params = [], $message = null, $attachmentList = [])
     {
         if (!$message) {
             $message = new Message();
         }
+        $params = $params ?? [];
+
         $config = $this->config;
-        $params = $this->params + $params;
+        $params = $params + $this->params;
 
         if ($email->get('from')) {
             $fromName = null;
@@ -388,6 +396,9 @@ class Sender
             if (empty($messageId) || !is_string($messageId) || strlen($messageId) < 4 || strpos($messageId, 'dummy:') === 0) {
                 $messageId = $this->generateMessageId($email);
                 $email->set('messageId', '<' . $messageId . '>');
+                if ($email->id) {
+                    $this->getEntityManager()->saveEntity($email, ['silent' => true]);
+                }
             } else {
                 $messageId = substr($messageId, 1, strlen($messageId) - 2);
             }
@@ -422,5 +433,11 @@ class Sender
         }
 
         return $messageId;
+    }
+
+    public function setEnvelopeOptions(array $options) : self
+    {
+        $this->transport->setEnvelope(new Envelope($options));
+        return $this;
     }
 }

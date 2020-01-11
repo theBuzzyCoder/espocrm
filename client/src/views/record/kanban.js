@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -212,6 +212,8 @@ define('views/record/kanban', ['views/record/list'], function (Dep) {
                 this.getAcl().checkScope(this.entityType, 'edit')
                 &&
                 !~this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').indexOf(this.statusField)
+                &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled'])
             ) {
 
                 this.statusFieldIsEditable = true;

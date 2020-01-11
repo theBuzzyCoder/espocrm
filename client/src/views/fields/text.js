@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -73,6 +73,8 @@ Espo.define('views/fields/text', 'views/fields/base', function (Dep) {
             if (this.params.cutHeight) {
                 this.cutHeight = this.params.cutHeight;
             }
+
+            this.rowsMin = this.options.rowsMin || this.params.rowsMin || this.rowsMin;
 
             if (this.params.rows < this.rowsMin) {
                 this.rowsMin = this.params.rows;

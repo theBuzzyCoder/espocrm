@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/link-manager/index', 'view', function (Dep) {
+define('views/admin/link-manager/index', 'view', function (Dep) {
 
     return Dep.extend({
 
@@ -71,6 +71,8 @@ Espo.define('views/admin/link-manager/index', 'view', function (Dep) {
             } else if (type == 'belongsTo') {
                 if (foreignType == 'hasMany') {
                     return 'manyToOne';
+                } else if (foreignType == 'hasOne') {
+                    return 'oneToOneRight';
                 } else {
                     return;
                 }
@@ -82,6 +84,11 @@ Espo.define('views/admin/link-manager/index', 'view', function (Dep) {
             } else if (type == 'hasChildren') {
                 if (foreignType == 'belongsToParent') {
                     return 'parentToChildren'
+                }
+                return;
+            } else if (type === 'hasOne') {
+                if (foreignType == 'belongsTo') {
+                    return 'oneToOneLeft';
                 }
                 return;
             }
@@ -98,25 +105,30 @@ Espo.define('views/admin/link-manager/index', 'view', function (Dep) {
             linkList.forEach(function (link) {
                 var d = links[link];
 
-                if (!d.foreign) return;
-                if (!d.entity) return;
+                var linkForeign = d.foreign;
 
-                var foreignType = this.getMetadata().get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
-
-                var type = this.computeRelationshipType(d.type, foreignType);
+                if (d.type === 'belongsToParent') {
+                    var type = 'childrenToParent';
+                } else {
+                    if (!d.entity) return;
+                    if (!linkForeign) return;
+                    var foreignType = this.getMetadata().get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
+                    var type = this.computeRelationshipType(d.type, foreignType);
+                }
 
                 if (!type) return;
 
                 this.linkDataList.push({
                     link: link,
                     isCustom: d.isCustom,
+                    isRemovable: d.isCustom,
                     customizable: d.customizable,
                     type: type,
                     entityForeign: d.entity,
                     entity: this.scope,
-                    linkForeign: d.foreign,
+                    linkForeign: linkForeign,
                     label: this.getLanguage().translate(link, 'links', this.scope),
-                    labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity)
+                    labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity),
                 });
 
             }, this);
@@ -175,7 +187,7 @@ Espo.define('views/admin/link-manager/index', 'view', function (Dep) {
                 type: 'POST',
                 data: JSON.stringify({
                     entity: this.scope,
-                    link: link
+                    link: link,
                 })
             }).done(function () {
                 this.$el.find('table tr[data-link="'+link+'"]').remove();
@@ -200,5 +212,3 @@ Espo.define('views/admin/link-manager/index', 'view', function (Dep) {
         },
     });
 });
-
-

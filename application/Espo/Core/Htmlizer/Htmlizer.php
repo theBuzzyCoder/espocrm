@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -35,26 +35,33 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\NumberUtil;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Metadata;
+use Espo\ORM\EntityManager;
 
-require('vendor/zordius/lightncandy/src/lightncandy.php');
+use LightnCandy\LightnCandy as LightnCandy;
 
 class Htmlizer
 {
     protected $fileManager;
-
     protected $dateTime;
-
     protected $config;
-
     protected $acl;
-
     protected $entityManager;
-
     protected $metadata;
-
     protected $language;
 
-    public function __construct(FileManager $fileManager, DateTime $dateTime, NumberUtil $number, $acl = null, $entityManager = null, $metadata = null, $language = null)
+    public function __construct(
+        FileManager $fileManager,
+        DateTime $dateTime,
+        NumberUtil $number,
+        $acl = null,
+        ?EntityManager $entityManager = null,
+        ?Metadata $metadata = null,
+        ?Language $language = null,
+        ?Config $config = null
+    )
     {
         $this->fileManager = $fileManager;
         $this->dateTime = $dateTime;
@@ -63,6 +70,7 @@ class Htmlizer
         $this->entityManager = $entityManager;
         $this->metadata = $metadata;
         $this->language = $language;
+        $this->config = $config;
     }
 
     protected function getAcl()
@@ -92,7 +100,7 @@ class Htmlizer
         return $value;
     }
 
-    protected function getDataFromEntity(Entity $entity, $skipLinks = false, $level = 0)
+    protected function getDataFromEntity(Entity $entity, $skipLinks = false, $level = 0, ?string $template = null)
     {
         $data = $entity->toArray();
 
@@ -118,15 +126,32 @@ class Htmlizer
 
         if (!$skipLinks && $level === 0) {
             foreach ($relationList as $relation) {
-                if (!$entity->hasLinkMultipleField($relation)) continue;
+                $collection = null;
 
-                $collection = $entity->getLinkMultipleCollection($relation);
-                $data[$relation] = $collection;
+                if ($entity->hasLinkMultipleField($relation)) {
+                    $toLoad = true;
+                    $collection = $entity->getLinkCollection($relation);
+                } else {
+                    if (
+                        $template && $entity->getRelationType($relation, ['hasMany', 'manyMany', 'hasChildren']) &&
+                        mb_stripos($template, '{{#each '.$relation.'}}') !== false
+                    ) {
+                        $limit = 100;
+                        if ($this->config) {
+                            $limit = $this->config->get('htmlizerLinkLimit') ?? $limit;
+                        }
+                        $collection = $entity->getLinkCollection($relation, ['limit' => $limit]);
+                    }
+                }
+
+                if ($collection) {
+                    $data[$relation] = $collection;
+                }
             }
         }
 
         foreach ($data as $key => $value) {
-            if ($value instanceof \Espo\ORM\EntityCollection) {
+            if ($value instanceof \Espo\ORM\ICollection) {
                 $skipAttributeList[] = $key;
                 $collection = $value;
                 $list = [];
@@ -151,10 +176,12 @@ class Htmlizer
 
             if ($type == Entity::DATETIME) {
                 if (!empty($data[$attribute])) {
+                    $data[$attribute . '_RAW'] = $data[$attribute];
                     $data[$attribute] = $this->dateTime->convertSystemDateTime($data[$attribute]);
                 }
             } else if ($type == Entity::DATE) {
                 if (!empty($data[$attribute])) {
+                    $data[$attribute . '_RAW'] = $data[$attribute];
                     $data[$attribute] = $this->dateTime->convertSystemDate($data[$attribute]);
                 }
             } else if ($type == Entity::JSON_ARRAY) {
@@ -205,7 +232,9 @@ class Htmlizer
 
             if (array_key_exists($attribute, $data)) {
                 $keyRaw = $attribute . '_RAW';
-                $data[$keyRaw] = $data[$attribute];
+
+                if (!isset($data[$keyRaw]))
+                    $data[$keyRaw] = $data[$attribute];
 
                 $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
                 if ($fieldType === 'enum') {
@@ -241,97 +270,300 @@ class Htmlizer
         return $data;
     }
 
+    protected function getHelpers()
+    {
+        $helpers = [
+            'file' => function () {
+                $args = func_get_args();
+                $id = $args[0] ?? null;
+                if (!$id) return '';
+                return new LightnCandy\SafeString("?entryPoint=attachment&id=" . $id);
+            },
+            'pagebreak' => function () {
+                return new LightnCandy\SafeString('<br pagebreak="true">');
+            },
+            'imageTag' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+
+                $field = $context['hash']['field'] ?? null;
+                if ($field) {
+                    $id = $context['_this'][$field . 'Id'] ?? null;
+                } else {
+                    if (count($args) > 1) {
+                        $id = $args[0];
+                    }
+                }
+                if (!$id || !is_string($id)) return null;
+
+                $width = $context['hash']['width'] ?? null;
+                $height = $context['hash']['height'] ?? null;
+
+                $attributesPart = "";
+                if ($width)
+                    $attributesPart .= " width=\"" .strval($width) . "\"";
+
+                if ($height)
+                    $attributesPart .= " height=\"" .strval($height) . "\"";
+
+                $html = "<img src=\"?entryPoint=attachment&id={$id}\"{$attributesPart}>";
+
+                return new LightnCandy\SafeString($html);
+            },
+            'var' => function () {
+                $args = func_get_args();
+                $c = $args[1] ?? [];
+                $key = $args[0] ?? null;
+                if (is_null($key)) return null;
+                return $c[$key] ?? null;
+            },
+            'numberFormat' => function () {
+                $args = func_get_args();
+                if (count($args) !== 2) return null;
+                $context = $args[count($args) - 1];
+                $number = $args[0] ?? null;
+
+                if (is_null($number)) return '';
+
+                $decimals = $context['hash']['decimals'] ?? 0;
+                $decimalPoint = $context['hash']['decimalPoint'] ?? '.';
+                $thousandsSeparator = $context['hash']['thousandsSeparator'] ?? ',';
+
+                return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
+            },
+            'dateFormat' => function () {
+                $args = func_get_args();
+                if (count($args) !== 2) return null;
+                $context = $args[count($args) - 1];
+                $dateValue = $args[0];
+
+                $format = $context['hash']['format'] ?? null;
+                $timezone = $context['hash']['timezone'] ?? null;
+                $language = $context['hash']['language'] ?? null;
+                $dateTime = $context['data']['root']['__dateTime'];
+                if (strlen($dateValue) > 11) return $dateTime->convertSystemDateTime($dateValue, $timezone, $format, $language);
+
+                return $dateTime->convertSystemDate($dateValue, $format, $language);
+            },
+            'barcodeImage' => function () {
+                $args = func_get_args();
+                if (count($args) !== 2) return null;
+                $context = $args[count($args) - 1];
+                $value = $args[0];
+
+                $codeType = $context['hash']['type'] ?? 'CODE128';
+
+                $typeMap = [
+                    "CODE128" => 'C128',
+                    "CODE128A" => 'C128A',
+                    "CODE128B" => 'C128B',
+                    "CODE128C" => 'C128C',
+                    "EAN13" => 'EAN13',
+                    "EAN8" => 'EAN8',
+                    "EAN5" => 'EAN5',
+                    "EAN2" => 'EAN2',
+                    "UPC" => 'UPCA',
+                    "UPCE" => 'UPCE',
+                    "ITF14" => 'I25',
+                    "pharmacode" => 'PHARMA',
+                    "QRcode" => 'QRCODE,H',
+                ];
+
+                if ($codeType === 'QRcode') {
+                    $function = 'write2DBarcode';
+                    $params = [
+                        $value,
+                        $typeMap[$codeType] ?? null,
+                        '', '',
+                        $context['hash']['width'] ?? 40,
+                        $context['hash']['height'] ?? 40,
+                        [
+                            'border' => false,
+                            'vpadding' => $context['hash']['padding'] ?? 2,
+                            'hpadding' => $context['hash']['padding'] ?? 2,
+                            'fgcolor' => $context['hash']['color'] ?? [0,0,0],
+                            'bgcolor' => $context['hash']['bgcolor'] ?? false,
+                            'module_width' => 1,
+                            'module_height' => 1,
+                        ],
+                        'N',
+                    ];
+                } else {
+                    $function = 'write1DBarcode';
+                    $params = [
+                        $value,
+                        $typeMap[$codeType] ?? null,
+                        '', '',
+                        $context['hash']['width'] ?? 60,
+                        $context['hash']['height'] ?? 30,
+                        0.4,
+                        [
+                            'position' => 'S',
+                            'border' => false,
+                            'padding' => $context['hash']['padding'] ?? 0,
+                            'fgcolor' => $context['hash']['color'] ?? [0,0,0],
+                            'bgcolor' => $context['hash']['bgcolor'] ?? [255,255,255],
+                            'text' => $context['hash']['text'] ?? true,
+                            'font' => 'helvetica',
+                            'fontsize' => $context['hash']['fontsize'] ?? 14,
+                            'stretchtext' => 4,
+                        ],
+                        'N',
+                    ];
+                }
+
+                $paramsString = urlencode(json_encode($params));
+
+                return new LightnCandy\SafeString("<tcpdf method=\"{$function}\" params=\"{$paramsString}\" />");
+            },
+            'ifEqual' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+                if ($args[0] === $args[1]) {
+                    return $context['fn']();
+                } else {
+                    return $context['inverse'] ? $context['inverse']() : '';
+                }
+            },
+            'ifNotEqual' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+                if ($args[0] !== $args[1]) {
+                    return $context['fn']();
+                } else {
+                    return $context['inverse'] ? $context['inverse']() : '';
+                }
+            },
+            'ifInArray' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+
+                $array = $args[1] ?? [];
+
+                if (in_array($args[0], $array)) {
+                    return $context['fn']();
+                } else {
+                    return $context['inverse'] ? $context['inverse']() : '';
+                }
+            },
+            'tableTag' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+
+                $border = $context['hash']['border'] ?? '0.5pt';
+                $cellpadding = $context['hash']['cellpadding'] ?? '2';
+
+
+                $width = $context['hash']['width'] ?? null;
+
+                $attributesPart = "";
+                if ($width) {
+                    $attributesPart .= " width=\"{$width}\"";
+                }
+
+                return
+                    new LightnCandy\SafeString("<table border=\"{$border}\" cellpadding=\"{$cellpadding}\" {$attributesPart}>") .
+                    $context['fn']() .
+                    new LightnCandy\SafeString("</table>");
+            },
+            'tdTag' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+
+                $align = strtolower($context['hash']['align'] ?? 'left');
+                if (!in_array($align, ['left', 'right', 'center'])) $align = 'left';
+
+                $width = $context['hash']['width'] ?? null;
+
+                $attributesPart = "align=\"{$align}\"";
+                if ($width) {
+                    $attributesPart .= " width=\"{$width}\"";
+                }
+
+                return
+                    new LightnCandy\SafeString("<td {$attributesPart}>") .
+                    $context['fn']() .
+                    new LightnCandy\SafeString("</td>");
+            },
+            'trTag' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+
+                return
+                    new LightnCandy\SafeString("<tr>") .
+                    $context['fn']() .
+                    new LightnCandy\SafeString("</tr>");
+            },
+            'checkboxTag' => function () {
+                $args = func_get_args();
+                $context = $args[count($args) - 1];
+
+                if (count($args) < 2) return null;
+
+                $color = $context['hash']['color'] ?? '#000';
+
+                $option = $context['hash']['option'] ?? null;
+
+                if (is_null($option)) return null;
+                $option = strval($option);
+
+                $list = $args[0] ?? [];
+
+                if (!is_array($list)) return null;
+
+                $css = "font-family: zapfdingbats; color: {$color}";
+
+                if (in_array($option, $list)) {
+                    $html = '<input type="checkbox" checked="checked" name="1" readonly="true" value="1" style="'.$css.'">';
+                } else {
+                    $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: '.$css.'">';
+                }
+
+                return new LightnCandy\SafeString($html);
+            },
+        ];
+
+        if ($this->metadata) {
+            $additionalHelpers = $this->metadata->get(['app', 'templateHelpers']) ?? [];
+            $helpers = array_merge($helpers, $additionalHelpers);
+        }
+
+        return $helpers;
+    }
+
     public function render(Entity $entity, $template, $id = null, $additionalData = [], $skipLinks = false)
     {
-        $code = \LightnCandy::compile($template, [
-            'flags' => \LightnCandy::FLAG_HANDLEBARSJS,
-            'helpers' => [
-                'file' => function ($context, $options) {
-                    if (count($context) && $context[0]) {
-                        $id = $context[0];
-                        return "?entryPoint=attachment&id=" . $id;
-                    }
-                },
-                'numberFormat' => function ($context, $options) {
-                    if ($context && isset($context[0])) {
-                        $number = $context[0];
+        $template = str_replace('<tcpdf ', '', $template);
 
-                        $decimals = 0;
-                        $decimalPoint = '.';
-                        $thousandsSeparator = ',';
+        $helpers = $this->getHelpers();
 
-                        if (isset($options['decimals'])) {
-                            $decimals = $options['decimals'];
-                        }
-                        if (isset($options['decimalPoint'])) {
-                            $decimalPoint = $options['decimalPoint'];
-                        }
-                        if (isset($options['thousandsSeparator'])) {
-                            $thousandsSeparator = $options['thousandsSeparator'];
-                        }
-                        return number_format($number, $decimals, $decimalPoint, $thousandsSeparator);
-                    }
-                    return '';
-                },
-                'var' => function ($context, $options) {
-                    if ($context && isset($context[0]) && isset($context[1])) {
-                        if (isset($context[1][$context[0]])) {
-                            return $context[1][$context[0]];
-                        }
-                    }
-                    return;
-                }
-            ],
-            'hbhelpers' => [
-                'ifEqual' => function () {
-                    $args = func_get_args();
-                    $context = $args[count($args) - 1];
-                    if ($args[0] === $args[1]) {
-                        return $context['fn']();
-                    } else {
-                        return $context['inverse'] ? $context['inverse']() : '';
-                    }
-                },
-                'ifNotEqual' => function () {
-                    $args = func_get_args();
-                    $context = $args[count($args) - 1];
-                    if ($args[0] !== $args[1]) {
-                        return $context['fn']();
-                    } else {
-                        return $context['inverse'] ? $context['inverse']() : '';
-                    }
-                }
-            ]
+        $code = LightnCandy::compile($template, [
+            'flags' => LightnCandy::FLAG_HANDLEBARSJS | LightnCandy::FLAG_ERROR_EXCEPTION,
+            'helpers' => $this->getHelpers(),
         ]);
 
-        $toRemove = false;
-        if ($id === null) {
-            $id = uniqid('', true);
-            $toRemove = true;
-        }
+        $renderer = LightnCandy::prepare($code);
 
-        $fileName = 'data/cache/templates/' . $id . '.php';
-
-        $this->fileManager->putContents($fileName, $code);
-        $renderer = $this->fileManager->getPhpContents($fileName);
-
-        if ($toRemove) {
-            $this->fileManager->removeFile($fileName);
-        }
-
-        $data = $this->getDataFromEntity($entity, $skipLinks);
+        $data = $this->getDataFromEntity($entity, $skipLinks, 0, $template);
 
         if (!array_key_exists('today', $data)) {
             $data['today'] = $this->dateTime->getTodayString();
+            $data['today_RAW'] = date('Y-m-d');
         }
 
         if (!array_key_exists('now', $data)) {
             $data['now'] = $this->dateTime->getNowString();
+            $data['now_RAW'] = date('Y-m-d H:i:s');
         }
 
         foreach ($additionalData as $k => $value) {
             $data[$k] = $value;
         }
+
+        $data['__dateTime'] = $this->dateTime;
+        $data['__metadata'] = $this->metadata;
+        $data['__entityManager'] = $this->entityManager;
+        $data['__language'] = $this->language;
 
         $html = $renderer($data);
 

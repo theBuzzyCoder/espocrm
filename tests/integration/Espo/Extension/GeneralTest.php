@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -38,6 +38,11 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
 
     protected $packagePath = 'Extension/General.zip';
 
+    protected function beforeSetUp()
+    {
+        $this->fullReset();
+    }
+
     public function testUpload()
     {
         $fileData = file_get_contents($this->normalizePath($this->packagePath));
@@ -49,7 +54,6 @@ class GeneralTest extends \tests\integration\Core\BaseTestCase
         $this->assertStringMatchesFormat('%x', $extensionId);
         $this->assertFileExists('data/upload/extensions/' . $extensionId . 'z');
         $this->assertFileExists('data/upload/extensions/' . $extensionId); //directory
-        //$this->assertDirectoryExists('data/upload/extensions/' . $extensionId);
 
         return $extensionId;
     }

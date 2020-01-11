@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -154,6 +154,8 @@ Espo.define('crm:views/contact/fields/accounts', 'views/fields/link-multiple-wit
         },
 
         addLinkHtml: function (id, name) {
+            name = name || id;
+
             if (this.mode == 'search') {
                 return Dep.prototype.addLinkHtml.call(this, id, name);
             }

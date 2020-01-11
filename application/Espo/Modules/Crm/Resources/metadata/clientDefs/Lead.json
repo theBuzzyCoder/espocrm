@@ -132,6 +132,26 @@
                         }
                     ]
                 }
+            },
+            "convertedAt": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "and",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "Converted"
+                                },
+                                {
+                                    "type": "isNotEmpty",
+                                    "attribute": "convertedAt"
+                                }
+                            ]
+                        }
+                    ]
+                }
             }
         },
         "panels": {

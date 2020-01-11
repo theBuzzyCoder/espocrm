@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -120,6 +120,8 @@ class FieldManager extends \Espo\Core\Controllers\Base
         }
 
         $this->getContainer()->get('fieldManager')->resetToDefault($data->scope, $data->name);
+
+        $this->getContainer()->get('dataManager')->clearCache();
 
         $this->getContainer()->get('dataManager')->rebuildMetadata();
 

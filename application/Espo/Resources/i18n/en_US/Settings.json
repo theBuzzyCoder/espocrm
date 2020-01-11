@@ -83,15 +83,16 @@
         "siteUrl": "Site URL",
         "addressPreview": "Address Preview",
         "addressFormat": "Address Format",
+        "personNameFormat": "Person Name Format",
         "notificationSoundsDisabled": "Disable Notification Sounds",
         "applicationName": "Application Name",
         "calendarEntityList": "Calendar Entity List",
         "mentionEmailNotifications": "Send email notifications about mentions in posts",
         "massEmailDisableMandatoryOptOutLink": "Disable mandatory opt-out link",
         "massEmailOpenTracking": "Email Open Tracking",
+        "massEmailVerp": "Use VERP",
         "activitiesEntityList": "Activities Entity List",
         "historyEntityList": "History Entity List",
-        "b2cMode": "B2C Mode",
         "currencyFormat": "Currency Format",
         "currencyDecimalPlaces": "Currency Decimal Places",
         "aclStrictMode": "ACL Strict Mode",
@@ -120,6 +121,13 @@
         "cronDisabled": "Disable Cron",
         "maintenanceMode": "Maintenance Mode",
         "useWebSocket": "Use WebSocket",
+        "passwordRecoveryDisabled": "Disable password recovery",
+        "passwordRecoveryForAdminDisabled": "Disable password recovery for admin users",
+        "passwordGenerateLength": "Length of generated passwords",
+        "passwordStrengthLength": "Minimum password length",
+        "passwordStrengthLetterCount": "Number of letters required in password",
+        "passwordStrengthNumberCount": "Number of digits required in password",
+        "passwordStrengthBothCases": "Password must contain letters of both upper and lower case",
         "auth2FA": "Enable 2-Factor Authentication",
         "auth2FAMethodList": "Available 2FA methods"
     },
@@ -132,6 +140,12 @@
             "1": "10 USD",
             "2": "$10"
         },
+        "personNameFormat": {
+            "firstLast": "First Last",
+            "lastFirst": "Last First",
+            "firstMiddleLast": "First Middle Last",
+            "lastFirstMiddle": "Last First Middle"
+        },
         "streamEmailNotificationsTypeList": {
             "Post": "Posts",
             "Status": "Status updates",
@@ -142,6 +156,7 @@
         }
     },
     "tooltips": {
+        "massEmailVerp": "Variable envelope return path. For better handling of bounced messages. Make sure that your SMTP provider supports it.",
         "recordsPerPage": "Number of records initially displayed in list views.",
         "recordsPerPageSmall": "Number of records initially displayed in relationship panels.",
         "outboundEmailIsShared": "Allow users to send emails from this address.",
@@ -208,6 +223,7 @@
         "Connecting": "Connecting...",
         "Activities": "Activities",
         "Admin Notifications": "Admin Notifications",
+        "Passwords": "Passwords",
         "2-Factor Authentication": "2-Factor Authentication"
     },
     "messages": {

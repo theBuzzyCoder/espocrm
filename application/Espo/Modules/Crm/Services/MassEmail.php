@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -335,6 +335,9 @@ class MassEmail extends \Espo\Services\Record
             if (!$smtpParams) {
                 throw new Error("Group Email Account '".$massEmail->get('inboundEmailId')."' has no SMTP params.");
             }
+            if ($inboundEmail->get('replyToAddress')) {
+                $smtpParams['replyToAddress'] = $inboundEmail->get('replyToAddress');
+            }
         }
 
         foreach ($queueItemList as $queueItem) {
@@ -458,7 +461,11 @@ class MassEmail extends \Espo\Services\Record
 
         $email = $this->getPreparedEmail($queueItem, $massEmail, $emailTemplate, $target, $trackingUrlList);
 
-        $params = array();
+        if ($email->get('replyToAddress')) {
+            unset($smtpParams['replyToAddress']);
+        }
+
+        $params = [];
         if ($massEmail->get('fromName')) {
             $params['fromName'] = $massEmail->get('fromName');
         }
@@ -492,6 +499,18 @@ class MassEmail extends \Espo\Services\Record
                 $sender->useSmtp($smtpParams);
             } else {
                 $sender->useGlobal();
+            }
+
+            $fromAddress = $params['fromAddress'] ?? $this->getConfig()->get('outboundEmailFromAddress');
+
+            if ($this->getConfig()->get('massEmailVerp')) {
+                if ($fromAddress && strpos($fromAddress, '@')) {
+                    $bounceAddress = explode('@', $fromAddress)[0] . '+bounce-qid-' . $queueItem->id .
+                        '@' . explode('@', $fromAddress)[1];
+                    $sender->setEnvelopeOptions([
+                        'from' => $bounceAddress,
+                    ]);
+                }
             }
 
             $sender->send($email, $params, $message, $attachmentList);

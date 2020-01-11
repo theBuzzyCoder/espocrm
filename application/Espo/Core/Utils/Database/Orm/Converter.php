@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -92,6 +92,7 @@ class Converter
         'orderBy' => 'orderBy',
         'where' => 'where',
         'storeArrayValues' => 'storeArrayValues',
+        'binary' => 'binary',
     );
 
     protected $idParams = array(
@@ -115,7 +116,7 @@ class Converter
         $this->fileManager = $fileManager; //need to featue with ormHooks. Ex. isFollowed field
         $this->config = $config;
 
-        $this->relationManager = new RelationManager($this->metadata);
+        $this->relationManager = new RelationManager($this->metadata, $config);
 
         $this->metadataHelper = new \Espo\Core\Utils\Metadata\Helper($this->metadata);
         $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->config);
@@ -345,12 +346,8 @@ class Converter
 
     /**
      * Correct fields definitions based on \Espo\Custom\Core\Utils\Database\Orm\Fields
-     *
-     * @param  array  $ormMetadata
-     *
-     * @return array
      */
-    protected function correctFields($entityName, array $ormMetadata)
+    protected function correctFields($entityName, array $ormMetadata) : array
     {
         $entityDefs = $this->getEntityDefs();
 
@@ -366,7 +363,7 @@ class Converter
             }
 
             if (class_exists($className) && method_exists($className, 'load')) {
-                $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs);
+                $helperClass = new $className($this->metadata, $ormMetadata, $entityDefs, $this->config);
                 $fieldResult = $helperClass->process($fieldName, $entityName);
                 if (isset($fieldResult['unset'])) {
                     $ormMetadata = Util::unsetInArray($ormMetadata, $fieldResult['unset']);
@@ -559,14 +556,32 @@ class Converter
 
     protected function applyIndexes(&$ormMetadata, $entityType)
     {
-        if (!isset($ormMetadata[$entityType]['indexes'])) {
-            return;
+        if (isset($ormMetadata[$entityType]['fields'])) {
+            $indexList = SchemaUtils::getEntityIndexListByFieldsDefs($ormMetadata[$entityType]['fields']);
+            foreach ($indexList as $indexName => $indexParams) {
+                if (!isset($ormMetadata[$entityType]['indexes'][$indexName])) {
+                    $ormMetadata[$entityType]['indexes'][$indexName] = $indexParams;
+                }
+            }
         }
 
-        foreach ($ormMetadata[$entityType]['indexes'] as $indexName => &$indexData) {
-            if (!isset($indexData['key'])) {
-                $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
-                $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+        if (isset($ormMetadata[$entityType]['indexes'])) {
+            foreach ($ormMetadata[$entityType]['indexes'] as $indexName => &$indexData) {
+                if (!isset($indexData['key'])) {
+                    $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
+                    $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+                }
+            }
+        }
+
+        if (isset($ormMetadata[$entityType]['relations'])) {
+            foreach ($ormMetadata[$entityType]['relations'] as $relationName => &$relationData) {
+                if (isset($relationData['indexes'])) {
+                    foreach ($relationData['indexes'] as $indexName => &$indexData) {
+                        $indexType = SchemaUtils::getIndexTypeByIndexDefs($indexData);
+                        $indexData['key'] = SchemaUtils::generateIndexName($indexName, $indexType);
+                    }
+                }
             }
         }
     }

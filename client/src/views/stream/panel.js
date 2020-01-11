@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -42,7 +42,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
 
         events: _.extend({
             'focus textarea[data-name="post"]': function (e) {
-                this.enablePostingMode();
+                this.enablePostingMode(true);
             },
             'click button.post': function () {
                 this.post();
@@ -79,14 +79,19 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             return data;
         },
 
-        enablePostingMode: function () {
+        enablePostingMode: function (byFocus) {
             this.$el.find('.buttons-panel').removeClass('hide');
 
             if (!this.postingMode) {
                 if (this.$textarea.val() && this.$textarea.val().length) {
                     this.getView('postField').controlTextareaHeight();
                 }
+                var isClicked = false;
                 $('body').on('click.stream-panel', function (e) {
+                    if (byFocus && !isClicked) {
+                        isClicked = true;
+                        return;
+                    }
                     var $target = $(e.target);
                     if ($target.parent().hasClass('remove-attachment')) return;
                     if ($.contains(this.$postContainer.get(0), e.target)) return;
@@ -397,7 +402,7 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
             ) + '<br><br>' +
             this.getHelper().transfromMarkdownInlineText(
                 this.translate('infoSyntax', 'messages', 'Stream') + ':'
-            ) + '<br><br>';
+            ) + '<br>';
 
             var syntaxItemList = [
                 ['code', '`{text}`'],
@@ -559,7 +564,8 @@ define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcompl
                 scope: 'Note',
                 viewOptions: {
                     url: url,
-                    title: this.translate('Stream') + ' &raquo ' + this.translate('posts', 'filters', 'Note'),
+                    title: this.translate('Stream') +
+                        ' @right ' + this.translate('posts', 'filters', 'Note'),
                     forceSelectAllAttributes: true
                 }
             };

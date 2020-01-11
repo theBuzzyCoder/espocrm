@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -568,6 +568,14 @@ class Util
         return bin2hex(random_bytes(16));
     }
 
+    public static function generateSecretKey()
+    {
+        if (!function_exists('random_bytes')) {
+            return self::generateId();
+        }
+        return bin2hex(random_bytes(16));
+    }
+
     public static function generateKey()
     {
         return md5(uniqid(rand(), true));
@@ -732,5 +740,136 @@ class Util
         $then = mb_substr($string, 1, $length - 1);
 
         return mb_strtolower($firstChar) . $then;
+    }
+
+    /**
+     * Sanitize Html code
+     * @param  string $text
+     * @param  array  $permittedHtmlTags - Allows only html tags without parameters like <p></p>, <br>, etc.
+     * @return string
+     */
+    public static function sanitizeHtml($text, $permittedHtmlTags = ['p', 'br', 'b', 'strong', 'pre'])
+    {
+        if (is_array($text)) {
+            foreach ($text as $key => &$value) {
+                $value = self::sanitizeHtml($value, $permittedHtmlTags);
+            }
+            return $text;
+        }
+
+        $sanitized = htmlspecialchars($text, \ENT_QUOTES | \ENT_HTML5, 'UTF-8');
+
+        foreach ($permittedHtmlTags as $htmlTag) {
+            $sanitized = preg_replace('/&lt;(\/)?(' . $htmlTag . ')&gt;/i', '<$1$2>', $sanitized);
+        }
+
+        return $sanitized;
+    }
+
+    public static function urlAddParam($url, $paramName, $paramValue)
+    {
+        $urlQuery = parse_url($url, \PHP_URL_QUERY);
+
+        if (!$urlQuery) {
+            $params = [
+                $paramName => $paramValue
+            ];
+
+            $url = trim($url);
+            $url = preg_replace('/\/\?$/', '', $url);
+            $url = preg_replace('/\/$/', '', $url);
+
+            return $url . '/?' . http_build_query($params);
+        }
+
+        parse_str($urlQuery, $params);
+
+        if (!isset($params[$paramName]) || $params[$paramName] != $paramValue) {
+            $params[$paramName] = $paramValue;
+
+            return str_replace($urlQuery, http_build_query($params), $url);
+        }
+
+        return $url;
+    }
+
+    public static function urlRemoveParam($url, $paramName, $suffix = '')
+    {
+        $urlQuery = parse_url($url, \PHP_URL_QUERY);
+
+        if ($urlQuery) {
+            parse_str($urlQuery, $params);
+
+            if (isset($params[$paramName])) {
+                unset($params[$paramName]);
+
+                $newUrl = str_replace($urlQuery, http_build_query($params), $url);
+
+                if (empty($params)) {
+                    $newUrl = preg_replace('/\/\?$/', '', $newUrl);
+                    $newUrl = preg_replace('/\/$/', '', $newUrl);
+                    $newUrl .= $suffix;
+                }
+
+                return $newUrl;
+            }
+        }
+
+        return $url;
+    }
+
+    public static function generatePassword(int $length = 8, int $letters = 5, int $numbers = 3, bool $bothCases = false)
+    {
+        $chars = [
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+            '0123456789',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            'abcdefghijklmnopqrstuvwxyz',
+        ];
+
+        $shuffle = function ($array) {
+            $currentIndex = count($array);
+            while (0 !== $currentIndex) {
+                $rand = (0 + (1 - 0) * (mt_rand() / mt_getrandmax()));
+                $randomIndex = intval(floor($rand * $currentIndex));
+                $currentIndex -= 1;
+                $temporaryValue = $array[$currentIndex];
+                $array[$currentIndex] = $array[$randomIndex];
+                $array[$randomIndex] = $temporaryValue;
+            }
+            return $array;
+        };
+
+        $upperCase = 0;
+        $lowerCase = 0;
+        if ($bothCases) {
+            $upperCase = 1;
+            $lowerCase = 1;
+            if ($letters >= 2) $letters = $letters - 2;
+                else $letters = 0;
+        }
+
+        $either = $length - ($letters + $numbers + $upperCase + $lowerCase);
+        if ($either < 0) $either = 0;
+
+        $array = [];
+
+        foreach ([$letters, $numbers, $either, $upperCase, $lowerCase] as $i => $len) {
+            $set = $chars[$i];
+            $subArray = [];
+
+            $j = 0;
+            while ($j < $len) {
+                $rand = (0 + (1 - 0) * (mt_rand() / mt_getrandmax()));
+                $index = intval(floor($rand * strlen($set)));
+                $subArray[] = $set[$index];
+                $j++;
+            }
+
+            $array = array_merge($array, $subArray);
+        }
+
+        return implode('', $shuffle($array));
     }
 }

@@ -235,6 +235,10 @@ blockquote {
     border-width: 0;
 }
 
+th {
+    font-weight: 600;
+}
+
 .table thead > tr > th {
     border-bottom: 1px solid @table-border-color;
     font-weight: normal;
@@ -283,6 +287,14 @@ label {
 
 .table {
     margin-bottom: 10px;
+}
+
+.chevron-right {
+    &::before {
+        content: "\203A";
+        display: inline-block;
+    }
+    padding: 0 0.1em;
 }
 
 .page-header {
@@ -369,7 +381,7 @@ label {
 
         .header-breadcrumbs {
             .breadcrumb-separator {
-                padding: 0 6px;
+                padding: 0 0.26em;
             }
 
             .breadcrumb-item,
@@ -958,12 +970,27 @@ ul.dropdown-menu > li.checkbox:last-child {
     margin-bottom: 0;
 }
 
+.form-group.col-sm-12 > .field .input-group > .input-group-btn > select {
+    max-width: 400px;
+}
 
-.col-sm-12 > .field .input-group-link-parent > .input-group-btn > select {
+.form-group > .field .input-group > .input-group-btn > select {
+    max-width: 240px;
+}
+
+.form-group.col-sm-12 > .field .input-group-link-parent.input-group > .input-group-btn > select {
     max-width: 220px;
 }
 
-.col-sm-6 > .field .input-group-link-parent > .input-group-btn > select {
+.form-group.col-sm-3 > .field .input-group-link-parent.input-group > .input-group-btn > select {
+    max-width: 100px;
+}
+
+.form-group.col-sm-4 > .field .input-group-link-parent.input-group > .input-group-btn > select {
+    max-width: 120px;
+}
+
+.form-group > .field .input-group-link-parent.input-group > .input-group-btn > select {
     max-width: 180px;
 }
 
@@ -1022,6 +1049,27 @@ ul.dropdown-menu > li.checkbox:last-child {
     margin-bottom: 0;
     .caret {
         border-top-color: @gray-light;
+    }
+}
+
+.field {
+    .checklist-label {
+        color: @text-color;
+        margin-bottom: 0;
+    }
+
+    .checklist-item-container {
+        margin-bottom: 2px;
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    .multi-enum-item-label-container {
+        margin-bottom: 4px;
+    }
+    .multi-enum-item-label-container:last-child {
+        margin-bottom: 0;
     }
 }
 
@@ -1177,6 +1225,10 @@ table.table > tbody td > .list-row-buttons button {
 
 select[multiple].input-sm {
     height: 90px !important;
+}
+
+optgroup {
+    font-weight: 600;
 }
 
 .input-group-btn > select.form-control {
@@ -1557,10 +1609,14 @@ table.no-margin {
     border-color: #e0e0e0;
 }
 
-.panel-body > .list-container > .list > div.show-more,
-.list.no-bottom-margin > div.show-more {
-    display: inline-block;
-    width: 100%;
+.panel-body > .list-container > .list,
+.panel-body.dashlet-body > div > .list,
+.list.no-bottom-margin
+{
+    > div.show-more {
+        display: inline-block;
+        width: 100%;
+    }
 }
 
 .panel-body > div:first-child > .list-expanded:first-child {
@@ -1643,6 +1699,13 @@ table.no-margin {
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.list > table td {
+    > .link-multiple-item {
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 }
 
 .list > table td[data-name="r-checkbox"] {
@@ -1748,6 +1811,12 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
                 height: ~"calc(100% - 29px)";
             }
         }
+    }
+    margin-left: 0;
+    margin-right: 0;
+
+    .panel.dashlet > .panel-body {
+        overflow-y: hidden;
     }
 }
 
@@ -1961,7 +2030,7 @@ label.attach-file-label {
     position: fixed;
     top: 0;
     margin: @navbar-height 0 0 -@container-padding;
-    z-index: 4;
+    z-index: 5;
 }
 
 .stick-sub.button-container {
@@ -2153,6 +2222,10 @@ h4.panel-title span.fas.color-icon {
     .list > table {
         min-width: @list-table-sm-screen-min-width;
         font-size: 96%;
+
+        & + .show-more {
+            min-width: @list-table-sm-screen-min-width;
+        }
     }
 
     #main > .list-container > .list > table {
@@ -2178,6 +2251,10 @@ h4.panel-title span.fas.color-icon {
 }
 
 .record .middle {
+    > .panel.hidden + .panel {
+        border-top-width: @panel-border-width;
+    }
+
     margin-bottom: @line-height-computed;
 }
 
@@ -2221,7 +2298,6 @@ h4.panel-title span.fas.color-icon {
 
 .bottom {
     .panel.hidden + .panel.sticked {
-        margin-top: 0;
         border-top-width: @panel-border-width;
     }
 }
@@ -2436,7 +2512,8 @@ table.table td.cell .complex-text {
     white-space: normal;
 }
 
-.complex-text {
+.complex-text,
+.popover-content {
     h1:first-child,
     h2:first-child,
     h3:first-child,
@@ -2720,7 +2797,7 @@ table.table td.cell .complex-text {
 
 #notifications-panel {
     position: absolute;
-    width: 600px;
+    width: @notifications-panel-width;
     z-index: 1001;
     right: 0;
     left: auto;
@@ -2728,7 +2805,7 @@ table.table td.cell .complex-text {
 
 #global-search-panel {
     position: absolute;
-    width: 540px;
+    width: @global-search-panel-width;
     z-index: 1001;
     right: 0;
     left: auto;
@@ -3128,7 +3205,10 @@ table.table-admin-panel {
             margin-top: 6px;
             h4 {
                 margin-top: 0;
+                font-size: 15px;
             }
+            white-space: nowrap;
+            overflow: hidden;
         }
     }
 

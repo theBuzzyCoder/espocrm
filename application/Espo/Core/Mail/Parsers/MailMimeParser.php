@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -91,7 +91,13 @@ class MailMimeParser
 
     public function getMessageMessageId($message)
     {
-        return $this->getMessageAttribute($message, 'Message-ID');
+        $messageId = $this->getMessageAttribute($message, 'Message-ID');
+
+        if ($messageId && strlen($messageId) && $messageId[0] !== '<') {
+            $messageId = '<' . $messageId . '>';
+        }
+
+        return $messageId;
     }
 
     public function getAddressNameMap($message)

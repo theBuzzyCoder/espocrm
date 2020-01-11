@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -25,24 +25,47 @@
  *
  * In accordance with Section 7(b) of the GNU General Public License version 3,
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
- ************************************************************************/ 
+ ************************************************************************/
 
 ob_start();
 $result = array('success' => false, 'errorMsg' => '');
 
 if (!empty($_SESSION['install'])) {
-    $preferences = array(
-        'smtpServer' => $_SESSION['install']['smtpServer'],
-        'smtpPort' => $_SESSION['install']['smtpPort'],
-        'smtpAuth' => (empty($_SESSION['install']['smtpAuth']) || $_SESSION['install']['smtpAuth'] == 'false' || !$_SESSION['install']['smtpAuth'])? false : true,
-        'smtpSecurity' => $_SESSION['install']['smtpSecurity'],
-        'smtpUsername' => $_SESSION['install']['smtpUsername'],
-        'smtpPassword' => $_SESSION['install']['smtpPassword'],
-        'outboundEmailFromName' => $_SESSION['install']['outboundEmailFromName'],
-        'outboundEmailFromAddress' => $_SESSION['install']['outboundEmailFromAddress'],
-        'outboundEmailIsShared' => (empty($_SESSION['install']['smtpAuth']) || $_SESSION['install']['outboundEmailIsShared'] == 'false' || !$_SESSION['install']['smtpAuth'])? false : true,
-    );
-    $res = $installer->setPreferences($preferences);
+
+    $paramList = [
+        'smtpServer',
+        'smtpPort',
+        'smtpAuth',
+        'smtpSecurity',
+        'smtpUsername',
+        'smtpPassword',
+        'outboundEmailFromName',
+        'outboundEmailFromAddress',
+        'outboundEmailIsShared',
+    ];
+
+    $preferences = [];
+    foreach ($paramList as $paramName) {
+
+        switch ($paramName) {
+            case 'smtpAuth':
+                $preferences['smtpAuth'] = (empty($_SESSION['install']['smtpAuth']) || $_SESSION['install']['smtpAuth'] == 'false' || !$_SESSION['install']['smtpAuth']) ? false : true;
+                break;
+
+            case 'outboundEmailIsShared':
+                $preferences['outboundEmailIsShared'] = (empty($_SESSION['install']['smtpAuth']) || $_SESSION['install']['outboundEmailIsShared'] == 'false' || !$_SESSION['install']['smtpAuth']) ? false : true;
+                break;
+
+            default:
+                if (array_key_exists($paramName, $_SESSION['install'])) {
+                    $preferences[$paramName] = $_SESSION['install'][$paramName];
+                }
+                break;
+        }
+
+    }
+
+    $res = $installer->savePreferences($preferences);
     if (!empty($res)) {
         $result['success'] = true;
     }

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,12 +33,12 @@ use \Espo\ORM\Entity;
 
 class EvaluatorTest extends \PHPUnit\Framework\TestCase
 {
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->evaluator = new \Espo\Core\Formula\Evaluator();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->evaluator = null;
     }
@@ -101,5 +101,24 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         ";
         $actual = $this->evaluator->process($expression);
         $this->assertEquals(2.5, $actual);
+    }
+
+    function testStringPad()
+    {
+        $expression = "string\\pad('1', 3, '0')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('100', $actual);
+
+        $expression = "string\\pad('1', 3)";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('1  ', $actual);
+
+        $expression = "string\\pad('11', 4, '0', 'left')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('0011', $actual);
+
+        $expression = "string\\pad('11', 4, '0', 'both')";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals('0110', $actual);
     }
 }

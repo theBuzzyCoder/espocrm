@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -51,14 +51,15 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
             this.dropdownItemList = [
                 {
                     name: 'reset',
-                    label: 'Reset',
+                    html: this.translate('Reset 2FA'),
                     hidden: true,
                 },
             ];
 
             this.userModel = this.options.userModel;
 
-            this.headerHtml = this.translate('Security') + ' &raquo; ' + this.getHelper().escapeString(this.userModel.get('userName'));
+            this.headerHtml = this.translate('Security') + ' <span class="chevron-right"></span> ' +
+                this.getHelper().escapeString(this.userModel.get('userName'));
 
             var model = this.model = new Model();
             model.name = 'UserSecurity';
@@ -146,7 +147,7 @@ define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Mo
         },
 
         actionReset: function () {
-            this.confirm(this.translate('securityResetConfimation', 'messages', 'User'), function () {
+            this.confirm(this.translate('security2FaResetConfimation', 'messages', 'User'), function () {
                 this.actionApply(true);
             }.bind(this));
 

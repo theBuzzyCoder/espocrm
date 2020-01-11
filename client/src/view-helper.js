@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -249,9 +249,8 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 if (typeof value === 'undefined') {
                     value = false;
                 }
-                list = list || {};
+                list = list || [];
                 var html = '';
-                var isArray = (Object.prototype.toString.call(list) === '[object Array]');
 
                 var multiple = (Object.prototype.toString.call(value) === '[object Array]');
                 var checkOption = function (name) {
@@ -267,6 +266,13 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 var scope = options.hash.scope || false;
                 var category = options.hash.category || false;
                 var field = options.hash.field || false;
+
+                if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
+                    if (!~list.indexOf(value)) {
+                        list = Espo.Utils.clone(list);
+                        list.push(value);
+                    }
+                }
 
                 var translationHash = options.hash.translationHash || options.hash.translatedOptions || null;
 
@@ -289,7 +295,10 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
 
                 for (var key in list) {
                     var keyVal = list[key];
-                    html += "<option value=\"" + keyVal + "\" " + (checkOption(list[key]) ? 'selected' : '') + ">" + translate(list[key]) + "</option>"
+                    var label = translate(list[key]);
+                    keyVal = self.escapeString(keyVal);
+                    label = self.escapeString(label);
+                    html += "<option value=\"" + keyVal + "\" " + (checkOption(list[key]) ? 'selected' : '') + ">" + label + "</option>"
                 }
                 return new Handlebars.SafeString(html);
             });
@@ -314,13 +323,15 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 text = text.replace(item.regex, item.value);
             });
 
+            options = options || {};
+
             if (options.inline) {
                 text = marked.inlineLexer(text, []);
             } else {
                 text = marked(text);
             }
 
-            text = DOMPurify.sanitize(text);
+            text = DOMPurify.sanitize(text).toString();
 
             text = text.replace(/<a href="mailto:(.*)"/gm, '<a href="javascript:" data-email-address="$1" data-action="mailTo"');
 
@@ -424,6 +435,30 @@ define('view-helper', ['lib!client/lib/purify.min.js'], function () {
                 }
             }
             return html;
+        },
+
+        calculateContentContainerHeight: function ($el) {
+            var smallScreenWidth = this.themeManager.getParam('screenWidthXs');
+            var $window = $(window);
+
+            var footerHeight = $('#footer').height() || 26;
+            var top = 0;
+            var element = $el.get(0);
+
+            if (element) {
+                top = element.getBoundingClientRect().top;
+
+                if ($window.width() < smallScreenWidth) {
+                    var $navbarCollapse = $('#navbar .navbar-body');
+                    if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
+                        top -= $navbarCollapse.height();
+                    }
+                }
+            }
+
+            var spaceHeight = top + footerHeight;
+
+            return $window.height() - spaceHeight - 20;
         },
     });
 

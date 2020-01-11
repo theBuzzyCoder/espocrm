@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -354,7 +354,7 @@ class Language
 
             $cacheFile = $this->getCacheFile($language);
 
-            if (!$this->useCache || !file_exists($cacheFile)) {
+            if (!$this->useCache || !file_exists($cacheFile) || $reload) {
 
                 $paths = $this->paths;
 
@@ -368,11 +368,12 @@ class Language
 
                 $data = $this->getUnifier()->unify('i18n', $paths, true);
 
-                if (is_array($data))
+                if (is_array($data)) {
                     $this->sanitizeData($data);
+                }
 
                 if ($language != $this->defaultLanguage) {
-                    $data = Util::merge($this->getDefaultLanguageData(), $data);
+                    $data = Util::merge($this->getDefaultLanguageData($reload), $data);
                 }
 
                 $this->data[$language] = $data;
@@ -399,11 +400,9 @@ class Language
             if (is_array($subData)) {
                 $this->sanitizeData($subData);
             } else {
-                $subData = htmlspecialchars($subData);
                 if (is_string($subData)) {
                     $subData = str_replace('<', '&lt;', $subData);
                     $subData = str_replace('>', '&gt;', $subData);
-                    $subData = str_replace('"', '&quot;', $subData);
                 }
             }
         }

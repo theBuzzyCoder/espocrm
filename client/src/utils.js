@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,20 +33,64 @@ define('utils', [], function () {
         handleAction: function (viewObject, e) {
             var $target = $(e.currentTarget);
             var action = $target.data('action');
+
+            var fired = false;
             if (action) {
                 var data = $target.data();
                 var method = 'action' + Espo.Utils.upperCaseFirst(action);
                 if (typeof viewObject[method] == 'function') {
                     viewObject[method].call(viewObject, data, e);
                     e.preventDefault();
+                    e.stopPropagation();
+                    fired = true;
                 } else if (data.handler) {
                     e.preventDefault();
+                    e.stopPropagation();
+                    fired = true;
                     require(data.handler, function (Handler) {
                         var handler = new Handler(viewObject);
                         handler[method].call(handler, data, e);
                     });
                 }
+
+                if (fired) {
+                    var $dropdown = $target.closest('.dropdown-menu');
+                    if ($dropdown.length) {
+                        var $dropdownToggle = $dropdown.parent().find('[data-toggle="dropdown"]');
+                        if ($dropdownToggle.length) {
+                            var isDisabled = false;
+                            if ($dropdownToggle.attr('disabled')) {
+                                isDisabled = true;
+                                $dropdownToggle.removeAttr('disabled').removeClass('disabled');
+                            }
+                            $dropdownToggle.dropdown('toggle');
+                            if (isDisabled) {
+                                $dropdownToggle.attr('disabled', 'disabled').addClass('disabled');
+                            }
+                        }
+                    }
+                }
             }
+        },
+
+        checkActionAvailability: function (helper, item) {
+            var config = helper.config;
+
+            if (item.configCheck) {
+                var configCheck = item.configCheck;
+                var opposite = false;
+                if (configCheck.substr(0, 1) === '!') {
+                    opposite = true;
+                    configCheck = configCheck.substr(1);
+                }
+                var configCheckResult = config.getByPath(configCheck.split('.'));
+                if (opposite) {
+                    configCheckResult = !configCheckResult;
+                }
+                if (!configCheckResult) return false;
+            }
+
+            return true;
         },
 
         checkActionAccess: function (acl, obj, item, isPrecise) {

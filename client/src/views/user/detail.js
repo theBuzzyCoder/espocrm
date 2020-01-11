@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -83,7 +83,7 @@ Espo.define('views/user/detail', 'views/detail', function (Dep) {
                 }
                 this.menu.buttons.push({
                     name: 'calendar',
-                    html: this.translate('Calendar', 'scopeNames'),
+                    html: '<span class="far fa-calendar-alt"></span> ' + this.translate('Calendar', 'scopeNames'),
                     style: 'default',
                     link: '#Calendar/show/userId=' + this.model.id + '&userName=' + encodeURIComponent(this.model.get('name')),
                     hidden: !showActivities

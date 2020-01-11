@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -29,30 +29,10 @@
 
 return [
     'defaultPermissions' => [
-        'dir' => '0775',
-        'file' => '0664',
+        'dir' => '0755',
+        'file' => '0644',
         'user' => '',
         'group' => ''
-    ],
-    'permissionMap' => [
-        /** array('0664', '0775') */
-        'writable' => [
-            'data',
-            'custom',
-            'application/Espo/Modules',
-            'client/modules'
-        ],
-        /** array('0644', '0755') */
-        'readable' => [
-            'api',
-            'application',
-            'client',
-            'vendor',
-            'index.php',
-            'cron.php',
-            'rebuild.php',
-            'clear_cache.php'
-        ],
     ],
     'jobMaxPortion' => 15, /** Max number of jobs per one execution. */
     'jobPeriod' => 7800, /** Max execution time (in seconds) allocated for a sinle job. If exceeded then set to Failed.*/
@@ -89,13 +69,12 @@ return [
         'crud',
         'logger',
         'isInstalled',
-        'defaultPermissions',
         'systemUser',
-        'permissionMap',
-        'permissionRules',
+        'defaultPermissions',
         'passwordSalt',
         'cryptKey',
         'apiSecretKeys',
+        'hashSecretKey',
         'restrictedMode',
         'userLimit',
         'portalUserLimit',
@@ -125,6 +104,9 @@ return [
         'webSocketSslAllowSelfSigned',
         'webSocketUseSecureServer',
         'webSocketPort',
+        'aclStrictMode',
+        'actualDatabaseType',
+        'actualDatabaseVersion',
     ],
     'adminItems' => [
         'devMode',
@@ -198,6 +180,8 @@ return [
         'cleanupDeletedRecords',
         'authTokenPreventConcurrent',
         'emailParser',
+        'passwordRecoveryDisabled',
+        'passwordRecoveryForAdminDisabled',
         'latestVersion',
     ],
     'superAdminItems' => [
@@ -254,7 +238,7 @@ return [
     'ldapUserEmailAddressAttribute' => 'mail',
     'ldapUserPhoneNumberAttribute' => 'telephoneNumber',
     'ldapUserObjectClass' => 'person',
-    'requiredPhpVersion' => '7.1.0',
+    'requiredPhpVersion' => '7.2.0',
     'requiredPhpLibs' => [
         'json',
         'openssl',
@@ -277,10 +261,11 @@ return [
         'post_max_size' => '20M',
         'upload_max_filesize' => '20M',
     ],
-    'requiredMysqlVersion' => '5.5.3',
+    'requiredMysqlVersion' => '5.7.0',
     'recommendedMysqlParams' => [],
-    'requiredMariadbVersion' => '5.5.3',
+    'requiredMariadbVersion' => '10.1.0',
     'recommendedMariadbParams' => [],
     'ldapPortalUserLdapAuth' => false,
+    'passwordGenerateLength' => 10,
     'aclStrictMode' => true,
 ];

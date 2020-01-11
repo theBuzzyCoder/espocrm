@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -29,11 +29,13 @@
 
 namespace Espo\Core\Utils\Authentication;
 
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Error;
+
+use Espo\Entities\AuthToken;
 
 class Espo extends Base
 {
-    public function login($username, $password, \Espo\Entities\AuthToken $authToken = null, $params = [], $request)
+    public function login(string $username, $password, ?AuthToken $authToken = null, array $params = [], $request = null)
     {
         if (!$password) return;
 
@@ -47,7 +49,7 @@ class Espo extends Base
             'whereClause' => [
                 'userName' => $username,
                 'password' => $hash,
-                'type!=' => ['api', 'system']
+                'type!=' => ['api', 'system'],
             ]
         ]);
 

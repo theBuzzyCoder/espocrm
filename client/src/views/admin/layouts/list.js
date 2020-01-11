@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -33,7 +33,10 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
         dataAttributeList: ['name', 'width', 'link', 'notSortable', 'align', 'view', 'customLabel', 'widthPx'],
 
         dataAttributesDefs: {
-            link: {type: 'bool'},
+            link: {
+                type: 'bool',
+                tooltip: true,
+            },
             width: {
                 type: 'float',
                 min: 0,
@@ -140,6 +143,8 @@ Espo.define('views/admin/layouts/list', 'views/admin/layouts/rows', function (De
                     if (fieldType) {
                         if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
                             o.notSortable = true;
+                            this.itemsData[fieldName] = this.itemsData[fieldName] || {};
+                            this.itemsData[fieldName].notSortable = true;
                         }
                     }
                     this.disabledFields.push(o);

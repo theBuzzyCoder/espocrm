@@ -18,7 +18,6 @@
     "Template": "Plantilla",
     "Job": "Trabajo",
     "EmailFilter": "Filtro de correo",
-    "Portal": "Portal",
     "PortalRole": "Rol del portal",
     "Attachment": "Adjuntos",
     "EmailFolder": "Carpeta de correo electrónico",
@@ -38,7 +37,6 @@
     "DynamicLogic": "Lógica dinámica",
     "DashletOptions": "Ajustes de cajas",
     "Admin": "Administrador",
-    "Global": "Global",
     "Preferences": "Preferencias",
     "EmailAddress": "Correo electrónico",
     "PhoneNumber": "Número de teléfono"
@@ -47,7 +45,6 @@
     "Email": "Correos",
     "User": "Usuarios",
     "Team": "Equipos",
-    "Role": "Roles",
     "EmailTemplate": "Plantillas de correo",
     "EmailAccount": "Cuentas de correo personales",
     "EmailAccountScope": "Cuentas de correo personales",
@@ -58,7 +55,6 @@
     "Dashboard": "Escritorio",
     "InboundEmail": "Cuentas de correo grupales",
     "Stream": "Historia",
-    "Import": "Resultados de importaciones",
     "Template": "Plantillas",
     "Job": "Trabajos",
     "EmailFilter": "Filtros",
@@ -81,7 +77,6 @@
     "Home": "Inicio",
     "by": "por",
     "Saved": "Guardado",
-    "Error": "Error",
     "Select": "Seleccionar",
     "Not valid": "No válido",
     "Please wait...": "Por favor espere...",
@@ -174,7 +169,6 @@
     "Person": "Persona",
     "First Name": "Nombre",
     "Last Name": "Apellidos",
-    "Original": "Original",
     "You": "Tu",
     "you": "tu",
     "change": "cambiar",
@@ -193,13 +187,11 @@
     "Submit": "Enviar",
     "Close": "Cerrar",
     "Yes": "Si",
-    "No": "No",
     "Value": "Valor",
     "Current version": "Versión actual",
     "List View": "Vista de Lista",
     "Tree View": "Vista de árbol",
     "Unlink All": "Desenlazar todo",
-    "Total": "Total",
     "Print to PDF": "Imprimir PDF",
     "Default": "Por defecto",
     "Number": "Número",
@@ -216,7 +208,12 @@
     "Self-Assign": "Autoasignar",
     "Self-Assigned": "Autosegnado",
     "Return to Application": "Volver a la aplicación",
-    "Select All Results": "Seleccionar todos los resultados"
+    "Select All Results": "Seleccionar todos los resultados",
+    "Expand": "Expandir",
+    "Collapse": "Contraer",
+    "New notifications": "Nuevas notificaciones",
+    "Manage Categories": "Administrar categorías",
+    "Manage Folders": "Administrar carpetas"
   },
   "messages": {
     "pleaseWait": "Por favor espere...",
@@ -248,7 +245,6 @@
     "checkForNewNotifications": "Comprobar si hay nuevas notificaciones",
     "duplicate": "El registro que está creando parece ser un duplicado",
     "dropToAttach": "Arrastre para adjuntar",
-    "streamPostInfo": "Escriba <strong>@usuario</strong> para mencionar usuarios en el comentario.\n\nLa sintaxis markdown disponible es:\n\n`<code>código</code>`\n**<strong>texto en negritas</strong>**\n*<em>un texto con énfasis</em>*\n~<del>el texto eliminado</del>~\n> Citar bloque\n[nombre del enlace](url)",
     "writeMessageToSelf": "Escribir un mensaje en tu historia",
     "checkForNewNotes": "Comprobar si hay actualizaciones en la historia",
     "internalPost": "El puesto será visto solo por los usuarios internos",
@@ -313,15 +309,13 @@
     "phoneNumberOther": "Teléfono (Otro)",
     "order": "Orden",
     "parent": "Padre",
-    "children": "Hijos",
-    "id": "ID"
+    "children": "Hijos"
   },
   "links": {
     "assignedUser": "Usuario asignado",
     "createdBy": "Creado por",
     "modifiedBy": "Modificado Por",
     "team": "Equipo",
-    "roles": "Roles",
     "teams": "Equipos",
     "users": "Usuarios",
     "parent": "Padre",
@@ -334,14 +328,14 @@
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} ha sido asignado a usted",
-    "emailReceived": "Correo recibido de: <strong>{from}</strong>.",
-    "entityRemoved": "{user} ha eliminado: <strong>[{entityType}]</strong> {entity}"
+    "emailReceived": "Correo recibido de: {from}",
+    "entityRemoved": "{user} ha eliminado: {entityType} {entity}"
   },
   "streamMessages": {
-    "post": "{user} ha publicado en: <strong>[{entityType}]</strong> {entity}",
-    "attach": "{user} ha añadido un archivo adjunto en: <strong>[{entityType}]</strong> {entity}",
-    "status": "{user} ha actualizado el campo <strong>{field}</strong> en: <strong>[{entityType}]</strong> {entity}",
-    "update": "{user} ha actualizado: <strong>[{entityType}]</strong> {entity}",
+    "post": "{user} ha publicado en: {entityType} {entity}",
+    "attach": "{user} ha añadido un archivo adjunto en: {entityType} {entity}",
+    "status": "{user} ha actualizado el campo {field} en: {entityType} {entity}",
+    "update": "{user} ha actualizado: {entityType} {entity}",
     "postTargetTeam": "{user} ha publicado en el equipo {target}",
     "postTargetTeams": "{user} ha publicado en los equipos {target}",
     "postTargetPortal": "{user} ha publicado en el portal {target}",
@@ -350,47 +344,47 @@
     "postTargetYou": "{user} ha publicado pora usted",
     "postTargetYouAndOthers": "{user} ha publicado para {target} y para usted",
     "postTargetAll": "{user} ha publicado para todos",
-    "mentionInPost": "{user} ha mencionado a {mentioned} en: <strong>[{entityType}]</strong> {entity}",
-    "mentionYouInPost": "{user} te ha mencionado en: <strong>[{entityType}]</strong> {entity}",
+    "mentionInPost": "{user} ha mencionado a {mentioned} en: {entityType} {entity}",
+    "mentionYouInPost": "{user} te ha mencionado en: {entityType} {entity}",
     "mentionInPostTarget": "{user} ha mencionado a {mentioned} en la publicación",
     "mentionYouInPostTarget": "{user} te ha mencionado en la publicación para {target}",
     "mentionYouInPostTargetAll": "{user} te ha mencionado en una publicación para todos",
     "mentionYouInPostTargetNoTarget": "{user} te ha mencionado en una publicación",
-    "create": "{user} ha creado: <strong>[{entityType}]</strong> {entity}",
-    "createThis": "{user} ha creado: <strong>{entityType}</strong>",
+    "create": "{user} ha creado: {entityType} {entity}",
+    "createThis": "{user} ha creado: {entityType}",
     "createAssignedThis": "{user} ha creado y se lo ha asignado a {assignee}: {entityType}",
-    "createAssigned": "{user} ha creado y se lo ha asignado a {assignee}: <strong>[{entityType}]</strong> {entity}",
-    "assign": "{user} ha asignado: <strong>[{entityType}]</strong> {entity} a {assignee}",
+    "createAssigned": "{user} ha creado y se lo ha asignado a {assignee}: {entityType} {entity}",
+    "assign": "{user} ha asignado: {entityType} {entity} a {assignee}",
     "assignThis": "{user} ha asignado {entityType} a {assignee}",
     "postThis": "{user} ha publicado",
     "attachThis": "{user} ha adjuntado",
-    "statusThis": "{user} ha actualizado el campo <strong>{field}</strong>",
+    "statusThis": "{user} ha actualizado el campo {field}",
     "updateThis": "{user} ha actualizado: {entityType}",
-    "createRelatedThis": "{user} ha creado: <strong>[{relatedEntityType}]</strong> {relatedEntity}, enlazado a {entityType}",
-    "createRelated": "{user} ha creado: <strong>[{relatedEntityType}]</strong> {relatedEntity} enlazado a <strong>[{entityType}]</strong> {entity}",
-    "relate": "{user} ha enlazado <strong>[{relatedEntityType}]</strong> {relatedEntity} a <strong>[{entityType}] {entity}",
+    "createRelatedThis": "{user} ha creado: {relatedEntityType} {relatedEntity}, enlazado a {entityType}",
+    "createRelated": "{user} ha creado: {relatedEntityType} {relatedEntity} enlazado a {entityType} {entity}",
+    "relate": "{user} ha enlazado {relatedEntityType} {relatedEntity} a {entityType} {entity}",
     "relateThis": "{user} vinculado {relatedEntityType} {relatedEntity} con este {entityType}",
-    "emailReceivedFromThis": "Correo recibido de: <strong>{from}</strong>.",
+    "emailReceivedFromThis": "Correo recibido de: {from}",
     "emailReceivedInitialFromThis": "Correo recibido de {from}, se ha creado: {entityType}",
     "emailReceivedThis": "Correo recibido",
     "emailReceivedInitialThis": "Correo recibido, se ha creado: {entityType}",
-    "emailReceivedFrom": "Correo recibido de {from}, relacionado a: <strong>[{entityType}]</strong> {entity}",
-    "emailReceivedFromInitial": "Correo recibido de {from}, se ha creado: <strong>[{entityType}]<strong>\n {entityType}",
-    "emailReceivedInitialFrom": "Correo recibido de {from}, se ha creado: <strong>[{entityType}]<strong>\n {entityType}",
+    "emailReceivedFrom": "Correo recibido de {from}, relacionado a: {entityType} {entity}",
+    "emailReceivedFromInitial": "Correo recibido de {from}, se ha creado: {entityType} {entityType}",
+    "emailReceivedInitialFrom": "Correo recibido de {from}, se ha creado: {entityType} {entityType}",
     "emailReceived": "El correo {email} ha sido recibido para el {entityType} {entity}",
-    "emailReceivedInitial": "Correo recibido, se ha creado: <strong>[{entityType}]<strong>\n {entityType}",
-    "emailSent": "{by} ha enviado un correo relacionado a: <strong>[{entityType}]</strong> {entity}",
+    "emailReceivedInitial": "Correo recibido, se ha creado: {entityType} {entityType}",
+    "emailSent": "{by} ha enviado un correo relacionado a: {entityType} {entity}",
     "emailSentThis": "{by} ha enviado un correo",
     "postTargetSelf": "{user} se ha enviado un mensaje a sí mismo",
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí mismo",
-    "createAssignedYou": "{user} ha creado y te lo ha asignado: <strong>[{entityType}]</strong> {entity}",
+    "createAssignedYou": "{user} ha creado y te lo ha asignado: {entityType} {entity}",
     "createAssignedThisSelf": "{user} ha creado y se ha asignado a sí mismo: {entityType}",
-    "createAssignedSelf": "{user} ha creado y se ha asignado a sí mismo: <strong>[{entityType}]</strong> {entity}",
-    "assignYou": "{user} te ha asignado <strong>[{entityType}]<strong> {entity} a ti",
+    "createAssignedSelf": "{user} ha creado y se ha asignado a sí mismo: {entityType} {entity}",
+    "assignYou": "{user} te ha asignado {entityType} {entity} a ti",
     "assignThisVoid": "{user} ha desasignado: {entityType}",
-    "assignVoid": "{user} ha desasignado: <strong>[{entityType}]</strong> {entity}",
+    "assignVoid": "{user} ha desasignado: {entityType} {entity}",
     "assignThisSelf": "{user} se ha asignado así mismo: {entityType}",
-    "assignSelf": "{user} se ha asignado así mismo: <strong>[{entityType}]</strong> {entity}"
+    "assignSelf": "{user} se ha asignado así mismo: {entityType} {entity}"
   },
   "lists": {
     "monthNames": [
@@ -453,8 +447,7 @@
     "salutationName": {
       "Mr.": "Sr.",
       "Mrs.": "Sra.",
-      "Ms.": "Sta.",
-      "Dr.": "Dr."
+      "Ms.": "Sta."
     },
     "language": {
       "af_ZA": "Afrikáans",
@@ -483,7 +476,6 @@
       "gl_ES": "Gallego",
       "gn_PY": "Guaraní",
       "he_IL": "Hebreo",
-      "hi_IN": "Hindi",
       "hr_HR": "Croata",
       "hu_HU": "Hungaro",
       "hy_AM": "Armenio",
@@ -517,13 +509,11 @@
       "sr_RS": "Serbio",
       "sv_SE": "Sueco",
       "sw_KE": "Suajili",
-      "ta_IN": "Tamil",
       "te_IN": "Télugu",
       "th_TH": "Tailandés",
       "tl_PH": "Tagalo",
       "tr_TR": "Turco",
       "uk_UA": "Ucraniano",
-      "ur_PK": "Urdu",
       "vi_VN": "Vietnamita",
       "zh_CN": "Chino Simplificado (China)",
       "zh_HK": "Chino Tradicional (Hong Kong)",
@@ -599,7 +589,6 @@
     "phoneNumber": {
       "Mobile": "Teléfono móvil",
       "Office": "Oficina",
-      "Fax": "Fax",
       "Home": "Hogar",
       "Other": "Otro"
     }
@@ -641,11 +630,9 @@
         "openInNewWindow": "Abrir en nueva ventana"
       },
       "video": {
-        "video": "Video",
         "videoLink": "Enlace al Video",
         "insert": "Insertar Video",
-        "url": "¿URL del Video?",
-        "providers": "(YouTube, Vimeo, Vine, Instagram, or DailyMotion)"
+        "url": "¿URL del Video?"
       },
       "table": {
         "table": "Tabla"
@@ -655,7 +642,6 @@
       },
       "style": {
         "style": "Estilo",
-        "normal": "Normal",
         "blockquote": "Cita",
         "pre": "Código",
         "h1": "Cabecera 1",
@@ -706,17 +692,6 @@
         "redo": "Rehacer"
       }
     }
-  },
-  "themes": {
-    "Espo": "Espo",
-    "Sakura": "Sakura",
-    "Violet": "Violeta",
-    "EspoRtl": "RTL Espo",
-    "EspoVertical": "Espo con barra lateral",
-    "SakuraVertical": "Sakura con barra lateral",
-    "VioletVertical": "Violet con barra lateral",
-    "Hazyblue": "Hazyblue",
-    "HazyblueVertical": "Hazyblue con barra lateral"
   },
   "streamMessagesMale": {
     "postTargetSelfAndOthers": "{user} ha publicado para {target} y para sí mismo"

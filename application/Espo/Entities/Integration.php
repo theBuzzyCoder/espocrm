@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -31,7 +31,7 @@ namespace Espo\Entities;
 
 class Integration extends \Espo\Core\ORM\Entity
 {
-    public function get($name, $params = array())
+    public function get(string $name, $params = [])
     {
         if ($name == 'id') {
             return $this->id;
@@ -54,7 +54,7 @@ class Integration extends \Espo\Core\ORM\Entity
         return null;
     }
 
-    public function clear($name = null)
+    public function clear(?string $name = null)
     {
         parent::clear($name);
 
@@ -98,6 +98,13 @@ class Integration extends \Espo\Core\ORM\Entity
             $data->$name = $value;
             $this->set('data', $data);
         }
+    }
+
+    public function isAttributeChanged($name)
+    {
+        if ($name === 'data') return true;
+
+        return parent::isAttributeChanged($name);
     }
 
     public function populateFromArray(array $arr, $onlyAccessible = true, $reset = false)

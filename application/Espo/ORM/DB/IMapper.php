@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -102,14 +102,14 @@ interface IMapper
      *
      * @return bool True if success
      */
-    function addRelation(IEntity $entity, string $relationName, $id = null, $relEntity = null, $data = null);
+    function addRelation(IEntity $entity, string $relationName, ?string $id = null, ?IEntity $relEntity = null, ?array $data = null);
 
     /**
      * Removes relation of entity with certain record.
      *
      * @return bool True if success
      */
-    function removeRelation(IEntity $entity, string $relationName, $id = null, $all = false, IEntity $relEntity = null);
+    function removeRelation(IEntity $entity, string $relationName, ?string $id = null, bool $all = false, IEntity $relEntity = null);
 
     /**
      * Removes all relations of entity of specified relation name.

@@ -1,9 +1,8 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -27,16 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Loaders;
+define('views/preferences/fields/signature', 'views/fields/wysiwyg', function (Dep) {
 
-class ClientManager extends Base
-{
-    public function load()
-    {
-        return new \Espo\Core\Utils\ClientManager(
-            $this->getContainer()->get('config'),
-            $this->getContainer()->get('themeManager'),
-            $this->getContainer()->get('metadata')
-        );
-    }
-}
+    return Dep.extend({
+
+        toolbar: [
+            ["style", ["bold", "italic", "underline", "clear"]],
+            ["color", ["color"]],
+            ["height", ["height"]],
+            ['table', ['espoLink']],
+            ["misc",["codeview", "fullscreen"]]
+        ],
+
+    });
+});

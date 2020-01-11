@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
 
         searchTemplate: 'fields/array/search',
 
-        searchTypeList: ['anyOf', 'noneOf', 'isEmpty', 'isNotEmpty'],
+        searchTypeList: ['anyOf', 'noneOf', 'allOf', 'isEmpty', 'isNotEmpty'],
 
         maxItemLength: null,
 
@@ -119,6 +119,9 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                 this.setupTranslation();
             }
 
+            this.displayAsLabel = this.params.displayAsLabel || this.displayAsLabel;
+            this.displayAsList = this.params.displayAsList || this.displayAsList;
+
             if (this.params.isSorted && this.translatedOptions) {
                 this.params.options = Espo.Utils.clone(this.params.options);
                 this.params.options = this.params.options.sort(function (v1, v2) {
@@ -146,7 +149,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
         handleSearchType: function (type) {
             var $inputContainer = this.$el.find('div.input-container');
 
-            if (~['anyOf', 'noneOf'].indexOf(type)) {
+            if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
                 $inputContainer.removeClass('hidden');
             } else {
                 $inputContainer.addClass('hidden');
@@ -390,7 +393,15 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             }, this)
 
 
-            if (this.params.displayAsLabel) {
+            if (this.displayAsList) {
+                if (!list.length) return '';
+                var itemClassName = 'multi-enum-item-container';
+                if (this.displayAsLabel) {
+                    itemClassName += ' multi-enum-item-label-container';
+                }
+                return '<div class="'+itemClassName+'">' +
+                    list.join('</div><div class="'+itemClassName+'">') + '</div>';
+            } else if (this.displayAsLabel) {
                 return list.join(' ');
             } else {
                 return list.join(', ')
@@ -470,7 +481,7 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
             var arr = [];
             var arrFront = [];
 
-            if (~['anyOf', 'noneOf'].indexOf(type)) {
+            if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
                 var valueList = this.$element.val().split(':,:');
                 if (valueList.length == 1 && valueList[0] == '') {
                     valueList = [];
@@ -501,6 +512,21 @@ define('views/fields/array', ['views/fields/base', 'lib!Selectize'], function (D
                         valueList: valueList
                     }
                 };
+                return data;
+            }
+
+            if (type === 'allOf') {
+                var data = {
+                    type: 'arrayAllOf',
+                    value: valueList,
+                    data: {
+                        type: 'allOf',
+                        valueList: valueList
+                    }
+                };
+                if (!valueList.length) {
+                    data.value = null;
+                }
                 return data;
             }
 

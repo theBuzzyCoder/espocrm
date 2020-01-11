@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -51,8 +51,8 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
         buttonList: [
             {
                 name: 'save',
-                label: 'Save',
-                style: 'primary'
+                label: 'Apply',
+                style: 'danger'
             },
             {
                 name: 'cancel',
@@ -116,7 +116,6 @@ Espo.define('views/dashlets/options/base', ['views/modal', 'views/record/detail'
                 el: this.options.el + ' .record',
                 layoutData: {
                     model: model,
-                    columnCount: 2,
                 }
             });
 

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -108,15 +108,33 @@ class User extends \Espo\Core\SelectManagers\Base
 
     protected function boolFilterOnlyMyTeam(&$result)
     {
-        $this->addJoin('teams', $result);
-        $result['whereClause'][] = [
-        	'teamsMiddle.teamId' => $this->getUser()->getLinkMultipleIdList('teams')
-        ];
+        $teamIdList = $this->getUser()->getLinkMultipleIdList('teams');
+
+        if (count($teamIdList) === 0) {
+            return [
+                'id' => null
+            ];
+        }
+
+        $this->addLeftJoin(['teams', 'teamsOnlyMyFilter'], $result);
         $this->setDistinct(true, $result);
+        return [
+            'teamsOnlyMyFilterMiddle.teamId' => $teamIdList
+        ];
     }
 
     protected function accessOnlyOwn(&$result)
     {
+        if ($this->getAcl()->get('portalPermission') == 'yes') {
+            $result['whereClause'][] = [
+                'OR' => [
+                    'id' => $this->getUser()->id,
+                    'type' => 'portal',
+                ],
+            ];
+            return;
+        }
+
         $result['whereClause'][] = [
             'id' => $this->getUser()->id
         ];
@@ -133,11 +151,18 @@ class User extends \Espo\Core\SelectManagers\Base
     {
         $this->setDistinct(true, $result);
         $this->addLeftJoin(['teams', 'teamsAccess'], $result);
+
+        $or = [
+            'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
+            'id' => $this->getUser()->id,
+        ];
+
+        if ($this->getAcl()->get('portalPermission') == 'yes') {
+            $or['type'] = 'portal';
+        }
+
         $result['whereClause'][] = [
-            'OR' => [
-                'teamsAccess.id' => $this->getUser()->getLinkMultipleIdList('teams'),
-                'id' => $this->getUser()->id
-            ]
+            'OR' => $or,
         ];
     }
 }

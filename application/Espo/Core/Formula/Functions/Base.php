@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -110,4 +110,16 @@ abstract class Base implements Injectable
     }
 
     public abstract function process(\StdClass $item);
+
+    protected function fetchArguments(\StdClass $item)
+    {
+        $args = $item->value ?? [];
+
+        $eArgs = [];
+        foreach ($args as $item) {
+            $eArgs[] = $this->evaluate($item);
+        }
+
+        return $eArgs;
+    }
 }

@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -34,7 +34,7 @@ use \Espo\ORM\Entity;
 class FormulaTest extends \PHPUnit\Framework\TestCase
 {
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $container = $this->container = $this->getMockBuilder('\\Espo\\Core\\Container')->disableOriginalConstructor()->getMock();
 
@@ -77,7 +77,7 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
             ]));
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->container = null;
         $this->functionFactory = null;
@@ -2814,6 +2814,47 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         ');
         $actual = $this->formula->process($item, $this->entity);
         $this->assertEquals('12', $actual);
+    }
+
+    function testPos()
+    {
+        $item = json_decode('
+            {
+                "type": "string\\\\pos",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "1234"
+                    },
+                    {
+                        "type": "value",
+                        "value": 23
+                    }
+                ]
+            }
+        ');
+
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertEquals(1, $actual);
+
+        $item = json_decode('
+            {
+                "type": "string\\\\pos",
+                "value": [
+                    {
+                        "type": "value",
+                        "value": "1234"
+                    },
+                    {
+                        "type": "value",
+                        "value": 54
+                    }
+                ]
+            }
+        ');
+
+        $actual = $this->formula->process($item, $this->entity);
+        $this->assertFalse($actual);
     }
 
     function testBundle()

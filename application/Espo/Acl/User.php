@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -37,6 +37,16 @@ class User extends \Espo\Core\Acl\Base
     public function checkIsOwner(\Espo\Entities\User $user, Entity $entity)
     {
         return $user->id === $entity->id;
+    }
+
+    public function checkEntityRead(EntityUser $user, Entity $entity, $data)
+    {
+        if (!$user->isAdmin() && $entity->isPortal()) {
+            if ($this->getAclManager()->get($user, 'portalPermission') === 'yes') {
+                return true;
+            }
+        }
+        return $this->checkEntity($user, $entity, $data, 'read');
     }
 
     public function checkEntityCreate(EntityUser $user, Entity $entity, $data)

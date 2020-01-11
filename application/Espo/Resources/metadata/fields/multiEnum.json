@@ -38,6 +38,10 @@
          "type":"bool"
       },
       {
+         "name": "displayAsList",
+         "type":"bool"
+      },
+      {
          "name":"audited",
          "type":"bool"
       },
@@ -47,8 +51,12 @@
       }
    ],
    "validationList": [
+      "array",
       "required",
       "maxCount"
+   ],
+   "mandatoryValidationList": [
+      "array"
    ],
    "filter": true,
    "notCreatable": false,
@@ -58,5 +66,6 @@
       "storeArrayValues": true
    },
    "translatedOptions": true,
+   "dynamicLogicOptions": true,
    "personalData": true
 }

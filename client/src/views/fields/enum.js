@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (Dep) {
+define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], function (Dep) {
 
     return Dep.extend({
 
@@ -64,6 +64,8 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             if (
+                typeof value !== 'undefined'
+                &&
                 value !== null
                 &&
                 value !== ''
@@ -72,6 +74,9 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             ) {
                 data.isNotEmpty = true;
             }
+
+            data.valueIsSet = this.model.has(this.name);
+
             return data;
         },
 
@@ -105,7 +110,7 @@ Espo.define('views/fields/enum', ['views/fields/base', 'lib!Selectize'], functio
             }
 
             if (this.params.isSorted && this.translatedOptions) {
-                this.params.options = Espo.Utils.clone(this.params.options);
+                this.params.options = Espo.Utils.clone(this.params.options) || [];
                 this.params.options = this.params.options.sort(function (v1, v2) {
                      return (this.translatedOptions[v1] || v1).localeCompare(this.translatedOptions[v2] || v2);
                 }.bind(this));

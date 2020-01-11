@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -42,7 +42,12 @@ class Lead extends \Espo\Core\Controllers\Record
         if (empty($data->records)) {
             $data->records = (object) [];
         }
-        $entity = $this->getRecordService()->convert($data->id, $data->records);
+
+        $additionalData = (object) [
+            'skipDuplicateCheck' => $data->skipDuplicateCheck ?? false,
+        ];
+
+        $entity = $this->getRecordService()->convert($data->id, $data->records, $additionalData);
 
         if (!empty($entity)) {
             return $entity->toArray();

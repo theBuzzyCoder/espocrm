@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -306,7 +306,7 @@ define('controllers/record', 'controller', function (Dep) {
             var collectionName = this.entityType || this.name;
             if (usePreviouslyFetched) {
                 if (collectionName in this.collectionMap) {
-                    var collection = this.collectionMap[collectionName];// = this.collectionMap[collectionName].clone();
+                    var collection = this.collectionMap[collectionName];
                     callback.call(context, collection);
                     return;
                 }

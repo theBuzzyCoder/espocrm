@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,18 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email/modals/detail', ['views/modals/detail', 'views/email/detail'], function (Dep, Detail) {
+define('views/email/modals/detail', ['views/modals/detail', 'views/email/detail'], function (Dep, Detail) {
 
     return Dep.extend({
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            console.log(this.model);
+
             this.buttonList.unshift({
                 'name': 'reply',
                 'label': 'Reply',
-                'style': 'danger'
+                'hidden': this.model && this.model.get('status') === 'Draft',
             });
+
             if (this.model) {
                 this.listenToOnce(this.model, 'sync', function () {
                     setTimeout(function () {
@@ -48,9 +51,19 @@ Espo.define('views/email/modals/detail', ['views/modals/detail', 'views/email/de
 
         },
 
+        controlRecordButtonsVisibility: function () {
+            Dep.prototype.controlRecordButtonsVisibility.call(this);
+
+            if (this.model.get('status') === 'Draft' || !this.getAcl().check('Email', 'create')) {
+                this.hideButton('reply');
+            } else {
+                this.showButton('reply');
+            }
+        },
+
         actionReply: function (data, e) {
             Detail.prototype.actionReply.call(this, {}, e, this.getPreferences().get('emailReplyToAllByDefault'));
-        }
+        },
 
     });
 });

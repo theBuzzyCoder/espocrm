@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -46,19 +46,22 @@ define('metadata', [], function () {
         load: function (callback, disableCache, sync) {
             var sync = (typeof sync == 'undefined') ? false: sync;
             this.off('sync');
-            this.once('sync', callback);
+
+            if (callback)
+                this.once('sync', callback);
+
             if (!disableCache) {
                  if (this.loadFromCache()) {
                     this.trigger('sync');
                     return;
                 }
             }
-            this.fetch(sync);
+            return this.fetch(sync);
         },
 
         fetch: function (sync) {
             var self = this;
-            this.ajax({
+            return this.ajax({
                 url: this.url,
                 type: 'GET',
                 dataType: 'JSON',

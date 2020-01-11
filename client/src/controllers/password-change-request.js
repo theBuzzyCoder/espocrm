@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -30,13 +30,16 @@ define('controllers/password-change-request', 'controller', function (Dep) {
 
     return Dep.extend({
 
-        actionPasswordChange: function (id) {
-            if (!id) {
+        actionPasswordChange: function (options) {
+            options = options || {};
+
+            if (!options.id) {
                 throw new Error();
             }
 
             this.entire('views/user/password-change-request', {
-                requestId: id
+                requestId: options.id,
+                strengthParams: options.strengthParams,
             }, function (view) {
                 view.render();
             });

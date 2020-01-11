@@ -2,7 +2,7 @@
     {
         "route": "/",
         "method": "get",
-        "params": "<h1>EspoCRM REST API<\/h1>"
+        "params": "\"EspoCRM REST API\""
     },
     {
         "route": "/App/user",
@@ -235,6 +235,14 @@
             "action": "delete",
             "scope": ":scope",
             "name": ":name"
+        }
+    },
+    {
+        "route": "/CurrencyRate",
+        "method": "put",
+        "params": {
+            "controller": "CurrencyRate",
+            "action": "update"
         }
     },
     {

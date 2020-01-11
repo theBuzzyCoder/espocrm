@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         'customPath' => 'tests/unit/testData/Utils/I18n/Espo/Custom/Resources/i18n/{language}',
     ];
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->objects['fileManager'] = new \Espo\Core\Utils\File\Manager();
 
@@ -69,7 +69,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('currentLanguage', 'en_US');
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         $this->object = NULL;
     }
@@ -131,7 +131,7 @@ class LanguageTest extends \PHPUnit\Framework\TestCase
                       'en_US' => 'English (United States)',
                     ]
                 ],
-                'testHtml' => '&lt;a href=&quot;javascript: alert(1)&quot;&gt;test&lt;/a&gt;',
+                'testHtml' => '&lt;a href="javascript: alert(1)"&gt;test&lt;/a&gt;',
             ],
         ];
 

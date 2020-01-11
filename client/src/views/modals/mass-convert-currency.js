@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@
  ************************************************************************/
 
 
-Espo.define('views/modals/mass-convert-currency', ['views/modal', 'model'], function (Dep, Model) {
+define('views/modals/mass-convert-currency', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -47,7 +47,8 @@ Espo.define('views/modals/mass-convert-currency', ['views/modal', 'model'], func
         ],
 
         setup: function () {
-            this.headerHtml = this.translate(this.options.entityType, 'scopeNamesPlural') + ' &raquo ' + this.translate('convertCurrency', 'massActions');
+            this.headerHtml = this.translate(this.options.entityType, 'scopeNamesPlural') +
+                ' <span class="chevron-right"></span> ' + this.translate('convertCurrency', 'massActions');
             this.addButton({
                 name: 'convert',
                 text: this.translate('Update'),
@@ -105,6 +106,7 @@ Espo.define('views/modals/mass-convert-currency', ['views/modal', 'model'], func
 
             this.ajaxPostRequest(this.options.entityType + '/action/massConvertCurrency', {
                 field: this.options.field,
+                fieldList: this.options.fieldList,
                 currency: currency,
                 ids: this.options.ids || null,
                 where: hasWhere ? this.options.where : null,
@@ -112,7 +114,7 @@ Espo.define('views/modals/mass-convert-currency', ['views/modal', 'model'], func
                 byWhere: this.options.byWhere,
                 targetCurrency: currency,
                 currencyRates: currencyRates,
-                baseCurrency: this.getConfig().get('baseCurrency')
+                baseCurrency: this.getConfig().get('baseCurrency'),
             }).then(function (result) {
                 this.trigger('after:update', result.count);
                 this.close();

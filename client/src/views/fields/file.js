@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -92,7 +92,7 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
         data: function () {
             var data =_.extend({
                 id: this.model.get(this.idName),
-                acceptAttribue: this.acceptAttribue
+                acceptAttribute: this.acceptAttribute,
             }, Dep.prototype.data.call(this));
 
             if (this.mode == 'edit') {
@@ -170,8 +170,8 @@ Espo.define('views/fields/file', 'views/fields/link', function (Dep) {
                 this.accept = this.params.accept;
             }
 
-            if (this.accept) {
-                this.acceptAttribue = this.accept.join('|');
+            if (this.accept && this.accept.length) {
+                this.acceptAttribute = this.accept.join(', ');
             }
 
             this.once('remove', function () {

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -106,7 +106,7 @@ Espo.define('views/fields/link-multiple-with-columns', 'views/fields/link-multip
         },
 
         getDetailLinkHtml: function (id, name) {
-            name = name || this.nameHash[id];
+            name = name || this.nameHash[id] || id;
 
             var roleHtml = '';
 

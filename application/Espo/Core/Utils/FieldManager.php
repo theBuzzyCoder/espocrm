@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -271,7 +271,7 @@ class FieldManager
 
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
-        if (!empty($entityDefs)) {
+        if (!empty((array) $entityDefs)) {
             $result &= $this->saveCustomEntityDefs($scope, $entityDefs);
             $this->isChanged = true;
         }
@@ -427,16 +427,22 @@ class FieldManager
 
     protected function getFieldDefs($scope, $name, $default = null)
     {
-        return $this->getMetadata()->get('entityDefs'.'.'.$scope.'.fields.'.$name, $default);
+        $defs = $this->getMetadata()->getObjects(['entityDefs', $scope, 'fields', $name], $default);
+        if (is_object($defs)) {
+            return get_object_vars($defs);
+        }
+        return $defs;
     }
 
-    protected function getCustomFieldDefs($scope, $name)
+    protected function getCustomFieldDefs($scope, $name, $default = null)
     {
         $customDefs = $this->getMetadata()->getCustom('entityDefs', $scope, (object) []);
 
         if (isset($customDefs->fields->$name)) {
             return (array) $customDefs->fields->$name;
         }
+
+        return $default;
     }
 
     protected function saveCustomEntityDefs($scope, $newDefs)
@@ -529,43 +535,32 @@ class FieldManager
             }
         }
 
-        $actualCustomFieldDefs = $this->getCustomFieldDefs($scope, $name);
-        $actualFieldDefs = $this->getFieldDefs($scope, $name, []);
+        $actualCustomFieldDefs = $this->getCustomFieldDefs($scope, $name, []);
+        $actualFieldDefs = $this->getFieldDefs($scope, $name, (object) []);
         $permittedParamList = array_keys($params);
 
-        $filteredFieldDefs = $actualCustomFieldDefs ? $actualCustomFieldDefs : [];
+        $filteredFieldDefs = !empty($actualCustomFieldDefs) ? $actualCustomFieldDefs : [];
 
         foreach ($fieldDefs as $paramName => $paramValue) {
             if (in_array($paramName, $permittedParamList)) {
+
+                $defaultParamValue = null;
+
                 switch ($params[$paramName]['type']) {
                     case 'bool':
-                        $fieldDefsDefaultValue = array_key_exists('default', $params[$paramName]) ? $params[$paramName]['default'] : false;
-
-                        $actualValue = array_key_exists($paramName, $actualFieldDefs) ? $actualFieldDefs[$paramName] : $fieldDefsDefaultValue;
-
-                        if (!Util::areValuesEqual($actualValue, $paramValue)) {
-                            $filteredFieldDefs[$paramName] = $paramValue;
-                        }
+                        $defaultParamValue = false;
                         break;
+                }
 
-                    default:
-                        if (!array_key_exists('default', $params[$paramName]) && !array_key_exists($paramName, $actualFieldDefs)) {
-                            $filteredFieldDefs[$paramName] = $paramValue;
-                            break;
-                        }
+                $actualValue = array_key_exists($paramName, $actualFieldDefs) ? $actualFieldDefs[$paramName] : $defaultParamValue;
 
-                        if (array_key_exists('default', $params[$paramName])) {
-                            $actualValue = $params[$paramName]['default'];
-                        }
+                if (!array_key_exists($paramName, $actualCustomFieldDefs) && !Util::areValuesEqual($actualValue, $paramValue)) {
+                    $filteredFieldDefs[$paramName] = $paramValue;
+                    continue;
+                }
 
-                        if (array_key_exists($paramName, $actualFieldDefs)) {
-                            $actualValue = $actualFieldDefs[$paramName];
-                        }
-
-                        if (!Util::areValuesEqual($actualValue, $paramValue)) {
-                            $filteredFieldDefs[$paramName] = $paramValue;
-                        }
-                        break;
+                if (array_key_exists($paramName, $actualCustomFieldDefs)) {
+                    $filteredFieldDefs[$paramName] = $paramValue;
                 }
             }
         }
@@ -593,7 +588,7 @@ class FieldManager
      * @param string $scope
      * @param string $fieldName
      * @param array $fieldDefs
-     * @return array
+     * @return object
      */
     protected function normalizeDefs($scope, $fieldName, array $fieldDefs)
     {

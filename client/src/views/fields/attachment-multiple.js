@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -58,6 +58,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
             'image/gif',
             'image/webp',
         ],
+
+        accept: null,
 
         validations: ['ready', 'required'],
 
@@ -141,7 +143,8 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
                 idValuesString: ids ? ids.join(',') : '',
                 nameHash: this.model.get(this.nameHashName),
                 foreignScope: this.foreignScope,
-                valueIsSet: this.model.has(this.idsName)
+                valueIsSet: this.model.has(this.idsName),
+                acceptAttribute: this.acceptAttribute,
             }, Dep.prototype.data.call(this));
 
             if (this.mode == 'edit') {
@@ -166,6 +169,14 @@ Espo.define('views/fields/attachment-multiple', 'views/fields/base', function (D
 
             if ('showPreviews' in this.params) {
                 this.showPreviews = this.params.showPreviews;
+            }
+
+            if ('accept' in this.params) {
+                this.accept = this.params.accept;
+            }
+
+            if (this.accept && this.accept.length) {
+                this.acceptAttribute = this.accept.join(', ');
             }
 
             var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};

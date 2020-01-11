@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -45,24 +45,31 @@ class Installer
 
     protected $isAuth = false;
 
-    protected $permissionMap;
-
     protected $permissionError;
 
     private $passwordHash;
 
-    protected $settingList = array(
+    protected $defaultSettings;
+
+    protected $permittedSettingList = array(
         'dateFormat',
         'timeFormat',
         'timeZone',
         'weekStart',
-        'defaultCurrency' => array(
-            'currencyList', 'defaultCurrency',
-        ),
-        'smtpSecurity',
+        'defaultCurrency',
         'language',
+        'thousandSeparator',
+        'decimalMark',
+        'smtpServer',
+        'smtpPort',
+        'smtpAuth',
+        'smtpSecurity',
+        'smtpUsername',
+        'smtpPassword',
+        'outboundEmailFromName',
+        'outboundEmailFromAddress',
+        'outboundEmailIsShared',
     );
-
 
     public function __construct()
     {
@@ -78,10 +85,6 @@ class Installer
 
         require_once('install/core/SystemHelper.php');
         $this->systemHelper = new SystemHelper();
-
-        $configPath = $this->getConfig()->getConfigPath();
-        $this->permissionMap = $this->getConfig()->get('permissionMap');
-        $this->permissionMap['writable'][] = $configPath;
 
         $this->databaseHelper = new \Espo\Core\Utils\Database\Helper($this->getConfig());
     }
@@ -189,15 +192,20 @@ class Installer
         return $this->language;
     }
 
-    public function getLanguageList()
+    public function getLanguageList($isTranslated = true)
     {
-        $config = $this->app->getContainer()->get('config');
+        $languageList = $this->app->getContainer()->get('config')->get('languageList');
 
-        $languageList = $config->get('languageList');
+        if ($isTranslated) {
+            return $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
+        }
 
-        $translated = $this->getLanguage()->translate('language', 'options', 'Global', $languageList);
+        return $languageList;
+    }
 
-        return $translated;
+    protected function getCurrencyList()
+    {
+        return $this->app->getMetadata()->get('app.currency.list');
     }
 
     public function getInstallerConfigData()
@@ -248,28 +256,33 @@ class Installer
      * @param  string $language
      * @return bool
      */
-    public function saveData($database, $language)
+    public function saveData(array $saveData)
     {
         $initData = include('install/core/afterInstall/config.php');
-        $siteUrl = $this->getSystemHelper()->getBaseUrl();
         $databaseDefaults = $this->app->getContainer()->get('config')->get('database');
 
-        $data = array(
-            'database' => array_merge($databaseDefaults, $database),
-            'language' => $language,
-            'siteUrl' => $siteUrl,
+        $data = [
+            'database' => array_merge($databaseDefaults, $saveData['database']),
+            'language' => $saveData['language'],
+            'siteUrl' => !empty($saveData['siteUrl']) ? $saveData['siteUrl'] : $this->getSystemHelper()->getBaseUrl(),
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
-            'cryptKey' => $this->getContainer()->get('crypt')->generateKey()
-        );
+            'cryptKey' => $this->getContainer()->get('crypt')->generateKey(),
+            'hashSecretKey' => \Espo\Core\Utils\Util::generateSecretKey(),
+        ];
 
-        $owner = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
-        $group = $this->getFileManager()->getPermissionUtils()->getDefaultGroup(true);
-
-        if (!empty($owner)) {
-            $data['defaultPermissions']['user'] = $owner;
+        if (empty($saveData['defaultPermissions']['user'])) {
+            $saveData['defaultPermissions']['user'] = $this->getFileManager()->getPermissionUtils()->getDefaultOwner(true);
         }
-        if (!empty($group)) {
-            $data['defaultPermissions']['group'] = $group;
+
+        if (empty($saveData['defaultPermissions']['group'])) {
+            $saveData['defaultPermissions']['group'] = $this->getFileManager()->getPermissionUtils()->getDefaultGroup(true);
+        }
+
+        if (!empty($saveData['defaultPermissions']['user'])) {
+            $data['defaultPermissions']['user'] = $saveData['defaultPermissions']['user'];
+        }
+        if (!empty($saveData['defaultPermissions']['group'])) {
+            $data['defaultPermissions']['group'] = $saveData['defaultPermissions']['group'];
         }
 
         $data = array_merge($data, $initData);
@@ -302,11 +315,13 @@ class Installer
         return $result;
     }
 
-    public function setPreferences($preferences)
+    public function savePreferences($preferences)
     {
-        $currencyList = $this->getConfig()->get('currencyList', array());
-        if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
+        $preferences = $this->normalizeSettingParams($preferences);
 
+        $currencyList = $this->getConfig()->get('currencyList', []);
+
+        if (isset($preferences['defaultCurrency']) && !in_array($preferences['defaultCurrency'], $currencyList)) {
             $preferences['currencyList'] = array($preferences['defaultCurrency']);
             $preferences['baseCurrency'] = $preferences['defaultCurrency'];
         }
@@ -318,7 +333,6 @@ class Installer
 
         return $res;
     }
-
 
     protected function createRecords()
     {
@@ -451,34 +465,76 @@ class Installer
         return $result;
     }
 
-    public function getSettingDefaults()
+    public function getDefaultSettings()
     {
-        $defaults = array();
+        if (!$this->defaultSettings) {
 
-        $settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');
+            $settingDefs = $this->app->getMetadata()->get('entityDefs.Settings.fields');
 
-        foreach ($this->settingList as $fieldName => $field) {
+            $defaults = array();
+            foreach ($this->permittedSettingList as $fieldName) {
 
-            if (is_array($field)) {
-                $fieldDefaults = array();
-                foreach ($field as $subField) {
-                    if (isset($settingDefs[$subField])) {
-                        $fieldDefaults = array_merge($fieldDefaults, $this->translateSetting($subField, $settingDefs[$subField]));
-                    }
+                if (!isset($settingDefs[$fieldName])) continue;
+
+                switch ($fieldName) {
+                    case 'defaultCurrency':
+                        $settingDefs['defaultCurrency']['options'] = $this->getCurrencyList();
+                        break;
+
+                    case 'language':
+                        $settingDefs['language']['options'] = $this->getLanguageList(false);
+                        break;
                 }
-                $defaults[$fieldName] = $fieldDefaults;
 
-            } else if (isset($settingDefs[$field])) {
+                $defaults[$fieldName] = $this->translateSetting($fieldName, $settingDefs[$fieldName]);
+            }
 
-                $defaults[$field] = $this->translateSetting($field, $settingDefs[$field]);
+            $this->defaultSettings = $defaults;
+        }
+
+        return $this->defaultSettings;
+    }
+
+    protected function normalizeSettingParams(array $params)
+    {
+        $defaultSettings = $this->getDefaultSettings();
+
+        $normalizedParams = [];
+        foreach ($params as $name => $value) {
+            if (!isset($defaultSettings[$name])) continue;
+
+            $paramDefs = $defaultSettings[$name];
+            $paramType = isset($paramDefs['type']) ? $paramDefs['type'] : 'varchar';
+
+            switch ($paramType) {
+                case 'enumInt':
+                    $value = (int) $value;
+
+                case 'enum':
+                    if (isset($paramDefs['options']) && array_key_exists($value, $paramDefs['options'])) {
+                        $normalizedParams[$name] = $value;
+                    } else if (array_key_exists('default', $paramDefs)) {
+                        $normalizedParams[$name] = $paramDefs['default'];
+                        $GLOBALS['log']->warning('Incorrect value ['. $value .'] for Settings parameter ['. $name .']. Use default value ['. $paramDefs['default'] .'].');
+                    }
+                    break;
+
+                case 'bool':
+                    $normalizedParams[$name] = (bool) $value;
+                    break;
+
+                case 'int':
+                    $normalizedParams[$name] = (int) $value;
+                    break;
+
+                case 'varchar':
+                default:
+                    $normalizedParams[$name] = $value;
+                    break;
             }
         }
 
-        if (isset($defaults['language'])) {
-            $defaults['language']['options'] = $this->getLanguageList();
-        }
-
-        return $defaults;
+        return $normalizedParams;
     }
 
     protected function translateSetting($name, array $settingDefs)

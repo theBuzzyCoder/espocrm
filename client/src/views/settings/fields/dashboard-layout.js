@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -66,7 +66,8 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
         data: function () {
             return {
                 dashboardLayout: this.dashboardLayout,
-                currentTab: this.currentTab
+                currentTab: this.currentTab,
+                isEmpty: this.isEmpty(),
             };
         },
 
@@ -364,10 +365,37 @@ Espo.define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib
             return options[optionName];
         },
 
+        isEmpty: function () {
+            var isEmpty = true
+
+            if (this.dashboardLayout && this.dashboardLayout.length) {
+                this.dashboardLayout.forEach(function (item) {
+                    if (item.layout && item.layout.length) {
+                        isEmpty = false;
+                    }
+                }, this);
+            }
+
+            return isEmpty;
+        },
+
+        validateRequired: function () {
+            if (!this.isRequired()) return;
+
+            if (this.isEmpty()) {
+                var msg = this.translate('fieldIsRequired', 'messages').replace('{field}', this.getLabelText());
+                this.showValidationMessage(msg);
+                return true;
+            }
+        },
+
         fetch: function () {
             var data = {};
+
             if (!this.dashboardLayout || !this.dashboardLayout.length) {
                 data[this.name] = null;
+                data['dashletsOptions'] = {};
+                return data;
             } else {
                 data[this.name] = Espo.Utils.cloneDeep(this.dashboardLayout);
             }

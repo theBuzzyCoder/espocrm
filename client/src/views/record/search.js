@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -307,7 +307,7 @@ define('views/record/search', 'view', function (Dep) {
                 this.$advancedFiltersPanel.removeClass('hidden');
             },
             'click .dropdown-menu a[data-action="savePreset"]': function (e) {
-                this.createView('savePreset', 'Modals.SaveFilters', {}, function (view) {
+                this.createView('savePreset', 'views/modals/save-filters', {}, function (view) {
                     view.render();
                     this.listenToOnce(view, 'save', function (name) {
                         this.savePreset(name);
@@ -619,8 +619,10 @@ define('views/record/search', 'view', function (Dep) {
         updateCollection: function () {
             this.collection.abortLastFetch();
             this.collection.reset();
-            this.notify('Please wait...');
             this.collection.where = this.searchManager.getWhere();
+
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
             this.collection.fetch().then(function () {
                 Espo.Ui.notify(false);
             });

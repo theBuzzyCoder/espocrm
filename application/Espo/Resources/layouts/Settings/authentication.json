@@ -11,5 +11,14 @@
         "rows": [
             [{"name": "auth2FA"}, {"name": "auth2FAMethodList"}]
         ]
+    },
+    {
+        "label": "Passwords",
+        "rows": [
+            [{"name": "passwordGenerateLength"}, false],
+            [{"name": "passwordStrengthLength"}, {"name": "passwordStrengthLetterCount"}],
+            [{"name": "passwordStrengthBothCases"}, {"name": "passwordStrengthNumberCount"}],
+            [{"name": "passwordRecoveryDisabled"}, {"name": "passwordRecoveryForAdminDisabled"}]
+        ]
     }
 ]

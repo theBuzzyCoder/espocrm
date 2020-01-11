@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/email-template/record/detail', 'views/record/detail', function (Dep) {
+define('views/email-template/record/detail', 'views/record/detail', function (Dep) {
 
     return Dep.extend({
 
@@ -35,6 +35,17 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
         setup: function () {
             Dep.prototype.setup.call(this);
             this.listenToInsertField();
+
+
+            this.hideField('insertField');
+
+            this.on('before:set-edit-mode', function () {
+                this.showField('insertField');
+            }, this);
+
+            this.on('before:set-detail-mode', function () {
+                this.hideField('insertField');
+            }, this);
         },
 
         listenToInsertField: function () {
@@ -45,6 +56,8 @@ Espo.define('views/email-template/record/detail', 'views/record/detail', functio
                 if (!bodyView) return;
 
                 if (this.model.get('isHtml')) {
+                    var $anchor = $(window.getSelection().anchorNode);
+                    if (!$anchor.closest('.note-editing-area').length) return;
                     bodyView.$summernote.summernote('insertText', tag);
                 } else {
                     var $body = bodyView.$element;

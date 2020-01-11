@@ -60,8 +60,8 @@
         "currencyList": {
             "type": "multiEnum",
             "default": ["USD", "EUR"],
-            "options": ["AED","ANG","ARS","AUD","BAM", "BGN","BHD","BND","BOB","BRL","BWP","CAD","CHF","CLP","CNY","COP","CRC","CZK","DKK","DOP","DZD","EEK","EGP","EUR","FJD","GBP","GNF","HKD","HNL","HRK","HUF","IDR","ILS","INR","IRR","JMD","JOD","JPY","KES","KRW","KWD","KYD","KZT","LBP","LKR","LTL","LVL","MAD","MDL","MKD","MMK","MUR","MXN","MYR","NAD","NGN","NIO","NOK","NPR","NZD","OMR","PEN","PGK","PHP","PKR","PLN","PYG","QAR","RON","RSD","RUB","SAR","SCR","SEK","SGD","SKK","SLL","SVC","THB","TND","TRY","TTD","TWD","TZS","UAH","UGX","USD","UYU","UZS","VND","YER","ZAR","ZMK"],
-            "required": true
+            "required": true,
+            "view": "views/settings/fields/currency-list"
         },
         "defaultCurrency": {
             "type": "enum",
@@ -101,19 +101,18 @@
             "type": "int",
             "min": 0,
             "max": 9999,
-            "default": 25
+            "default": 587
         },
         "smtpAuth": {
-            "type": "bool",
-            "default": true
+            "type": "bool"
         },
         "smtpSecurity": {
             "type": "enum",
+            "default": "TLS",
             "options": ["", "SSL", "TLS"]
         },
         "smtpUsername": {
-            "type": "varchar",
-            "required": true
+            "type": "varchar"
         },
         "smtpPassword": {
             "type": "password"
@@ -160,9 +159,38 @@
             "type": "multiEnum",
             "view": "views/settings/fields/auth-two-fa-method-list"
         },
-        "ldapHost": {
-            "type": "varchar",
+        "passwordRecoveryDisabled": {
+            "type": "bool"
+        },
+        "passwordRecoveryForAdminDisabled": {
+            "type": "bool"
+        },
+        "passwordGenerateLength": {
+            "type": "int",
+            "min": 6,
+            "max": 150,
             "required": true
+        },
+        "passwordStrengthLength": {
+            "type": "int",
+            "max": 150,
+            "min": 1
+        },
+        "passwordStrengthLetterCount": {
+            "type": "int",
+            "max": 150,
+            "min": 0
+        },
+        "passwordStrengthNumberCount": {
+            "type": "int",
+            "max": 150,
+            "min": 0
+        },
+        "passwordStrengthBothCases": {
+            "type": "bool"
+        },
+        "ldapHost": {
+            "type": "varchar"
         },
         "ldapPort": {
             "type": "varchar",
@@ -178,7 +206,6 @@
         },
         "ldapUsername": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapPassword": {
@@ -233,37 +260,30 @@
         },
         "ldapUserNameAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserObjectClass": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserFirstNameAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserLastNameAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserTitleAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserEmailAddressAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserPhoneNumberAttribute": {
             "type": "varchar",
-            "required": true,
             "tooltip": true
         },
         "ldapUserDefaultTeam": {
@@ -390,6 +410,10 @@
             "type": "int",
             "min": 1
         },
+        "massEmailVerp": {
+            "type": "bool",
+            "tooltip": true
+        },
         "authTokenLifetime": {
             "type": "float",
             "min": 0,
@@ -432,6 +456,15 @@
             "notStorable": true,
             "readOnly": true,
             "view": "views/settings/fields/address-preview"
+        },
+        "personNameFormat": {
+            "type": "enum",
+            "options": [
+                "firstLast",
+                "lastFirst",
+                "firstMiddleLast",
+                "lastFirstMiddle"
+            ]
         },
         "currencyFormat": {
             "type": "enumInt",

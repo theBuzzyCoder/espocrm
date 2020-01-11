@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -144,6 +144,7 @@ class Email extends \Espo\Core\Notificators\Base
             if (!$userId) continue;
             if ($userIdFrom === $userId) continue;
             if ($entity->getLinkMultipleColumn('users', 'inTrash', $userId)) continue;
+            if (!$this->isNotificationsEnabledForUser($userId)) return;
 
             if (!empty($options['isBeingImported']) || !empty($options['isJustSent'])) {
                 $folderId = $entity->getLinkMultipleColumn('users', 'folderId', $userId);

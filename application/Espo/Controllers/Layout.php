@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -39,11 +39,7 @@ class Layout extends \Espo\Core\Controllers\Base
 {
     public function actionRead($params, $data)
     {
-        $data = $this->getContainer()->get('layout')->get($params['scope'], $params['name']);
-        if (empty($data)) {
-            throw new NotFound("Layout " . $params['scope'] . ":" . $params['name'] . ' is not found.');
-        }
-        return $data;
+        return $this->getServiceFactory()->create('Layout')->getForFrontend($params['scope'], $params['name']);
     }
 
     public function actionUpdate($params, $data, $request)

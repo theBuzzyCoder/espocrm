@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model'], function (Dep, Model) {
+define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -66,6 +66,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
 
                 this.model.set('textFilterFields', this.getMetadata().get(['entityDefs', scope, 'collection', 'textFilterFields']) || ['name']);
                 this.model.set('fullTextSearch', this.getMetadata().get(['entityDefs', scope, 'collection', 'fullTextSearch']) || false);
+                this.model.set('countDisabled', this.getMetadata().get(['entityDefs', scope, 'collection', 'countDisabled']) || false);
 
                 this.model.set('statusField', this.getMetadata().get('scopes.' + scope + '.statusField') || null);
 
@@ -272,6 +273,16 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                     tooltip: true
                 });
 
+                this.createView('countDisabled', 'views/fields/bool', {
+                    model: model,
+                    mode: 'edit',
+                    el: this.options.el + ' .field[data-name="countDisabled"]',
+                    defs: {
+                        name: 'countDisabled'
+                    },
+                    tooltip: true,
+                });
+
                 this.createView('kanbanViewMode', 'views/fields/bool', {
                     model: model,
                     mode: 'edit',
@@ -381,6 +392,8 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
         toPlural: function (string) {
             if (string.slice(-1) == 'y') {
                 return string.substr(0, string.length - 1) + 'ies';
+            } else if (string.slice(-1) == 's') {
+                return string + 'es';
             } else {
                 return string + 's';
             }
@@ -523,6 +536,7 @@ Espo.define('views/admin/entity-manager/modals/edit-entity', ['views/modal', 'mo
                 disabled: this.model.get('disabled'),
                 textFilterFields: this.model.get('textFilterFields'),
                 fullTextSearch: this.model.get('fullTextSearch'),
+                countDisabled: this.model.get('countDisabled'),
                 statusField: this.model.get('statusField'),
                 iconClass: this.model.get('iconClass')
             };

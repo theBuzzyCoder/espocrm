@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
 
     protected $entityFactory;
 
-    protected function setUp()
+    protected function setUp() : void
     {
         $this->pdo = $this->createMock('MockPDO');
         $this->pdo
@@ -81,7 +81,7 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->account = new \Espo\Entities\Account();
     }
 
-    protected function tearDown()
+    protected function tearDown() : void
     {
         unset($this->query);
         unset($this->pdo);
@@ -303,6 +303,22 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT post.id AS `id`, post.name AS `name` FROM `post` " .
             "LEFT JOIN `note_table` AS `note` ON note.parent_id = post.id AND note.parent_type = 'Post' " .
+            "WHERE post.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+
+    public function testJoinOnlyMiddle()
+    {
+        $sql = $this->query->createSelectQuery('Post', [
+            'select' => ['id'],
+            'leftJoins' => [['tags', null, null, ['onlyMiddle' => true]]]
+        ]);
+
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "LEFT JOIN `post_tag` AS `tagsMiddle` ON post.id = tagsMiddle.post_id AND tagsMiddle.deleted = '0' " .
             "WHERE post.deleted = '0'";
 
         $this->assertEquals($expectedSql, $sql);
@@ -737,6 +753,17 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testFunction17()
+    {
+        $sql = $this->query->createSelectQuery('Comment', [
+            'select' => [["TIMESTAMPDIFF_YEAR:('2016-10-10', '2018-10-10')", 'test']],
+            'withDeleted' => true
+        ]);
+        $expectedSql =
+            "SELECT TIMESTAMPDIFF(YEAR, '2016-10-10', '2018-10-10') AS `test` FROM `comment`";
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testFunctionTZ1()
     {
         $sql = $this->query->createSelectQuery('Comment', [
@@ -886,6 +913,22 @@ class QueryTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
             "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) > '1' AND article.deleted = '0'";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testMatch6()
+    {
+        $sql = $this->query->createSelectQuery('Article', [
+            'select' => ['id', 'name'],
+            'whereClause' => [
+                'MATCH_NATURAL_LANGUAGE:(description,test)'
+            ]
+        ]);
+
+        $expectedSql =
+            "SELECT article.id AS `id`, article.name AS `name` FROM `article` " .
+            "WHERE MATCH (article.description) AGAINST ('test' IN NATURAL LANGUAGE MODE) AND article.deleted = '0'";
 
         $this->assertEquals($expectedSql, $sql);
     }

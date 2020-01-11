@@ -16,9 +16,18 @@
          "hidden": true
       },
       {
+         "name": "allowCustomOptions",
+         "type": "bool",
+         "hidden": true
+      },
+      {
          "name": "noEmptyString",
          "type": "bool",
          "default": false
+      },
+      {
+         "name": "displayAsList",
+         "type":"bool"
       },
       {
          "name": "maxCount",
@@ -35,8 +44,12 @@
       }
    ],
    "validationList": [
+      "array",
       "required",
       "maxCount"
+   ],
+   "mandatoryValidationList": [
+      "array"
    ],
    "filter": true,
    "notCreatable": false,
@@ -46,5 +59,6 @@
       "storeArrayValues": true
    },
    "translatedOptions": true,
+   "dynamicLogicOptions": true,
    "personalData": true
 }

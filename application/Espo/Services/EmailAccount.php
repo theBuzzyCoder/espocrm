@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -37,6 +37,8 @@ use \Zend\Mail\Storage;
 
 class EmailAccount extends Record
 {
+    protected $storageClassName = '\\Espo\\Core\\Mail\\Mail\\Storage\\Imap';
+
     const PORTION_LIMIT = 10;
 
     protected function init()
@@ -110,7 +112,6 @@ class EmailAccount extends Record
 
     protected function createStorage(array $params)
     {
-
         $emailAddress = $params['emailAddress'] ?? null;
         $userId = $params['userId'] ?? null;
 
@@ -151,7 +152,7 @@ class EmailAccount extends Record
             }
         }
 
-        $storage = new \Espo\Core\Mail\Mail\Storage\Imap($imapParams);
+        $storage = new $this->storageClassName($imapParams);
 
         return $storage;
     }
@@ -272,10 +273,6 @@ class EmailAccount extends Record
         }
 
         $parserName = 'MailMimeParser';
-        if ($this->getConfig()->get('emailParser')) {
-            $parserName = $this->getConfig()->get('emailParser');
-        }
-
         $parserClassName = '\\Espo\\Core\\Mail\\Parsers\\' . $parserName;
 
         $monitoredFoldersArr = explode(',', $monitoredFolders);
@@ -487,7 +484,7 @@ class EmailAccount extends Record
 
     public function getSmtpParamsFromAccount(\Espo\Entities\EmailAccount $emailAccount)
     {
-        $smtpParams = array();
+        $smtpParams = [];
         $smtpParams['server'] = $emailAccount->get('smtpHost');
         if ($smtpParams['server']) {
             $smtpParams['port'] = $emailAccount->get('smtpPort');
@@ -496,6 +493,7 @@ class EmailAccount extends Record
             if ($emailAccount->get('smtpAuth')) {
                 $smtpParams['username'] = $emailAccount->get('smtpUsername');
                 $smtpParams['password'] = $emailAccount->get('smtpPassword');
+                $smtpParams['smtpAuthMechanism'] = $emailAccount->get('smtpAuthMechanism');
             }
             if (array_key_exists('password', $smtpParams)) {
                 $smtpParams['password'] = $this->getCrypt()->decrypt($smtpParams['password']);

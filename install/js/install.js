@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -64,7 +64,7 @@ var InstallScript = function(opt) {
 			'break': true
 		},
 		{
-			'action': 'applySett',
+			'action': 'saveSettings',
 			'break': true
 		},
         {
@@ -79,6 +79,8 @@ var InstallScript = function(opt) {
 	];
 	this.checkIndex = 0;
 	this.checkError = false;
+
+    this.initSanitizeHtml();
 }
 
 InstallScript.prototype.main = function() {
@@ -254,7 +256,7 @@ InstallScript.prototype.step4 = function() {
 		}
 		var data = self.systemSettings;
 
-		data.action = 'setPreferences';
+		data.action = 'savePreferences';
 		$.ajax({
 			url: "index.php",
 			type: "POST",
@@ -285,14 +287,14 @@ InstallScript.prototype.step5 = function() {
 
 	$("#next").click(function(){
 		$(this).attr('disabled', 'disabled');
-		self.setEmailSett();
+		self.saveEmailSettings();
 		if (!self.validate()) {
 			$(this).removeAttr('disabled');
 			return;
 		}
 		var data = self.emailSettings;
 
-		data.action = 'setEmailSett';
+		data.action = 'saveEmailSettings';
 		$.ajax({
 			url: "index.php",
 			type: "POST",
@@ -382,7 +384,7 @@ InstallScript.prototype.setSystemSett = function() {
 	this.systemSettings.language = $('[name="language"]').val();
 }
 
-InstallScript.prototype.setEmailSett = function() {
+InstallScript.prototype.saveEmailSettings = function() {
 	this.emailSettings.smtpServer = $('[name="smtpServer"]').val();
 	this.emailSettings.smtpPort = $('[name="smtpPort"]').val();
 	this.emailSettings.smtpAuth = $('[name="smtpAuth"]').is(':checked');
@@ -542,15 +544,35 @@ InstallScript.prototype.getLang = function(key, type) {
 InstallScript.prototype.showMsg = function(opt) {
 	this.hideMsg();
 
-	var msg = opt.msg || '';
+	var message = opt.msg || '';
 	var error = opt.error || false;
-	$('#msg-box').html(msg);
-	$('#msg-box').removeClass('hide');
-	$('#msg-box').removeClass('alert-success');
-	$('#msg-box').removeClass('alert-danger');
 
-	if (error) $('#msg-box').addClass('alert-danger');
-	else $('#msg-box').addClass('alert-success');
+    if (message) {
+        message = this.sanitizeHtml(message);
+
+        $('#msg-box').html(message);
+        $('#msg-box').removeClass('hide');
+        $('#msg-box').removeClass('alert-success');
+        $('#msg-box').removeClass('alert-danger');
+    }
+
+	if (error) {
+        $('#msg-box').addClass('alert-danger');
+    } else {
+        $('#msg-box').addClass('alert-success');
+    }
+}
+
+InstallScript.prototype.initSanitizeHtml = function() {
+    DOMPurify.addHook('afterSanitizeAttributes', function(node) {
+        if ('target' in node) {
+            node.setAttribute('target','_blank');
+        }
+    });
+}
+
+InstallScript.prototype.sanitizeHtml = function(html) {
+	return DOMPurify.sanitize(html);
 }
 
 InstallScript.prototype.hideMsg = function() {
@@ -604,7 +626,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 		this.checkModRewrite();
 		return;
 	}
-	if (checkAction == 'applySett') {
+	if (checkAction == 'saveSettings') {
 		data['user-name'] = this.userSett.name;
 		data['user-pass'] = this.userSett.pass;
 	}
@@ -638,7 +660,7 @@ InstallScript.prototype.checkAction = function(dataMain) {
 			// break next checking
 			var ajaxData = {
 				'success': false,
-				'errorMsg': ['Ajax failed']
+				'errorMsg': [self.getLang('Ajax failed', 'messages')]
 			}
 			self.callbackChecking(ajaxData);
 		}

@@ -2,7 +2,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -26,13 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-Espo.define('views/fields/link-one', 'views/fields/link', function (Dep) {
+define('views/fields/link-one', 'views/fields/link', function (Dep) {
 
     return Dep.extend({
 
-        readOnly: true,
-
-        searchTypeList: ['is', 'isOneOf'],
+        searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isOneOf'],
 
         fetchSearch: function () {
             var type = this.$el.find('select.search-type').val();
@@ -46,12 +44,12 @@ Espo.define('views/fields/link-one', 'views/fields/link', function (Dep) {
                     data: {
                         type: type,
                         oneOfIdList: this.searchData.oneOfIdList,
-                        oneOfNameHash: this.searchData.oneOfNameHash
-                    }
+                        oneOfNameHash: this.searchData.oneOfNameHash,
+                    },
                 };
                 return data;
 
-            } else {
+            } else if (type == 'is' || !type) {
                 if (!value) {
                     return false;
                 }
@@ -61,8 +59,26 @@ Espo.define('views/fields/link-one', 'views/fields/link', function (Dep) {
                     value: value,
                     data: {
                         type: type,
-                        nameValue: this.$el.find('[data-name="' + this.nameName + '"]').val()
-                    }
+                        nameValue: this.$el.find('[data-name="' + this.nameName + '"]').val(),
+                    },
+                };
+                return data;
+
+            } else if (type === 'isEmpty') {
+                var data = {
+                    type: 'isNotLinked',
+                    data: {
+                        type: type,
+                    },
+                };
+                return data;
+
+            } else if (type === 'isNotEmpty') {
+                var data = {
+                    type: 'isLinked',
+                    data: {
+                        type: type,
+                    },
                 };
                 return data;
             }

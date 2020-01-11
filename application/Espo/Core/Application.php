@@ -3,7 +3,7 @@
  * This file is part of EspoCRM.
  *
  * EspoCRM - Open Source CRM application.
- * Copyright (C) 2014-2019 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
+ * Copyright (C) 2014-2020 Yuri Kuznetsov, Taras Machyshyn, Oleksiy Avramenko
  * Website: https://www.espocrm.com
  *
  * EspoCRM is free software: you can redistribute it and/or modify
@@ -48,6 +48,7 @@ class Application
         $GLOBALS['log'] = $this->getContainer()->get('log');
 
         $this->initAutoloads();
+        $this->initPreloads();
     }
 
     protected function initContainer()
@@ -181,7 +182,7 @@ class Application
                 }
             }
             $processList = array_values($processList);
-            if (count($runningCount) >= $maxProcessNumber) {
+            if ($runningCount >= $maxProcessNumber) {
                 $toSkip = true;
             }
             if (!$toSkip) {
@@ -344,6 +345,15 @@ class Application
     {
         $autoload = new \Espo\Core\Utils\Autoload($this->getConfig(), $this->getMetadata(), $this->getContainer()->get('fileManager'));
         $autoload->register();
+    }
+
+    protected function initPreloads()
+    {
+        foreach ($this->getMetadata()->get(['app', 'containerServices']) ?? [] as $name => $defs) {
+            if ($defs['preload'] ?? false) {
+                $this->getContainer()->get($name);
+            }
+        }
     }
 
     public function setBasePath($basePath)
