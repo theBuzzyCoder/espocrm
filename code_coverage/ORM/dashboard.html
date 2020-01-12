@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/karthik/espocrm/application/Espo/ORM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../index.html">/home/karthik/espocrm/application/Espo</a></li>
+         <li class="breadcrumb-item"><a href="index.html">ORM</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="DB/Mapper.php.html#43">Espo\ORM\DB\Mapper</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/MysqlMapper.php.html#40">Espo\ORM\DB\MysqlMapper</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#38">Espo\ORM\DB\Query\Base</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Mysql.php.html#37">Espo\ORM\DB\Query\Mysql</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#32">Espo\ORM\EntityCollection</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityFactory.php.html#32">Espo\ORM\EntityFactory</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#34">Espo\ORM\EntityManager</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#32">Espo\ORM\Metadata</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#39">Espo\ORM\Repositories\RDB</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repository.php.html#32">Espo\ORM\Repository</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="RepositoryFactory.php.html#32">Espo\ORM\RepositoryFactory</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Sth2Collection.php.html#32">Espo\ORM\Sth2Collection</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#32">Espo\ORM\SthCollection</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#32">Espo\ORM\Entity</a></td><td class="text-right">23%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="DB/Query/Base.php.html#38">Espo\ORM\DB\Query\Base</a></td><td class="text-right">214832</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#43">Espo\ORM\DB\Mapper</a></td><td class="text-right">56406</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#39">Espo\ORM\Repositories\RDB</a></td><td class="text-right">19182</td></tr>
+       <tr><td><a href="Entity.php.html#32">Espo\ORM\Entity</a></td><td class="text-right">9983</td></tr>
+       <tr><td><a href="EntityCollection.php.html#32">Espo\ORM\EntityCollection</a></td><td class="text-right">3782</td></tr>
+       <tr><td><a href="EntityManager.php.html#34">Espo\ORM\EntityManager</a></td><td class="text-right">2352</td></tr>
+       <tr><td><a href="SthCollection.php.html#32">Espo\ORM\SthCollection</a></td><td class="text-right">552</td></tr>
+       <tr><td><a href="Metadata.php.html#32">Espo\ORM\Metadata</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="RepositoryFactory.php.html#32">Espo\ORM\RepositoryFactory</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="EntityFactory.php.html#32">Espo\ORM\EntityFactory</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="DB/Query/Mysql.php.html#37">Espo\ORM\DB\Query\Mysql</a></td><td class="text-right">12</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="DB/Mapper.php.html#63"><abbr title="Espo\ORM\DB\Mapper::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#82"><abbr title="Espo\ORM\Repositories\RDB::handleSelectParams">handleSelectParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#229"><abbr title="Espo\ORM\EntityManager::getPDO">getPDO</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#237"><abbr title="Espo\ORM\EntityManager::normalizeRepositoryName">normalizeRepositoryName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#242"><abbr title="Espo\ORM\EntityManager::normalizeEntityName">normalizeEntityName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#247"><abbr title="Espo\ORM\EntityManager::createCollection">createCollection</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#253"><abbr title="Espo\ORM\EntityManager::createSthCollection">createSthCollection</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#258"><abbr title="Espo\ORM\EntityManager::getEntityFactory">getEntityFactory</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#263"><abbr title="Espo\ORM\EntityManager::runQuery">runQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#278"><abbr title="Espo\ORM\EntityManager::init">init</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#36"><abbr title="Espo\ORM\Metadata::setData">setData</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#41"><abbr title="Espo\ORM\Metadata::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Metadata.php.html#52"><abbr title="Espo\ORM\Metadata::has">has</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#63"><abbr title="Espo\ORM\Repositories\RDB::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#74"><abbr title="Espo\ORM\Repositories\RDB::getMapper">getMapper</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#86"><abbr title="Espo\ORM\Repositories\RDB::getEntityFactory">getEntityFactory</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#219"><abbr title="Espo\ORM\EntityManager::getMetadata">getMetadata</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#91"><abbr title="Espo\ORM\Repositories\RDB::getEntityManager">getEntityManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#96"><abbr title="Espo\ORM\Repositories\RDB::reset">reset</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#103"><abbr title="Espo\ORM\Repositories\RDB::getNew">getNew</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#113"><abbr title="Espo\ORM\Repositories\RDB::getById">getById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#125"><abbr title="Espo\ORM\Repositories\RDB::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#133"><abbr title="Espo\ORM\Repositories\RDB::beforeSave">beforeSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#137"><abbr title="Espo\ORM\Repositories\RDB::afterSave">afterSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#141"><abbr title="Espo\ORM\Repositories\RDB::save">save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#173"><abbr title="Espo\ORM\Repositories\RDB::restoreDeleted">restoreDeleted</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#178"><abbr title="Espo\ORM\Repositories\RDB::beforeRemove">beforeRemove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#182"><abbr title="Espo\ORM\Repositories\RDB::afterRemove">afterRemove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#186"><abbr title="Espo\ORM\Repositories\RDB::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#196"><abbr title="Espo\ORM\Repositories\RDB::deleteFromDb">deleteFromDb</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#224"><abbr title="Espo\ORM\EntityManager::getOrmMetadata">getOrmMetadata</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#214"><abbr title="Espo\ORM\EntityManager::hasRepository">hasRepository</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#225"><abbr title="Espo\ORM\Repositories\RDB::findOne">findOne</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#262"><abbr title="Espo\ORM\EntityCollection::setAsFetched">setAsFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#130"><abbr title="Espo\ORM\EntityCollection::count">count</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#135"><abbr title="Espo\ORM\EntityCollection::seek">seek</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#143"><abbr title="Espo\ORM\EntityCollection::append">append</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#148"><abbr title="Espo\ORM\EntityCollection::getEntityByOffset">getEntityByOffset</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#163"><abbr title="Espo\ORM\EntityCollection::buildEntityFromArray">buildEntityFromArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#175"><abbr title="Espo\ORM\EntityCollection::getEntityType">getEntityType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#180"><abbr title="Espo\ORM\EntityCollection::getEntityName">getEntityName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#185"><abbr title="Espo\ORM\EntityCollection::getDataList">getDataList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#190"><abbr title="Espo\ORM\EntityCollection::merge">merge</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#202"><abbr title="Espo\ORM\EntityCollection::contains">contains</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#210"><abbr title="Espo\ORM\EntityCollection::indexOf">indexOf</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#243"><abbr title="Espo\ORM\EntityCollection::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#257"><abbr title="Espo\ORM\EntityCollection::getValueMapList">getValueMapList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#267"><abbr title="Espo\ORM\EntityCollection::setAsNotFetched">setAsNotFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#209"><abbr title="Espo\ORM\EntityManager::setMetadata">setMetadata</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#272"><abbr title="Espo\ORM\EntityCollection::isFetched">isFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityFactory.php.html#38"><abbr title="Espo\ORM\EntityFactory::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityFactory.php.html#43"><abbr title="Espo\ORM\EntityFactory::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#59"><abbr title="Espo\ORM\EntityManager::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#95"><abbr title="Espo\ORM\EntityManager::getQuery">getQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#105"><abbr title="Espo\ORM\EntityManager::getMapperClassName">getMapperClassName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#119"><abbr title="Espo\ORM\EntityManager::getMapper">getMapper</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#133"><abbr title="Espo\ORM\EntityManager::initPDO">initPDO</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#162"><abbr title="Espo\ORM\EntityManager::getEntity">getEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#171"><abbr title="Espo\ORM\EntityManager::saveEntity">saveEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#177"><abbr title="Espo\ORM\EntityManager::removeEntity">removeEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#183"><abbr title="Espo\ORM\EntityManager::createEntity">createEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#191"><abbr title="Espo\ORM\EntityManager::fetchEntity">fetchEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityManager.php.html#197"><abbr title="Espo\ORM\EntityManager::getRepository">getRepository</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#201"><abbr title="Espo\ORM\Repositories\RDB::find">find</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#234"><abbr title="Espo\ORM\Repositories\RDB::findByQuery">findByQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#112"><abbr title="Espo\ORM\EntityCollection::offsetSet">offsetSet</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#46"><abbr title="Espo\ORM\SthCollection::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#667"><abbr title="Espo\ORM\Repositories\RDB::isTableLocked">isTableLocked</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repository.php.html#60"><abbr title="Espo\ORM\Repository::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repository.php.html#69"><abbr title="Espo\ORM\Repository::getEntityFactory">getEntityFactory</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repository.php.html#74"><abbr title="Espo\ORM\Repository::getEntityManager">getEntityManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repository.php.html#79"><abbr title="Espo\ORM\Repository::getEntityType">getEntityType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="RepositoryFactory.php.html#40"><abbr title="Espo\ORM\RepositoryFactory::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="RepositoryFactory.php.html#46"><abbr title="Espo\ORM\RepositoryFactory::create">create</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="RepositoryFactory.php.html#58"><abbr title="Espo\ORM\RepositoryFactory::normalizeName">normalizeName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="RepositoryFactory.php.html#63"><abbr title="Espo\ORM\RepositoryFactory::setDefaultRepositoryClassName">setDefaultRepositoryClassName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Sth2Collection.php.html#34"><abbr title="Espo\ORM\Sth2Collection::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Sth2Collection.php.html#44"><abbr title="Espo\ORM\Sth2Collection::getQuery">getQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Sth2Collection.php.html#49"><abbr title="Espo\ORM\Sth2Collection::getPdo">getPdo</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Sth2Collection.php.html#54"><abbr title="Espo\ORM\Sth2Collection::getEntityFactory">getEntityFactory</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#53"><abbr title="Espo\ORM\SthCollection::getQuery">getQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#653"><abbr title="Espo\ORM\Repositories\RDB::lockTable">lockTable</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#58"><abbr title="Espo\ORM\SthCollection::getPdo">getPdo</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#63"><abbr title="Espo\ORM\SthCollection::getEntityFactory">getEntityFactory</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#68"><abbr title="Espo\ORM\SthCollection::setSelectParams">setSelectParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#73"><abbr title="Espo\ORM\SthCollection::setQuery">setQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#78"><abbr title="Espo\ORM\SthCollection::executeQuery">executeQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#91"><abbr title="Espo\ORM\SthCollection::getIterator">getIterator</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#107"><abbr title="Espo\ORM\SthCollection::fetchRow">fetchRow</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#115"><abbr title="Espo\ORM\SthCollection::prepareEntity">prepareEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#119"><abbr title="Espo\ORM\SthCollection::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#133"><abbr title="Espo\ORM\SthCollection::getValueMapList">getValueMapList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#139"><abbr title="Espo\ORM\SthCollection::setAsFetched">setAsFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#144"><abbr title="Espo\ORM\SthCollection::setAsNotFetched">setAsNotFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#149"><abbr title="Espo\ORM\SthCollection::isFetched">isFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#661"><abbr title="Espo\ORM\Repositories\RDB::unlockTable">unlockTable</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#648"><abbr title="Espo\ORM\Repositories\RDB::getPDO">getPDO</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#250"><abbr title="Espo\ORM\Repositories\RDB::findRelated">findRelated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#463"><abbr title="Espo\ORM\Repositories\RDB::getAll">getAll</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#285"><abbr title="Espo\ORM\Repositories\RDB::countRelated">countRelated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#298"><abbr title="Espo\ORM\Repositories\RDB::isRelated">isRelated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#321"><abbr title="Espo\ORM\Repositories\RDB::relate">relate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#362"><abbr title="Espo\ORM\Repositories\RDB::unrelate">unrelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#401"><abbr title="Espo\ORM\Repositories\RDB::getRelationColumn">getRelationColumn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#406"><abbr title="Espo\ORM\Repositories\RDB::beforeRelate">beforeRelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#410"><abbr title="Espo\ORM\Repositories\RDB::afterRelate">afterRelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#414"><abbr title="Espo\ORM\Repositories\RDB::beforeUnrelate">beforeUnrelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#418"><abbr title="Espo\ORM\Repositories\RDB::afterUnrelate">afterUnrelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#422"><abbr title="Espo\ORM\Repositories\RDB::beforeMassRelate">beforeMassRelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#426"><abbr title="Espo\ORM\Repositories\RDB::afterMassRelate">afterMassRelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#430"><abbr title="Espo\ORM\Repositories\RDB::updateRelation">updateRelation</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#449"><abbr title="Espo\ORM\Repositories\RDB::massRelate">massRelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#469"><abbr title="Espo\ORM\Repositories\RDB::count">count</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#612"><abbr title="Espo\ORM\Repositories\RDB::getSelectParams">getSelectParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#481"><abbr title="Espo\ORM\Repositories\RDB::max">max</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#487"><abbr title="Espo\ORM\Repositories\RDB::min">min</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#493"><abbr title="Espo\ORM\Repositories\RDB::sum">sum</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#499"><abbr title="Espo\ORM\Repositories\RDB::join">join</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#520"><abbr title="Espo\ORM\Repositories\RDB::leftJoin">leftJoin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#541"><abbr title="Espo\ORM\Repositories\RDB::distinct">distinct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#547"><abbr title="Espo\ORM\Repositories\RDB::where">where</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#561"><abbr title="Espo\ORM\Repositories\RDB::having">having</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#574"><abbr title="Espo\ORM\Repositories\RDB::order">order</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#582"><abbr title="Espo\ORM\Repositories\RDB::limit">limit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#590"><abbr title="Espo\ORM\Repositories\RDB::select">select</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#596"><abbr title="Espo\ORM\Repositories\RDB::groupBy">groupBy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#602"><abbr title="Espo\ORM\Repositories\RDB::setListParams">setListParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#607"><abbr title="Espo\ORM\Repositories\RDB::getListParams">getListParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#125"><abbr title="Espo\ORM\EntityCollection::offsetUnset">offsetUnset</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#104"><abbr title="Espo\ORM\EntityCollection::offsetGet">offsetGet</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#70"><abbr title="Espo\ORM\DB\Mapper::selectById">selectById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#836"><abbr title="Espo\ORM\DB\Query\Base::getFunctionArgumentPart">getFunctionArgumentPart</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/MysqlMapper.php.html#42"><abbr title="Espo\ORM\DB\MysqlMapper::toDb">toDb</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#268"><abbr title="Espo\ORM\DB\Query\Base::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#275"><abbr title="Espo\ORM\DB\Query\Base::getSeed">getSeed</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#283"><abbr title="Espo\ORM\DB\Query\Base::createSelectQuery">createSelectQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#455"><abbr title="Espo\ORM\DB\Query\Base::getFunctionPart">getFunctionPart</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#594"><abbr title="Espo\ORM\DB\Query\Base::getFunctionPartTZ">getFunctionPartTZ</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#619"><abbr title="Espo\ORM\DB\Query\Base::convertMatchExpression">convertMatchExpression</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#674"><abbr title="Espo\ORM\DB\Query\Base::convertComplexExpression">convertComplexExpression</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#722"><abbr title="Espo\ORM\DB\Query\Base::getAllAttributesFromComplexExpression">getAllAttributesFromComplexExpression</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#755"><abbr title="Espo\ORM\DB\Query\Base::parseArgumentListFromFunctionContent">parseArgumentListFromFunctionContent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#818"><abbr title="Espo\ORM\DB\Query\Base::isArgumentString">isArgumentString</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#826"><abbr title="Espo\ORM\DB\Query\Base::isArgumentNumeric">isArgumentNumeric</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#831"><abbr title="Espo\ORM\DB\Query\Base::isArgumentBoolOrNull">isArgumentBoolOrNull</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#901"><abbr title="Espo\ORM\DB\Query\Base::getAttributeSql">getAttributeSql</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1134"><abbr title="Espo\ORM\DB\Mapper::setReturnCollection">setReturnCollection</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#962"><abbr title="Espo\ORM\DB\Query\Base::getSelect">getSelect</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1064"><abbr title="Espo\ORM\DB\Query\Base::getBelongsToJoin">getBelongsToJoin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1086"><abbr title="Espo\ORM\DB\Query\Base::getBelongsToJoins">getBelongsToJoins</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1129"><abbr title="Espo\ORM\DB\Query\Base::getOrderPart">getOrderPart</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1199"><abbr title="Espo\ORM\DB\Query\Base::getOrder">getOrder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1207"><abbr title="Espo\ORM\DB\Query\Base::order">order</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1216"><abbr title="Espo\ORM\DB\Query\Base::getFieldPathForOrderBy">getFieldPathForOrderBy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1231"><abbr title="Espo\ORM\DB\Query\Base::getAggregationSelect">getAggregationSelect</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1248"><abbr title="Espo\ORM\DB\Query\Base::quote">quote</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1259"><abbr title="Espo\ORM\DB\Query\Base::toDb">toDb</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1273"><abbr title="Espo\ORM\DB\Query\Base::toDbConversion">toDbConversion</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1278"><abbr title="Espo\ORM\DB\Query\Base::getAlias">getAlias</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1291"><abbr title="Espo\ORM\DB\Query\Base::getTableAliases">getTableAliases</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1139"><abbr title="Espo\ORM\DB\Mapper::setCollectionClass">setCollectionClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1125"><abbr title="Espo\ORM\DB\Mapper::composeUpdateQuery">composeUpdateQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1369"><abbr title="Espo\ORM\DB\Query\Base::getWhere">getWhere</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#441"><abbr title="Espo\ORM\DB\Mapper::getRelationColumn">getRelationColumn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#94"><abbr title="Espo\ORM\DB\Mapper::count">count</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#99"><abbr title="Espo\ORM\DB\Mapper::max">max</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#104"><abbr title="Espo\ORM\DB\Mapper::min">min</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#109"><abbr title="Espo\ORM\DB\Mapper::sum">sum</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#114"><abbr title="Espo\ORM\DB\Mapper::select">select</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#121"><abbr title="Espo\ORM\DB\Mapper::selectByQuery">selectByQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#147"><abbr title="Espo\ORM\DB\Mapper::createSthCollection">createSthCollection</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#152"><abbr title="Espo\ORM\DB\Mapper::aggregate">aggregate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#175"><abbr title="Espo\ORM\DB\Mapper::selectRelated">selectRelated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#377"><abbr title="Espo\ORM\DB\Mapper::countRelated">countRelated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#382"><abbr title="Espo\ORM\DB\Mapper::relate">relate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#387"><abbr title="Espo\ORM\DB\Mapper::unrelate">unrelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#392"><abbr title="Espo\ORM\DB\Mapper::updateRelation">updateRelation</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#494"><abbr title="Espo\ORM\DB\Mapper::massRelate">massRelate</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1112"><abbr title="Espo\ORM\DB\Mapper::composeInsertQuery">composeInsertQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#562"><abbr title="Espo\ORM\DB\Mapper::runQuery">runQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#577"><abbr title="Espo\ORM\DB\Mapper::addRelation">addRelation</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#777"><abbr title="Espo\ORM\DB\Mapper::removeRelation">removeRelation</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#916"><abbr title="Espo\ORM\DB\Mapper::removeAllRelations">removeAllRelations</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#921"><abbr title="Espo\ORM\DB\Mapper::quote">quote</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#932"><abbr title="Espo\ORM\DB\Mapper::insert">insert</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#959"><abbr title="Espo\ORM\DB\Mapper::update">update</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1000"><abbr title="Espo\ORM\DB\Mapper::prepareValueForInsert">prepareValueForInsert</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1013"><abbr title="Espo\ORM\DB\Mapper::deleteFromDb">deleteFromDb</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1029"><abbr title="Espo\ORM\DB\Mapper::restoreDeleted">restoreDeleted</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1042"><abbr title="Espo\ORM\DB\Mapper::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1048"><abbr title="Espo\ORM\DB\Mapper::toValueMap">toValueMap</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1069"><abbr title="Espo\ORM\DB\Mapper::fromRow">fromRow</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1075"><abbr title="Espo\ORM\DB\Mapper::getMMJoin">getMMJoin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1320"><abbr title="Espo\ORM\DB\Query\Base::getFieldPath">getFieldPath</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1616"><abbr title="Espo\ORM\DB\Query\Base::obtainJoinAlias">obtainJoinAlias</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#99"><abbr title="Espo\ORM\EntityCollection::offsetExists">offsetExists</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#502"><abbr title="Espo\ORM\Entity::setAsNotFetched">setAsNotFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#345"><abbr title="Espo\ORM\Entity::getRelationType">getRelationType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#353"><abbr title="Espo\ORM\Entity::getAttributeParam">getAttributeParam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#361"><abbr title="Espo\ORM\Entity::getRelationParam">getRelationParam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#369"><abbr title="Espo\ORM\Entity::isFetched">isFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#374"><abbr title="Espo\ORM\Entity::isFieldChanged">isFieldChanged</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#379"><abbr title="Espo\ORM\Entity::isAttributeChanged">isAttributeChanged</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#394"><abbr title="Espo\ORM\Entity::areValuesEqual">areValuesEqual</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#449"><abbr title="Espo\ORM\Entity::setFetched">setFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#463"><abbr title="Espo\ORM\Entity::getFetched">getFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#474"><abbr title="Espo\ORM\Entity::hasFetched">hasFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#482"><abbr title="Espo\ORM\Entity::resetFetchedValues">resetFetchedValues</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#487"><abbr title="Espo\ORM\Entity::updateFetchedValues">updateFetchedValues</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#496"><abbr title="Espo\ORM\Entity::setAsFetched">setAsFetched</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#508"><abbr title="Espo\ORM\Entity::isBeingSaved">isBeingSaved</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#332"><abbr title="Espo\ORM\Entity::getRelations">getRelations</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#513"><abbr title="Espo\ORM\Entity::setAsBeingSaved">setAsBeingSaved</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#518"><abbr title="Espo\ORM\Entity::setAsNotBeingSaved">setAsNotBeingSaved</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#523"><abbr title="Espo\ORM\Entity::populateDefaults">populateDefaults</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#532"><abbr title="Espo\ORM\Entity::getEntityManager">getEntityManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#537"><abbr title="Espo\ORM\Entity::cloneArray">cloneArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#553"><abbr title="Espo\ORM\Entity::cloneObject">cloneObject</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#44"><abbr title="Espo\ORM\EntityCollection::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#51"><abbr title="Espo\ORM\EntityCollection::rewind">rewind</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#60"><abbr title="Espo\ORM\EntityCollection::current">current</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#65"><abbr title="Espo\ORM\EntityCollection::key">key</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#70"><abbr title="Espo\ORM\EntityCollection::next">next</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#81"><abbr title="Espo\ORM\EntityCollection::getLastValidKey">getLastValidKey</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EntityCollection.php.html#94"><abbr title="Espo\ORM\EntityCollection::valid">valid</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#337"><abbr title="Espo\ORM\Entity::getAttributeType">getAttributeType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#322"><abbr title="Espo\ORM\Entity::getFields">getFields</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1633"><abbr title="Espo\ORM\DB\Query\Base::stringifyValue">stringifyValue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#316"><abbr title="Espo\ORM\Entity::getValueMap">getValueMap</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1647"><abbr title="Espo\ORM\DB\Query\Base::sanitize">sanitize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1652"><abbr title="Espo\ORM\DB\Query\Base::sanitizeSelectAlias">sanitizeSelectAlias</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1659"><abbr title="Espo\ORM\DB\Query\Base::sanitizeSelectItem">sanitizeSelectItem</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1664"><abbr title="Espo\ORM\DB\Query\Base::sanitizeIndexName">sanitizeIndexName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1669"><abbr title="Espo\ORM\DB\Query\Base::getJoins">getJoins</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1707"><abbr title="Espo\ORM\DB\Query\Base::buildJoinConditionsStatement">buildJoinConditionsStatement</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1722"><abbr title="Espo\ORM\DB\Query\Base::buildJoinConditionStatement">buildJoinConditionStatement</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1816"><abbr title="Espo\ORM\DB\Query\Base::getJoin">getJoin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1973"><abbr title="Espo\ORM\DB\Query\Base::composeSelectQuery">composeSelectQuery</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#2033"><abbr title="Espo\ORM\DB\Query\Base::getKeys">getKeys</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="DB/Query/Mysql.php.html#39"><abbr title="Espo\ORM\DB\Query\Mysql::limit">limit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#84"><abbr title="Espo\ORM\Entity::clear">clear</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#92"><abbr title="Espo\ORM\Entity::reset">reset</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="SthCollection.php.html#154"><abbr title="Espo\ORM\SthCollection::getEntityType">getEntityType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#238"><abbr title="Espo\ORM\Entity::isNew">isNew</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#243"><abbr title="Espo\ORM\Entity::setIsNew">setIsNew</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#248"><abbr title="Espo\ORM\Entity::isSaved">isSaved</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#253"><abbr title="Espo\ORM\Entity::setIsSaved">setIsSaved</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#258"><abbr title="Espo\ORM\Entity::getEntityName">getEntityName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#263"><abbr title="Espo\ORM\Entity::getEntityType">getEntityType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#268"><abbr title="Espo\ORM\Entity::hasField">hasField</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#283"><abbr title="Espo\ORM\Entity::getAttributeList">getAttributeList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#288"><abbr title="Espo\ORM\Entity::getRelationList">getRelationList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#293"><abbr title="Espo\ORM\Entity::getValues">getValues</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#298"><abbr title="Espo\ORM\Entity::toArray">toArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Entity.php.html#102"><abbr title="Espo\ORM\Entity::set">set</abbr></a></td><td class="text-right">35%</td></tr>
+       <tr><td><a href="Entity.php.html#167"><abbr title="Espo\ORM\Entity::populateFromArray">populateFromArray</abbr></a></td><td class="text-right">51%</td></tr>
+       <tr><td><a href="Entity.php.html#129"><abbr title="Espo\ORM\Entity::get">get</abbr></a></td><td class="text-right">72%</td></tr>
+       <tr><td><a href="Entity.php.html#151"><abbr title="Espo\ORM\Entity::has">has</abbr></a></td><td class="text-right">87%</td></tr>
+       <tr><td><a href="Entity.php.html#66"><abbr title="Espo\ORM\Entity::__construct">__construct</abbr></a></td><td class="text-right">88%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="DB/Query/Base.php.html#1369"><abbr title="Espo\ORM\DB\Query\Base::getWhere">getWhere</abbr></a></td><td class="text-right">4970</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#283"><abbr title="Espo\ORM\DB\Query\Base::createSelectQuery">createSelectQuery</abbr></a></td><td class="text-right">2256</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#577"><abbr title="Espo\ORM\DB\Mapper::addRelation">addRelation</abbr></a></td><td class="text-right">1980</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#175"><abbr title="Espo\ORM\DB\Mapper::selectRelated">selectRelated</abbr></a></td><td class="text-right">1892</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#455"><abbr title="Espo\ORM\DB\Query\Base::getFunctionPart">getFunctionPart</abbr></a></td><td class="text-right">1892</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1816"><abbr title="Espo\ORM\DB\Query\Base::getJoin">getJoin</abbr></a></td><td class="text-right">930</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#777"><abbr title="Espo\ORM\DB\Mapper::removeRelation">removeRelation</abbr></a></td><td class="text-right">812</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#962"><abbr title="Espo\ORM\DB\Query\Base::getSelect">getSelect</abbr></a></td><td class="text-right">756</td></tr>
+       <tr><td><a href="Entity.php.html#394"><abbr title="Espo\ORM\Entity::areValuesEqual">areValuesEqual</abbr></a></td><td class="text-right">552</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#755"><abbr title="Espo\ORM\DB\Query\Base::parseArgumentListFromFunctionContent">parseArgumentListFromFunctionContent</abbr></a></td><td class="text-right">462</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1722"><abbr title="Espo\ORM\DB\Query\Base::buildJoinConditionStatement">buildJoinConditionStatement</abbr></a></td><td class="text-right">462</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1129"><abbr title="Espo\ORM\DB\Query\Base::getOrderPart">getOrderPart</abbr></a></td><td class="text-right">342</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#2033"><abbr title="Espo\ORM\DB\Query\Base::getKeys">getKeys</abbr></a></td><td class="text-right">342</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#901"><abbr title="Espo\ORM\DB\Query\Base::getAttributeSql">getAttributeSql</abbr></a></td><td class="text-right">306</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#836"><abbr title="Espo\ORM\DB\Query\Base::getFunctionArgumentPart">getFunctionArgumentPart</abbr></a></td><td class="text-right">240</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1086"><abbr title="Espo\ORM\DB\Query\Base::getBelongsToJoins">getBelongsToJoins</abbr></a></td><td class="text-right">210</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#494"><abbr title="Espo\ORM\DB\Mapper::massRelate">massRelate</abbr></a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="EntityCollection.php.html#210"><abbr title="Espo\ORM\EntityCollection::indexOf">indexOf</abbr></a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1973"><abbr title="Espo\ORM\DB\Query\Base::composeSelectQuery">composeSelectQuery</abbr></a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#392"><abbr title="Espo\ORM\DB\Mapper::updateRelation">updateRelation</abbr></a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#141"><abbr title="Espo\ORM\Repositories\RDB::save">save</abbr></a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#612"><abbr title="Espo\ORM\Repositories\RDB::getSelectParams">getSelectParams</abbr></a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#619"><abbr title="Espo\ORM\DB\Query\Base::convertMatchExpression">convertMatchExpression</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1320"><abbr title="Espo\ORM\DB\Query\Base::getFieldPath">getFieldPath</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#674"><abbr title="Espo\ORM\DB\Query\Base::convertComplexExpression">convertComplexExpression</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Entity.php.html#167"><abbr title="Espo\ORM\Entity::populateFromArray">populateFromArray</abbr></a></td><td class="text-right">105</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#722"><abbr title="Espo\ORM\DB\Query\Base::getAllAttributesFromComplexExpression">getAllAttributesFromComplexExpression</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#321"><abbr title="Espo\ORM\Repositories\RDB::relate">relate</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1669"><abbr title="Espo\ORM\DB\Query\Base::getJoins">getJoins</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1048"><abbr title="Espo\ORM\DB\Mapper::toValueMap">toValueMap</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#362"><abbr title="Espo\ORM\Repositories\RDB::unrelate">unrelate</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#441"><abbr title="Espo\ORM\DB\Mapper::getRelationColumn">getRelationColumn</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#250"><abbr title="Espo\ORM\Repositories\RDB::findRelated">findRelated</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#594"><abbr title="Espo\ORM\DB\Query\Base::getFunctionPartTZ">getFunctionPartTZ</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1000"><abbr title="Espo\ORM\DB\Mapper::prepareValueForInsert">prepareValueForInsert</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#959"><abbr title="Espo\ORM\DB\Mapper::update">update</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="EntityManager.php.html#133"><abbr title="Espo\ORM\EntityManager::initPDO">initPDO</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="EntityManager.php.html#59"><abbr title="Espo\ORM\EntityManager::__construct">__construct</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1291"><abbr title="Espo\ORM\DB\Query\Base::getTableAliases">getTableAliases</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Entity.php.html#553"><abbr title="Espo\ORM\Entity::cloneObject">cloneObject</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#70"><abbr title="Espo\ORM\DB\Mapper::selectById">selectById</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#152"><abbr title="Espo\ORM\DB\Mapper::aggregate">aggregate</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Entity.php.html#102"><abbr title="Espo\ORM\Entity::set">set</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#520"><abbr title="Espo\ORM\Repositories\RDB::leftJoin">leftJoin</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#430"><abbr title="Espo\ORM\Repositories\RDB::updateRelation">updateRelation</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#121"><abbr title="Espo\ORM\DB\Mapper::selectByQuery">selectByQuery</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Entity.php.html#298"><abbr title="Espo\ORM\Entity::toArray">toArray</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#562"><abbr title="Espo\ORM\DB\Mapper::runQuery">runQuery</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="EntityManager.php.html#263"><abbr title="Espo\ORM\EntityManager::runQuery">runQuery</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#298"><abbr title="Espo\ORM\Repositories\RDB::isRelated">isRelated</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#499"><abbr title="Espo\ORM\Repositories\RDB::join">join</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1075"><abbr title="Espo\ORM\DB\Mapper::getMMJoin">getMMJoin</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1013"><abbr title="Espo\ORM\DB\Mapper::deleteFromDb">deleteFromDb</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Entity.php.html#537"><abbr title="Espo\ORM\Entity::cloneArray">cloneArray</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Entity.php.html#449"><abbr title="Espo\ORM\Entity::setFetched">setFetched</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#113"><abbr title="Espo\ORM\Repositories\RDB::getById">getById</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="EntityCollection.php.html#70"><abbr title="Espo\ORM\EntityCollection::next">next</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#921"><abbr title="Espo\ORM\DB\Mapper::quote">quote</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#234"><abbr title="Espo\ORM\Repositories\RDB::findByQuery">findByQuery</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1248"><abbr title="Espo\ORM\DB\Query\Base::quote">quote</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#818"><abbr title="Espo\ORM\DB\Query\Base::isArgumentString">isArgumentString</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1616"><abbr title="Espo\ORM\DB\Query\Base::obtainJoinAlias">obtainJoinAlias</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1064"><abbr title="Espo\ORM\DB\Query\Base::getBelongsToJoin">getBelongsToJoin</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1029"><abbr title="Espo\ORM\DB\Mapper::restoreDeleted">restoreDeleted</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Metadata.php.html#41"><abbr title="Espo\ORM\Metadata::get">get</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#285"><abbr title="Espo\ORM\Repositories\RDB::countRelated">countRelated</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityCollection.php.html#112"><abbr title="Espo\ORM\EntityCollection::offsetSet">offsetSet</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="SthCollection.php.html#91"><abbr title="Espo\ORM\SthCollection::getIterator">getIterator</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityCollection.php.html#148"><abbr title="Espo\ORM\EntityCollection::getEntityByOffset">getEntityByOffset</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityCollection.php.html#163"><abbr title="Espo\ORM\EntityCollection::buildEntityFromArray">buildEntityFromArray</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityCollection.php.html#190"><abbr title="Espo\ORM\EntityCollection::merge">merge</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#561"><abbr title="Espo\ORM\Repositories\RDB::having">having</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#547"><abbr title="Espo\ORM\Repositories\RDB::where">where</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#201"><abbr title="Espo\ORM\Repositories\RDB::find">find</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityCollection.php.html#243"><abbr title="Espo\ORM\EntityCollection::toArray">toArray</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityFactory.php.html#43"><abbr title="Espo\ORM\EntityFactory::create">create</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#125"><abbr title="Espo\ORM\Repositories\RDB::get">get</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityManager.php.html#119"><abbr title="Espo\ORM\EntityManager::getMapper">getMapper</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#103"><abbr title="Espo\ORM\Repositories\RDB::getNew">getNew</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityManager.php.html#197"><abbr title="Espo\ORM\EntityManager::getRepository">getRepository</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#449"><abbr title="Espo\ORM\Repositories\RDB::massRelate">massRelate</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityCollection.php.html#81"><abbr title="Espo\ORM\EntityCollection::getLastValidKey">getLastValidKey</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#345"><abbr title="Espo\ORM\Entity::getRelationType">getRelationType</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityCollection.php.html#51"><abbr title="Espo\ORM\EntityCollection::rewind">rewind</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#353"><abbr title="Espo\ORM\Entity::getAttributeParam">getAttributeParam</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#932"><abbr title="Espo\ORM\DB\Mapper::insert">insert</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1216"><abbr title="Espo\ORM\DB\Query\Base::getFieldPathForOrderBy">getFieldPathForOrderBy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1231"><abbr title="Espo\ORM\DB\Query\Base::getAggregationSelect">getAggregationSelect</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1278"><abbr title="Espo\ORM\DB\Query\Base::getAlias">getAlias</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1633"><abbr title="Espo\ORM\DB\Query\Base::stringifyValue">stringifyValue</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1707"><abbr title="Espo\ORM\DB\Query\Base::buildJoinConditionsStatement">buildJoinConditionsStatement</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="DB/Query/Mysql.php.html#39"><abbr title="Espo\ORM\DB\Query\Mysql::limit">limit</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#84"><abbr title="Espo\ORM\Entity::clear">clear</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#337"><abbr title="Espo\ORM\Entity::getAttributeType">getAttributeType</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="SthCollection.php.html#119"><abbr title="Espo\ORM\SthCollection::toArray">toArray</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#379"><abbr title="Espo\ORM\Entity::isAttributeChanged">isAttributeChanged</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#361"><abbr title="Espo\ORM\Entity::getRelationParam">getRelationParam</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#463"><abbr title="Espo\ORM\Entity::getFetched">getFetched</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#523"><abbr title="Espo\ORM\Entity::populateDefaults">populateDefaults</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EntityCollection.php.html#44"><abbr title="Espo\ORM\EntityCollection::__construct">__construct</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Entity.php.html#129"><abbr title="Espo\ORM\Entity::get">get</abbr></a></td><td class="text-right">7</td></tr>
+       <tr><td><a href="EntityManager.php.html#95"><abbr title="Espo\ORM\EntityManager::getQuery">getQuery</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1207"><abbr title="Espo\ORM\DB\Query\Base::order">order</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1199"><abbr title="Espo\ORM\DB\Query\Base::getOrder">getOrder</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#275"><abbr title="Espo\ORM\DB\Query\Base::getSeed">getSeed</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#469"><abbr title="Espo\ORM\Repositories\RDB::count">count</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#1112"><abbr title="Espo\ORM\DB\Mapper::composeInsertQuery">composeInsertQuery</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#109"><abbr title="Espo\ORM\DB\Mapper::sum">sum</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#114"><abbr title="Espo\ORM\DB\Mapper::select">select</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#104"><abbr title="Espo\ORM\DB\Mapper::min">min</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="RepositoryFactory.php.html#46"><abbr title="Espo\ORM\RepositoryFactory::create">create</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="SthCollection.php.html#73"><abbr title="Espo\ORM\SthCollection::setQuery">setQuery</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="SthCollection.php.html#78"><abbr title="Espo\ORM\SthCollection::executeQuery">executeQuery</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#99"><abbr title="Espo\ORM\DB\Mapper::max">max</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="SthCollection.php.html#107"><abbr title="Espo\ORM\SthCollection::fetchRow">fetchRow</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EntityCollection.php.html#135"><abbr title="Espo\ORM\EntityCollection::seek">seek</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Entity.php.html#474"><abbr title="Espo\ORM\Entity::hasFetched">hasFetched</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1259"><abbr title="Espo\ORM\DB\Query\Base::toDb">toDb</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Metadata.php.html#52"><abbr title="Espo\ORM\Metadata::has">has</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Mapper.php.html#94"><abbr title="Espo\ORM\DB\Mapper::count">count</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EntityManager.php.html#162"><abbr title="Espo\ORM\EntityManager::getEntity">getEntity</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EntityManager.php.html#191"><abbr title="Espo\ORM\EntityManager::fetchEntity">fetchEntity</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Entity.php.html#374"><abbr title="Espo\ORM\Entity::isFieldChanged">isFieldChanged</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EntityManager.php.html#229"><abbr title="Espo\ORM\EntityManager::getPDO">getPDO</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#74"><abbr title="Espo\ORM\Repositories\RDB::getMapper">getMapper</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Entity.php.html#487"><abbr title="Espo\ORM\Entity::updateFetchedValues">updateFetchedValues</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EntityCollection.php.html#104"><abbr title="Espo\ORM\EntityCollection::offsetGet">offsetGet</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EntityCollection.php.html#202"><abbr title="Espo\ORM\EntityCollection::contains">contains</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#186"><abbr title="Espo\ORM\Repositories\RDB::remove">remove</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="DB/Query/Base.php.html#1652"><abbr title="Espo\ORM\DB\Query\Base::sanitizeSelectAlias">sanitizeSelectAlias</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Repositories/RDB.php.html#225"><abbr title="Espo\ORM\Repositories\RDB::findOne">findOne</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EntityManager.php.html#105"><abbr title="Espo\ORM\EntityManager::getMapperClassName">getMapperClassName</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Entity.php.html#66"><abbr title="Espo\ORM\Entity::__construct">__construct</abbr></a></td><td class="text-right">5</td></tr>
+       <tr><td><a href="Entity.php.html#151"><abbr title="Espo\ORM\Entity::has">has</abbr></a></td><td class="text-right">4</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 7.0.10</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.26-1+ubuntu18.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.0</a> and <a href="https://phpunit.de/">PHPUnit 8.5.2</a> at Sun Jan 12 10:24:20 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([13,0,0,1,0,0,0,0,0,0,0,0], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([254,0,0,0,1,0,1,0,1,2,0,13], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,237,"<a href=\"DB\/Mapper.php.html#43\">Espo\\ORM\\DB\\Mapper<\/a>"],[0,1,"<a href=\"DB\/MysqlMapper.php.html#40\">Espo\\ORM\\DB\\MysqlMapper<\/a>"],[0,463,"<a href=\"DB\/Query\/Base.php.html#38\">Espo\\ORM\\DB\\Query\\Base<\/a>"],[0,3,"<a href=\"DB\/Query\/Mysql.php.html#37\">Espo\\ORM\\DB\\Query\\Mysql<\/a>"],[23.770491803278688,149,"<a href=\"Entity.php.html#32\">Espo\\ORM\\Entity<\/a>"],[0,61,"<a href=\"EntityCollection.php.html#32\">Espo\\ORM\\EntityCollection<\/a>"],[0,4,"<a href=\"EntityFactory.php.html#32\">Espo\\ORM\\EntityFactory<\/a>"],[0,48,"<a href=\"EntityManager.php.html#34\">Espo\\ORM\\EntityManager<\/a>"],[0,6,"<a href=\"Metadata.php.html#32\">Espo\\ORM\\Metadata<\/a>"],[0,138,"<a href=\"Repositories\/RDB.php.html#39\">Espo\\ORM\\Repositories\\RDB<\/a>"],[0,11,"<a href=\"Repository.php.html#32\">Espo\\ORM\\Repository<\/a>"],[0,5,"<a href=\"RepositoryFactory.php.html#32\">Espo\\ORM\\RepositoryFactory<\/a>"],[0,4,"<a href=\"Sth2Collection.php.html#32\">Espo\\ORM\\Sth2Collection<\/a>"],[0,23,"<a href=\"SthCollection.php.html#32\">Espo\\ORM\\SthCollection<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"DB\/Mapper.php.html#63\">Espo\\ORM\\DB\\Mapper::__construct<\/a>"],[0,6,"<a href=\"DB\/Mapper.php.html#70\">Espo\\ORM\\DB\\Mapper::selectById<\/a>"],[0,2,"<a href=\"DB\/Mapper.php.html#94\">Espo\\ORM\\DB\\Mapper::count<\/a>"],[0,2,"<a href=\"DB\/Mapper.php.html#99\">Espo\\ORM\\DB\\Mapper::max<\/a>"],[0,2,"<a href=\"DB\/Mapper.php.html#104\">Espo\\ORM\\DB\\Mapper::min<\/a>"],[0,2,"<a href=\"DB\/Mapper.php.html#109\">Espo\\ORM\\DB\\Mapper::sum<\/a>"],[0,2,"<a href=\"DB\/Mapper.php.html#114\">Espo\\ORM\\DB\\Mapper::select<\/a>"],[0,5,"<a href=\"DB\/Mapper.php.html#121\">Espo\\ORM\\DB\\Mapper::selectByQuery<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#147\">Espo\\ORM\\DB\\Mapper::createSthCollection<\/a>"],[0,6,"<a href=\"DB\/Mapper.php.html#152\">Espo\\ORM\\DB\\Mapper::aggregate<\/a>"],[0,43,"<a href=\"DB\/Mapper.php.html#175\">Espo\\ORM\\DB\\Mapper::selectRelated<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#377\">Espo\\ORM\\DB\\Mapper::countRelated<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#382\">Espo\\ORM\\DB\\Mapper::relate<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#387\">Espo\\ORM\\DB\\Mapper::unrelate<\/a>"],[0,11,"<a href=\"DB\/Mapper.php.html#392\">Espo\\ORM\\DB\\Mapper::updateRelation<\/a>"],[0,8,"<a href=\"DB\/Mapper.php.html#441\">Espo\\ORM\\DB\\Mapper::getRelationColumn<\/a>"],[0,13,"<a href=\"DB\/Mapper.php.html#494\">Espo\\ORM\\DB\\Mapper::massRelate<\/a>"],[0,5,"<a href=\"DB\/Mapper.php.html#562\">Espo\\ORM\\DB\\Mapper::runQuery<\/a>"],[0,44,"<a href=\"DB\/Mapper.php.html#577\">Espo\\ORM\\DB\\Mapper::addRelation<\/a>"],[0,28,"<a href=\"DB\/Mapper.php.html#777\">Espo\\ORM\\DB\\Mapper::removeRelation<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#916\">Espo\\ORM\\DB\\Mapper::removeAllRelations<\/a>"],[0,4,"<a href=\"DB\/Mapper.php.html#921\">Espo\\ORM\\DB\\Mapper::quote<\/a>"],[0,3,"<a href=\"DB\/Mapper.php.html#932\">Espo\\ORM\\DB\\Mapper::insert<\/a>"],[0,7,"<a href=\"DB\/Mapper.php.html#959\">Espo\\ORM\\DB\\Mapper::update<\/a>"],[0,7,"<a href=\"DB\/Mapper.php.html#1000\">Espo\\ORM\\DB\\Mapper::prepareValueForInsert<\/a>"],[0,5,"<a href=\"DB\/Mapper.php.html#1013\">Espo\\ORM\\DB\\Mapper::deleteFromDb<\/a>"],[0,4,"<a href=\"DB\/Mapper.php.html#1029\">Espo\\ORM\\DB\\Mapper::restoreDeleted<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#1042\">Espo\\ORM\\DB\\Mapper::delete<\/a>"],[0,9,"<a href=\"DB\/Mapper.php.html#1048\">Espo\\ORM\\DB\\Mapper::toValueMap<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#1069\">Espo\\ORM\\DB\\Mapper::fromRow<\/a>"],[0,5,"<a href=\"DB\/Mapper.php.html#1075\">Espo\\ORM\\DB\\Mapper::getMMJoin<\/a>"],[0,2,"<a href=\"DB\/Mapper.php.html#1112\">Espo\\ORM\\DB\\Mapper::composeInsertQuery<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#1125\">Espo\\ORM\\DB\\Mapper::composeUpdateQuery<\/a>"],[100,1,"<a href=\"DB\/Mapper.php.html#1132\">Espo\\ORM\\DB\\Mapper::toDb<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#1134\">Espo\\ORM\\DB\\Mapper::setReturnCollection<\/a>"],[0,1,"<a href=\"DB\/Mapper.php.html#1139\">Espo\\ORM\\DB\\Mapper::setCollectionClass<\/a>"],[0,1,"<a href=\"DB\/MysqlMapper.php.html#42\">Espo\\ORM\\DB\\MysqlMapper::toDb<\/a>"],[0,1,"<a href=\"DB\/Query\/Base.php.html#268\">Espo\\ORM\\DB\\Query\\Base::__construct<\/a>"],[0,2,"<a href=\"DB\/Query\/Base.php.html#275\">Espo\\ORM\\DB\\Query\\Base::getSeed<\/a>"],[0,47,"<a href=\"DB\/Query\/Base.php.html#283\">Espo\\ORM\\DB\\Query\\Base::createSelectQuery<\/a>"],[0,43,"<a href=\"DB\/Query\/Base.php.html#455\">Espo\\ORM\\DB\\Query\\Base::getFunctionPart<\/a>"],[0,7,"<a href=\"DB\/Query\/Base.php.html#594\">Espo\\ORM\\DB\\Query\\Base::getFunctionPartTZ<\/a>"],[0,10,"<a href=\"DB\/Query\/Base.php.html#619\">Espo\\ORM\\DB\\Query\\Base::convertMatchExpression<\/a>"],[0,10,"<a href=\"DB\/Query\/Base.php.html#674\">Espo\\ORM\\DB\\Query\\Base::convertComplexExpression<\/a>"],[0,9,"<a href=\"DB\/Query\/Base.php.html#722\">Espo\\ORM\\DB\\Query\\Base::getAllAttributesFromComplexExpression<\/a>"],[0,21,"<a href=\"DB\/Query\/Base.php.html#755\">Espo\\ORM\\DB\\Query\\Base::parseArgumentListFromFunctionContent<\/a>"],[0,4,"<a href=\"DB\/Query\/Base.php.html#818\">Espo\\ORM\\DB\\Query\\Base::isArgumentString<\/a>"],[0,1,"<a href=\"DB\/Query\/Base.php.html#826\">Espo\\ORM\\DB\\Query\\Base::isArgumentNumeric<\/a>"],[0,1,"<a href=\"DB\/Query\/Base.php.html#831\">Espo\\ORM\\DB\\Query\\Base::isArgumentBoolOrNull<\/a>"],[0,15,"<a href=\"DB\/Query\/Base.php.html#836\">Espo\\ORM\\DB\\Query\\Base::getFunctionArgumentPart<\/a>"],[0,17,"<a href=\"DB\/Query\/Base.php.html#901\">Espo\\ORM\\DB\\Query\\Base::getAttributeSql<\/a>"],[0,27,"<a href=\"DB\/Query\/Base.php.html#962\">Espo\\ORM\\DB\\Query\\Base::getSelect<\/a>"],[0,4,"<a href=\"DB\/Query\/Base.php.html#1064\">Espo\\ORM\\DB\\Query\\Base::getBelongsToJoin<\/a>"],[0,14,"<a href=\"DB\/Query\/Base.php.html#1086\">Espo\\ORM\\DB\\Query\\Base::getBelongsToJoins<\/a>"],[0,18,"<a href=\"DB\/Query\/Base.php.html#1129\">Espo\\ORM\\DB\\Query\\Base::getOrderPart<\/a>"],[0,2,"<a href=\"DB\/Query\/Base.php.html#1199\">Espo\\ORM\\DB\\Query\\Base::getOrder<\/a>"],[0,2,"<a href=\"DB\/Query\/Base.php.html#1207\">Espo\\ORM\\DB\\Query\\Base::order<\/a>"],[0,3,"<a href=\"DB\/Query\/Base.php.html#1216\">Espo\\ORM\\DB\\Query\\Base::getFieldPathForOrderBy<\/a>"],[0,3,"<a href=\"DB\/Query\/Base.php.html#1231\">Espo\\ORM\\DB\\Query\\Base::getAggregationSelect<\/a>"],[0,4,"<a href=\"DB\/Query\/Base.php.html#1248\">Espo\\ORM\\DB\\Query\\Base::quote<\/a>"],[0,2,"<a href=\"DB\/Query\/Base.php.html#1259\">Espo\\ORM\\DB\\Query\\Base::toDb<\/a>"],[0,1,"<a href=\"DB\/Query\/Base.php.html#1273\">Espo\\ORM\\DB\\Query\\Base::toDbConversion<\/a>"],[0,3,"<a href=\"DB\/Query\/Base.php.html#1278\">Espo\\ORM\\DB\\Query\\Base::getAlias<\/a>"],[0,6,"<a href=\"DB\/Query\/Base.php.html#1291\">Espo\\ORM\\DB\\Query\\Base::getTableAliases<\/a>"],[0,10,"<a href=\"DB\/Query\/Base.php.html#1320\">Espo\\ORM\\DB\\Query\\Base::getFieldPath<\/a>"],[0,70,"<a href=\"DB\/Query\/Base.php.html#1369\">Espo\\ORM\\DB\\Query\\Base::getWhere<\/a>"],[0,4,"<a href=\"DB\/Query\/Base.php.html#1616\">Espo\\ORM\\DB\\Query\\Base::obtainJoinAlias<\/a>"],[0,3,"<a href=\"DB\/Query\/Base.php.html#1633\">Espo\\ORM\\DB\\Query\\Base::stringifyValue<\/a>"],[0,1,"<a href=\"DB\/Query\/Base.php.html#1647\">Espo\\ORM\\DB\\Query\\Base::sanitize<\/a>"],[0,2,"<a href=\"DB\/Query\/Base.php.html#1652\">Espo\\ORM\\DB\\Query\\Base::sanitizeSelectAlias<\/a>"],[0,1,"<a href=\"DB\/Query\/Base.php.html#1659\">Espo\\ORM\\DB\\Query\\Base::sanitizeSelectItem<\/a>"],[0,1,"<a href=\"DB\/Query\/Base.php.html#1664\">Espo\\ORM\\DB\\Query\\Base::sanitizeIndexName<\/a>"],[0,9,"<a href=\"DB\/Query\/Base.php.html#1669\">Espo\\ORM\\DB\\Query\\Base::getJoins<\/a>"],[0,3,"<a href=\"DB\/Query\/Base.php.html#1707\">Espo\\ORM\\DB\\Query\\Base::buildJoinConditionsStatement<\/a>"],[0,21,"<a href=\"DB\/Query\/Base.php.html#1722\">Espo\\ORM\\DB\\Query\\Base::buildJoinConditionStatement<\/a>"],[0,30,"<a href=\"DB\/Query\/Base.php.html#1816\">Espo\\ORM\\DB\\Query\\Base::getJoin<\/a>"],[0,12,"<a href=\"DB\/Query\/Base.php.html#1973\">Espo\\ORM\\DB\\Query\\Base::composeSelectQuery<\/a>"],[100,1,"<a href=\"DB\/Query\/Base.php.html#2031\">Espo\\ORM\\DB\\Query\\Base::limit<\/a>"],[0,18,"<a href=\"DB\/Query\/Base.php.html#2033\">Espo\\ORM\\DB\\Query\\Base::getKeys<\/a>"],[0,3,"<a href=\"DB\/Query\/Mysql.php.html#39\">Espo\\ORM\\DB\\Query\\Mysql::limit<\/a>"],[88.88888888888889,5,"<a href=\"Entity.php.html#66\">Espo\\ORM\\Entity::__construct<\/a>"],[0,3,"<a href=\"Entity.php.html#84\">Espo\\ORM\\Entity::clear<\/a>"],[0,1,"<a href=\"Entity.php.html#92\">Espo\\ORM\\Entity::reset<\/a>"],[100,1,"<a href=\"Entity.php.html#97\">Espo\\ORM\\Entity::setValue<\/a>"],[35.294117647058826,9,"<a href=\"Entity.php.html#102\">Espo\\ORM\\Entity::set<\/a>"],[72.72727272727273,7,"<a href=\"Entity.php.html#129\">Espo\\ORM\\Entity::get<\/a>"],[87.5,4,"<a href=\"Entity.php.html#151\">Espo\\ORM\\Entity::has<\/a>"],[51.06382978723404,26,"<a href=\"Entity.php.html#167\">Espo\\ORM\\Entity::populateFromArray<\/a>"],[0,1,"<a href=\"Entity.php.html#238\">Espo\\ORM\\Entity::isNew<\/a>"],[0,1,"<a href=\"Entity.php.html#243\">Espo\\ORM\\Entity::setIsNew<\/a>"],[0,1,"<a href=\"Entity.php.html#248\">Espo\\ORM\\Entity::isSaved<\/a>"],[0,1,"<a href=\"Entity.php.html#253\">Espo\\ORM\\Entity::setIsSaved<\/a>"],[0,1,"<a href=\"Entity.php.html#258\">Espo\\ORM\\Entity::getEntityName<\/a>"],[0,1,"<a href=\"Entity.php.html#263\">Espo\\ORM\\Entity::getEntityType<\/a>"],[0,1,"<a href=\"Entity.php.html#268\">Espo\\ORM\\Entity::hasField<\/a>"],[100,1,"<a href=\"Entity.php.html#273\">Espo\\ORM\\Entity::hasAttribute<\/a>"],[100,1,"<a href=\"Entity.php.html#278\">Espo\\ORM\\Entity::hasRelation<\/a>"],[0,1,"<a href=\"Entity.php.html#283\">Espo\\ORM\\Entity::getAttributeList<\/a>"],[0,1,"<a href=\"Entity.php.html#288\">Espo\\ORM\\Entity::getRelationList<\/a>"],[0,1,"<a href=\"Entity.php.html#293\">Espo\\ORM\\Entity::getValues<\/a>"],[0,5,"<a href=\"Entity.php.html#298\">Espo\\ORM\\Entity::toArray<\/a>"],[0,1,"<a href=\"Entity.php.html#316\">Espo\\ORM\\Entity::getValueMap<\/a>"],[0,1,"<a href=\"Entity.php.html#322\">Espo\\ORM\\Entity::getFields<\/a>"],[100,1,"<a href=\"Entity.php.html#327\">Espo\\ORM\\Entity::getAttributes<\/a>"],[0,1,"<a href=\"Entity.php.html#332\">Espo\\ORM\\Entity::getRelations<\/a>"],[0,3,"<a href=\"Entity.php.html#337\">Espo\\ORM\\Entity::getAttributeType<\/a>"],[0,3,"<a href=\"Entity.php.html#345\">Espo\\ORM\\Entity::getRelationType<\/a>"],[0,3,"<a href=\"Entity.php.html#353\">Espo\\ORM\\Entity::getAttributeParam<\/a>"],[0,3,"<a href=\"Entity.php.html#361\">Espo\\ORM\\Entity::getRelationParam<\/a>"],[0,1,"<a href=\"Entity.php.html#369\">Espo\\ORM\\Entity::isFetched<\/a>"],[0,2,"<a href=\"Entity.php.html#374\">Espo\\ORM\\Entity::isFieldChanged<\/a>"],[0,3,"<a href=\"Entity.php.html#379\">Espo\\ORM\\Entity::isAttributeChanged<\/a>"],[0,23,"<a href=\"Entity.php.html#394\">Espo\\ORM\\Entity::areValuesEqual<\/a>"],[0,4,"<a href=\"Entity.php.html#449\">Espo\\ORM\\Entity::setFetched<\/a>"],[0,3,"<a href=\"Entity.php.html#463\">Espo\\ORM\\Entity::getFetched<\/a>"],[0,2,"<a href=\"Entity.php.html#474\">Espo\\ORM\\Entity::hasFetched<\/a>"],[0,1,"<a href=\"Entity.php.html#482\">Espo\\ORM\\Entity::resetFetchedValues<\/a>"],[0,2,"<a href=\"Entity.php.html#487\">Espo\\ORM\\Entity::updateFetchedValues<\/a>"],[0,1,"<a href=\"Entity.php.html#496\">Espo\\ORM\\Entity::setAsFetched<\/a>"],[0,1,"<a href=\"Entity.php.html#502\">Espo\\ORM\\Entity::setAsNotFetched<\/a>"],[0,1,"<a href=\"Entity.php.html#508\">Espo\\ORM\\Entity::isBeingSaved<\/a>"],[0,1,"<a href=\"Entity.php.html#513\">Espo\\ORM\\Entity::setAsBeingSaved<\/a>"],[0,1,"<a href=\"Entity.php.html#518\">Espo\\ORM\\Entity::setAsNotBeingSaved<\/a>"],[0,3,"<a href=\"Entity.php.html#523\">Espo\\ORM\\Entity::populateDefaults<\/a>"],[0,1,"<a href=\"Entity.php.html#532\">Espo\\ORM\\Entity::getEntityManager<\/a>"],[0,4,"<a href=\"Entity.php.html#537\">Espo\\ORM\\Entity::cloneArray<\/a>"],[0,6,"<a href=\"Entity.php.html#553\">Espo\\ORM\\Entity::cloneObject<\/a>"],[0,3,"<a href=\"EntityCollection.php.html#44\">Espo\\ORM\\EntityCollection::__construct<\/a>"],[0,3,"<a href=\"EntityCollection.php.html#51\">Espo\\ORM\\EntityCollection::rewind<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#60\">Espo\\ORM\\EntityCollection::current<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#65\">Espo\\ORM\\EntityCollection::key<\/a>"],[0,4,"<a href=\"EntityCollection.php.html#70\">Espo\\ORM\\EntityCollection::next<\/a>"],[0,3,"<a href=\"EntityCollection.php.html#81\">Espo\\ORM\\EntityCollection::getLastValidKey<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#94\">Espo\\ORM\\EntityCollection::valid<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#99\">Espo\\ORM\\EntityCollection::offsetExists<\/a>"],[0,2,"<a href=\"EntityCollection.php.html#104\">Espo\\ORM\\EntityCollection::offsetGet<\/a>"],[0,3,"<a href=\"EntityCollection.php.html#112\">Espo\\ORM\\EntityCollection::offsetSet<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#125\">Espo\\ORM\\EntityCollection::offsetUnset<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#130\">Espo\\ORM\\EntityCollection::count<\/a>"],[0,2,"<a href=\"EntityCollection.php.html#135\">Espo\\ORM\\EntityCollection::seek<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#143\">Espo\\ORM\\EntityCollection::append<\/a>"],[0,3,"<a href=\"EntityCollection.php.html#148\">Espo\\ORM\\EntityCollection::getEntityByOffset<\/a>"],[0,3,"<a href=\"EntityCollection.php.html#163\">Espo\\ORM\\EntityCollection::buildEntityFromArray<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#175\">Espo\\ORM\\EntityCollection::getEntityType<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#180\">Espo\\ORM\\EntityCollection::getEntityName<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#185\">Espo\\ORM\\EntityCollection::getDataList<\/a>"],[0,3,"<a href=\"EntityCollection.php.html#190\">Espo\\ORM\\EntityCollection::merge<\/a>"],[0,2,"<a href=\"EntityCollection.php.html#202\">Espo\\ORM\\EntityCollection::contains<\/a>"],[0,13,"<a href=\"EntityCollection.php.html#210\">Espo\\ORM\\EntityCollection::indexOf<\/a>"],[0,3,"<a href=\"EntityCollection.php.html#243\">Espo\\ORM\\EntityCollection::toArray<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#257\">Espo\\ORM\\EntityCollection::getValueMapList<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#262\">Espo\\ORM\\EntityCollection::setAsFetched<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#267\">Espo\\ORM\\EntityCollection::setAsNotFetched<\/a>"],[0,1,"<a href=\"EntityCollection.php.html#272\">Espo\\ORM\\EntityCollection::isFetched<\/a>"],[0,1,"<a href=\"EntityFactory.php.html#38\">Espo\\ORM\\EntityFactory::__construct<\/a>"],[0,3,"<a href=\"EntityFactory.php.html#43\">Espo\\ORM\\EntityFactory::create<\/a>"],[0,7,"<a href=\"EntityManager.php.html#59\">Espo\\ORM\\EntityManager::__construct<\/a>"],[0,2,"<a href=\"EntityManager.php.html#95\">Espo\\ORM\\EntityManager::getQuery<\/a>"],[0,2,"<a href=\"EntityManager.php.html#105\">Espo\\ORM\\EntityManager::getMapperClassName<\/a>"],[0,3,"<a href=\"EntityManager.php.html#119\">Espo\\ORM\\EntityManager::getMapper<\/a>"],[0,7,"<a href=\"EntityManager.php.html#133\">Espo\\ORM\\EntityManager::initPDO<\/a>"],[0,2,"<a href=\"EntityManager.php.html#162\">Espo\\ORM\\EntityManager::getEntity<\/a>"],[0,1,"<a href=\"EntityManager.php.html#171\">Espo\\ORM\\EntityManager::saveEntity<\/a>"],[0,1,"<a href=\"EntityManager.php.html#177\">Espo\\ORM\\EntityManager::removeEntity<\/a>"],[0,1,"<a href=\"EntityManager.php.html#183\">Espo\\ORM\\EntityManager::createEntity<\/a>"],[0,2,"<a href=\"EntityManager.php.html#191\">Espo\\ORM\\EntityManager::fetchEntity<\/a>"],[0,3,"<a href=\"EntityManager.php.html#197\">Espo\\ORM\\EntityManager::getRepository<\/a>"],[0,1,"<a href=\"EntityManager.php.html#209\">Espo\\ORM\\EntityManager::setMetadata<\/a>"],[0,1,"<a href=\"EntityManager.php.html#214\">Espo\\ORM\\EntityManager::hasRepository<\/a>"],[0,1,"<a href=\"EntityManager.php.html#219\">Espo\\ORM\\EntityManager::getMetadata<\/a>"],[0,1,"<a href=\"EntityManager.php.html#224\">Espo\\ORM\\EntityManager::getOrmMetadata<\/a>"],[0,2,"<a href=\"EntityManager.php.html#229\">Espo\\ORM\\EntityManager::getPDO<\/a>"],[0,1,"<a href=\"EntityManager.php.html#237\">Espo\\ORM\\EntityManager::normalizeRepositoryName<\/a>"],[0,1,"<a href=\"EntityManager.php.html#242\">Espo\\ORM\\EntityManager::normalizeEntityName<\/a>"],[0,1,"<a href=\"EntityManager.php.html#247\">Espo\\ORM\\EntityManager::createCollection<\/a>"],[0,1,"<a href=\"EntityManager.php.html#253\">Espo\\ORM\\EntityManager::createSthCollection<\/a>"],[0,1,"<a href=\"EntityManager.php.html#258\">Espo\\ORM\\EntityManager::getEntityFactory<\/a>"],[0,5,"<a href=\"EntityManager.php.html#263\">Espo\\ORM\\EntityManager::runQuery<\/a>"],[0,1,"<a href=\"EntityManager.php.html#278\">Espo\\ORM\\EntityManager::init<\/a>"],[0,1,"<a href=\"Metadata.php.html#36\">Espo\\ORM\\Metadata::setData<\/a>"],[0,3,"<a href=\"Metadata.php.html#41\">Espo\\ORM\\Metadata::get<\/a>"],[0,2,"<a href=\"Metadata.php.html#52\">Espo\\ORM\\Metadata::has<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#63\">Espo\\ORM\\Repositories\\RDB::__construct<\/a>"],[0,2,"<a href=\"Repositories\/RDB.php.html#74\">Espo\\ORM\\Repositories\\RDB::getMapper<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#82\">Espo\\ORM\\Repositories\\RDB::handleSelectParams<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#86\">Espo\\ORM\\Repositories\\RDB::getEntityFactory<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#91\">Espo\\ORM\\Repositories\\RDB::getEntityManager<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#96\">Espo\\ORM\\Repositories\\RDB::reset<\/a>"],[0,3,"<a href=\"Repositories\/RDB.php.html#103\">Espo\\ORM\\Repositories\\RDB::getNew<\/a>"],[0,4,"<a href=\"Repositories\/RDB.php.html#113\">Espo\\ORM\\Repositories\\RDB::getById<\/a>"],[0,3,"<a href=\"Repositories\/RDB.php.html#125\">Espo\\ORM\\Repositories\\RDB::get<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#133\">Espo\\ORM\\Repositories\\RDB::beforeSave<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#137\">Espo\\ORM\\Repositories\\RDB::afterSave<\/a>"],[0,11,"<a href=\"Repositories\/RDB.php.html#141\">Espo\\ORM\\Repositories\\RDB::save<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#173\">Espo\\ORM\\Repositories\\RDB::restoreDeleted<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#178\">Espo\\ORM\\Repositories\\RDB::beforeRemove<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#182\">Espo\\ORM\\Repositories\\RDB::afterRemove<\/a>"],[0,2,"<a href=\"Repositories\/RDB.php.html#186\">Espo\\ORM\\Repositories\\RDB::remove<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#196\">Espo\\ORM\\Repositories\\RDB::deleteFromDb<\/a>"],[0,3,"<a href=\"Repositories\/RDB.php.html#201\">Espo\\ORM\\Repositories\\RDB::find<\/a>"],[0,2,"<a href=\"Repositories\/RDB.php.html#225\">Espo\\ORM\\Repositories\\RDB::findOne<\/a>"],[0,4,"<a href=\"Repositories\/RDB.php.html#234\">Espo\\ORM\\Repositories\\RDB::findByQuery<\/a>"],[0,8,"<a href=\"Repositories\/RDB.php.html#250\">Espo\\ORM\\Repositories\\RDB::findRelated<\/a>"],[0,3,"<a href=\"Repositories\/RDB.php.html#285\">Espo\\ORM\\Repositories\\RDB::countRelated<\/a>"],[0,5,"<a href=\"Repositories\/RDB.php.html#298\">Espo\\ORM\\Repositories\\RDB::isRelated<\/a>"],[0,9,"<a href=\"Repositories\/RDB.php.html#321\">Espo\\ORM\\Repositories\\RDB::relate<\/a>"],[0,9,"<a href=\"Repositories\/RDB.php.html#362\">Espo\\ORM\\Repositories\\RDB::unrelate<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#401\">Espo\\ORM\\Repositories\\RDB::getRelationColumn<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#406\">Espo\\ORM\\Repositories\\RDB::beforeRelate<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#410\">Espo\\ORM\\Repositories\\RDB::afterRelate<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#414\">Espo\\ORM\\Repositories\\RDB::beforeUnrelate<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#418\">Espo\\ORM\\Repositories\\RDB::afterUnrelate<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#422\">Espo\\ORM\\Repositories\\RDB::beforeMassRelate<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#426\">Espo\\ORM\\Repositories\\RDB::afterMassRelate<\/a>"],[0,5,"<a href=\"Repositories\/RDB.php.html#430\">Espo\\ORM\\Repositories\\RDB::updateRelation<\/a>"],[0,3,"<a href=\"Repositories\/RDB.php.html#449\">Espo\\ORM\\Repositories\\RDB::massRelate<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#463\">Espo\\ORM\\Repositories\\RDB::getAll<\/a>"],[0,2,"<a href=\"Repositories\/RDB.php.html#469\">Espo\\ORM\\Repositories\\RDB::count<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#481\">Espo\\ORM\\Repositories\\RDB::max<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#487\">Espo\\ORM\\Repositories\\RDB::min<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#493\">Espo\\ORM\\Repositories\\RDB::sum<\/a>"],[0,5,"<a href=\"Repositories\/RDB.php.html#499\">Espo\\ORM\\Repositories\\RDB::join<\/a>"],[0,5,"<a href=\"Repositories\/RDB.php.html#520\">Espo\\ORM\\Repositories\\RDB::leftJoin<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#541\">Espo\\ORM\\Repositories\\RDB::distinct<\/a>"],[0,3,"<a href=\"Repositories\/RDB.php.html#547\">Espo\\ORM\\Repositories\\RDB::where<\/a>"],[0,3,"<a href=\"Repositories\/RDB.php.html#561\">Espo\\ORM\\Repositories\\RDB::having<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#574\">Espo\\ORM\\Repositories\\RDB::order<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#582\">Espo\\ORM\\Repositories\\RDB::limit<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#590\">Espo\\ORM\\Repositories\\RDB::select<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#596\">Espo\\ORM\\Repositories\\RDB::groupBy<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#602\">Espo\\ORM\\Repositories\\RDB::setListParams<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#607\">Espo\\ORM\\Repositories\\RDB::getListParams<\/a>"],[0,11,"<a href=\"Repositories\/RDB.php.html#612\">Espo\\ORM\\Repositories\\RDB::getSelectParams<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#648\">Espo\\ORM\\Repositories\\RDB::getPDO<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#653\">Espo\\ORM\\Repositories\\RDB::lockTable<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#661\">Espo\\ORM\\Repositories\\RDB::unlockTable<\/a>"],[0,1,"<a href=\"Repositories\/RDB.php.html#667\">Espo\\ORM\\Repositories\\RDB::isTableLocked<\/a>"],[0,1,"<a href=\"Repository.php.html#60\">Espo\\ORM\\Repository::__construct<\/a>"],[0,1,"<a href=\"Repository.php.html#69\">Espo\\ORM\\Repository::getEntityFactory<\/a>"],[0,1,"<a href=\"Repository.php.html#74\">Espo\\ORM\\Repository::getEntityManager<\/a>"],[0,1,"<a href=\"Repository.php.html#79\">Espo\\ORM\\Repository::getEntityType<\/a>"],[100,1,"<a href=\"Repository.php.html#84\">Espo\\ORM\\Repository::get<\/a>"],[100,1,"<a href=\"Repository.php.html#86\">Espo\\ORM\\Repository::save<\/a>"],[100,1,"<a href=\"Repository.php.html#88\">Espo\\ORM\\Repository::remove<\/a>"],[100,1,"<a href=\"Repository.php.html#90\">Espo\\ORM\\Repository::find<\/a>"],[100,1,"<a href=\"Repository.php.html#92\">Espo\\ORM\\Repository::findOne<\/a>"],[100,1,"<a href=\"Repository.php.html#94\">Espo\\ORM\\Repository::getAll<\/a>"],[100,1,"<a href=\"Repository.php.html#96\">Espo\\ORM\\Repository::count<\/a>"],[0,1,"<a href=\"RepositoryFactory.php.html#40\">Espo\\ORM\\RepositoryFactory::__construct<\/a>"],[0,2,"<a href=\"RepositoryFactory.php.html#46\">Espo\\ORM\\RepositoryFactory::create<\/a>"],[0,1,"<a href=\"RepositoryFactory.php.html#58\">Espo\\ORM\\RepositoryFactory::normalizeName<\/a>"],[0,1,"<a href=\"RepositoryFactory.php.html#63\">Espo\\ORM\\RepositoryFactory::setDefaultRepositoryClassName<\/a>"],[0,1,"<a href=\"Sth2Collection.php.html#34\">Espo\\ORM\\Sth2Collection::__construct<\/a>"],[0,1,"<a href=\"Sth2Collection.php.html#44\">Espo\\ORM\\Sth2Collection::getQuery<\/a>"],[0,1,"<a href=\"Sth2Collection.php.html#49\">Espo\\ORM\\Sth2Collection::getPdo<\/a>"],[0,1,"<a href=\"Sth2Collection.php.html#54\">Espo\\ORM\\Sth2Collection::getEntityFactory<\/a>"],[0,1,"<a href=\"SthCollection.php.html#46\">Espo\\ORM\\SthCollection::__construct<\/a>"],[0,1,"<a href=\"SthCollection.php.html#53\">Espo\\ORM\\SthCollection::getQuery<\/a>"],[0,1,"<a href=\"SthCollection.php.html#58\">Espo\\ORM\\SthCollection::getPdo<\/a>"],[0,1,"<a href=\"SthCollection.php.html#63\">Espo\\ORM\\SthCollection::getEntityFactory<\/a>"],[0,1,"<a href=\"SthCollection.php.html#68\">Espo\\ORM\\SthCollection::setSelectParams<\/a>"],[0,2,"<a href=\"SthCollection.php.html#73\">Espo\\ORM\\SthCollection::setQuery<\/a>"],[0,2,"<a href=\"SthCollection.php.html#78\">Espo\\ORM\\SthCollection::executeQuery<\/a>"],[0,3,"<a href=\"SthCollection.php.html#91\">Espo\\ORM\\SthCollection::getIterator<\/a>"],[0,2,"<a href=\"SthCollection.php.html#107\">Espo\\ORM\\SthCollection::fetchRow<\/a>"],[0,1,"<a href=\"SthCollection.php.html#115\">Espo\\ORM\\SthCollection::prepareEntity<\/a>"],[0,3,"<a href=\"SthCollection.php.html#119\">Espo\\ORM\\SthCollection::toArray<\/a>"],[0,1,"<a href=\"SthCollection.php.html#133\">Espo\\ORM\\SthCollection::getValueMapList<\/a>"],[0,1,"<a href=\"SthCollection.php.html#139\">Espo\\ORM\\SthCollection::setAsFetched<\/a>"],[0,1,"<a href=\"SthCollection.php.html#144\">Espo\\ORM\\SthCollection::setAsNotFetched<\/a>"],[0,1,"<a href=\"SthCollection.php.html#149\">Espo\\ORM\\SthCollection::isFetched<\/a>"],[0,1,"<a href=\"SthCollection.php.html#154\">Espo\\ORM\\SthCollection::getEntityType<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

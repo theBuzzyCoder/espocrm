@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/karthik/espocrm/application/Espo/Core/Utils/Cron</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../../../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/home/karthik/espocrm/application/Espo</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Core</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Utils</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Cron</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Job.php.html#38">Espo\Core\Utils\Cron\Job</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="JobTask.php.html#32">Espo\Core\Utils\Cron\JobTask</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#35">Espo\Core\Utils\Cron\ScheduledJob</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Job.php.html#38">Espo\Core\Utils\Cron\Job</a></td><td class="text-right">1722</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#35">Espo\Core\Utils\Cron\ScheduledJob</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="JobTask.php.html#32">Espo\Core\Utils\Cron\JobTask</a></td><td class="text-right">20</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Job.php.html#50"><abbr title="Espo\Core\Utils\Cron\Job::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#248"><abbr title="Espo\Core\Utils\Cron\Job::markJobsFailedByPeriod">markJobsFailedByPeriod</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#62"><abbr title="Espo\Core\Utils\Cron\ScheduledJob::getActiveScheduledJobList">getActiveScheduledJobList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#52"><abbr title="Espo\Core\Utils\Cron\ScheduledJob::getEntityManager">getEntityManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#47"><abbr title="Espo\Core\Utils\Cron\ScheduledJob::getConfig">getConfig</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#41"><abbr title="Espo\Core\Utils\Cron\ScheduledJob::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="JobTask.php.html#45"><abbr title="Espo\Core\Utils\Cron\JobTask::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="JobTask.php.html#41"><abbr title="Espo\Core\Utils\Cron\JobTask::configure">configure</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="JobTask.php.html#36"><abbr title="Espo\Core\Utils\Cron\JobTask::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#389"><abbr title="Espo\Core\Utils\Cron\Job::updateFailedJobAttempts">updateFailedJobAttempts</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#325"><abbr title="Espo\Core\Utils\Cron\Job::removePendingJobDuplicates">removePendingJobDuplicates</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#285"><abbr title="Espo\Core\Utils\Cron\Job::markJobListFailed">markJobListFailed</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#227"><abbr title="Espo\Core\Utils\Cron\Job::markJobsFailedReadyNotStarted">markJobsFailedReadyNotStarted</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#58"><abbr title="Espo\Core\Utils\Cron\Job::getConfig">getConfig</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#199"><abbr title="Espo\Core\Utils\Cron\Job::markJobsFailedByNotExistingProcesses">markJobsFailedByNotExistingProcesses</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#191"><abbr title="Espo\Core\Utils\Cron\Job::markJobsFailed">markJobsFailed</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#181"><abbr title="Espo\Core\Utils\Cron\Job::getPendingCountByScheduledJobId">getPendingCountByScheduledJobId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#157"><abbr title="Espo\Core\Utils\Cron\Job::getJobByScheduledJobIdOnMinute">getJobByScheduledJobIdOnMinute</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#124"><abbr title="Espo\Core\Utils\Cron\Job::getRunningScheduledJobIdList">getRunningScheduledJobIdList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#111"><abbr title="Espo\Core\Utils\Cron\Job::isScheduledJobRunning">isScheduledJobRunning</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#81"><abbr title="Espo\Core\Utils\Cron\Job::getPendingJobList">getPendingJobList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#73"><abbr title="Espo\Core\Utils\Cron\Job::isJobPending">isJobPending</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#68"><abbr title="Espo\Core\Utils\Cron\Job::getCronScheduledJob">getCronScheduledJob</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#63"><abbr title="Espo\Core\Utils\Cron\Job::getEntityManager">getEntityManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#79"><abbr title="Espo\Core\Utils\Cron\ScheduledJob::addLogRecord">addLogRecord</abbr></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Job.php.html#248"><abbr title="Espo\Core\Utils\Cron\Job::markJobsFailedByPeriod">markJobsFailedByPeriod</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Job.php.html#285"><abbr title="Espo\Core\Utils\Cron\Job::markJobListFailed">markJobListFailed</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Job.php.html#325"><abbr title="Espo\Core\Utils\Cron\Job::removePendingJobDuplicates">removePendingJobDuplicates</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Job.php.html#199"><abbr title="Espo\Core\Utils\Cron\Job::markJobsFailedByNotExistingProcesses">markJobsFailedByNotExistingProcesses</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Job.php.html#389"><abbr title="Espo\Core\Utils\Cron\Job::updateFailedJobAttempts">updateFailedJobAttempts</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Job.php.html#111"><abbr title="Espo\Core\Utils\Cron\Job::isScheduledJobRunning">isScheduledJobRunning</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#79"><abbr title="Espo\Core\Utils\Cron\ScheduledJob::addLogRecord">addLogRecord</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Job.php.html#81"><abbr title="Espo\Core\Utils\Cron\Job::getPendingJobList">getPendingJobList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Job.php.html#124"><abbr title="Espo\Core\Utils\Cron\Job::getRunningScheduledJobIdList">getRunningScheduledJobIdList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="JobTask.php.html#45"><abbr title="Espo\Core\Utils\Cron\JobTask::run">run</abbr></a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 7.0.10</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.26-1+ubuntu18.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.0</a> and <a href="https://phpunit.de/">PHPUnit 8.5.2</a> at Sun Jan 12 10:24:20 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../../../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([3,0,0,0,0,0,0,0,0,0,0,0], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([25,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,41,"<a href=\"Job.php.html#38\">Espo\\Core\\Utils\\Cron\\Job<\/a>"],[0,4,"<a href=\"JobTask.php.html#32\">Espo\\Core\\Utils\\Cron\\JobTask<\/a>"],[0,7,"<a href=\"ScheduledJob.php.html#35\">Espo\\Core\\Utils\\Cron\\ScheduledJob<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"Job.php.html#50\">Espo\\Core\\Utils\\Cron\\Job::__construct<\/a>"],[0,1,"<a href=\"Job.php.html#58\">Espo\\Core\\Utils\\Cron\\Job::getConfig<\/a>"],[0,1,"<a href=\"Job.php.html#63\">Espo\\Core\\Utils\\Cron\\Job::getEntityManager<\/a>"],[0,1,"<a href=\"Job.php.html#68\">Espo\\Core\\Utils\\Cron\\Job::getCronScheduledJob<\/a>"],[0,1,"<a href=\"Job.php.html#73\">Espo\\Core\\Utils\\Cron\\Job::isJobPending<\/a>"],[0,2,"<a href=\"Job.php.html#81\">Espo\\Core\\Utils\\Cron\\Job::getPendingJobList<\/a>"],[0,3,"<a href=\"Job.php.html#111\">Espo\\Core\\Utils\\Cron\\Job::isScheduledJobRunning<\/a>"],[0,2,"<a href=\"Job.php.html#124\">Espo\\Core\\Utils\\Cron\\Job::getRunningScheduledJobIdList<\/a>"],[0,1,"<a href=\"Job.php.html#157\">Espo\\Core\\Utils\\Cron\\Job::getJobByScheduledJobIdOnMinute<\/a>"],[0,1,"<a href=\"Job.php.html#181\">Espo\\Core\\Utils\\Cron\\Job::getPendingCountByScheduledJobId<\/a>"],[0,1,"<a href=\"Job.php.html#191\">Espo\\Core\\Utils\\Cron\\Job::markJobsFailed<\/a>"],[0,4,"<a href=\"Job.php.html#199\">Espo\\Core\\Utils\\Cron\\Job::markJobsFailedByNotExistingProcesses<\/a>"],[0,1,"<a href=\"Job.php.html#227\">Espo\\Core\\Utils\\Cron\\Job::markJobsFailedReadyNotStarted<\/a>"],[0,6,"<a href=\"Job.php.html#248\">Espo\\Core\\Utils\\Cron\\Job::markJobsFailedByPeriod<\/a>"],[0,6,"<a href=\"Job.php.html#285\">Espo\\Core\\Utils\\Cron\\Job::markJobListFailed<\/a>"],[0,5,"<a href=\"Job.php.html#325\">Espo\\Core\\Utils\\Cron\\Job::removePendingJobDuplicates<\/a>"],[0,4,"<a href=\"Job.php.html#389\">Espo\\Core\\Utils\\Cron\\Job::updateFailedJobAttempts<\/a>"],[0,1,"<a href=\"JobTask.php.html#36\">Espo\\Core\\Utils\\Cron\\JobTask::__construct<\/a>"],[0,1,"<a href=\"JobTask.php.html#41\">Espo\\Core\\Utils\\Cron\\JobTask::configure<\/a>"],[0,2,"<a href=\"JobTask.php.html#45\">Espo\\Core\\Utils\\Cron\\JobTask::run<\/a>"],[0,1,"<a href=\"ScheduledJob.php.html#41\">Espo\\Core\\Utils\\Cron\\ScheduledJob::__construct<\/a>"],[0,1,"<a href=\"ScheduledJob.php.html#47\">Espo\\Core\\Utils\\Cron\\ScheduledJob::getConfig<\/a>"],[0,1,"<a href=\"ScheduledJob.php.html#52\">Espo\\Core\\Utils\\Cron\\ScheduledJob::getEntityManager<\/a>"],[0,1,"<a href=\"ScheduledJob.php.html#62\">Espo\\Core\\Utils\\Cron\\ScheduledJob::getActiveScheduledJobList<\/a>"],[0,3,"<a href=\"ScheduledJob.php.html#79\">Espo\\Core\\Utils\\Cron\\ScheduledJob::addLogRecord<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

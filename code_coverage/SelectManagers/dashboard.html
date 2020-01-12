@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/karthik/espocrm/application/Espo/SelectManagers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../index.html">/home/karthik/espocrm/application/Espo</a></li>
+         <li class="breadcrumb-item"><a href="index.html">SelectManagers</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="ActionHistoryRecord.php.html#32">Espo\SelectManagers\ActionHistoryRecord</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#32">Espo\SelectManagers\Attachment</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AuthLogRecord.php.html#32">Espo\SelectManagers\AuthLogRecord</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AuthToken.php.html#32">Espo\SelectManagers\AuthToken</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#32">Espo\SelectManagers\Email</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAccount.php.html#32">Espo\SelectManagers\EmailAccount</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailFilter.php.html#32">Espo\SelectManagers\EmailFilter</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailFolder.php.html#32">Espo\SelectManagers\EmailFolder</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailTemplate.php.html#32">Espo\SelectManagers\EmailTemplate</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#32">Espo\SelectManagers\Import</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#32">Espo\SelectManagers\ScheduledJob</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Team.php.html#32">Espo\SelectManagers\Team</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#32">Espo\SelectManagers\User</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Webhook.php.html#32">Espo\SelectManagers\Webhook</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Email.php.html#32">Espo\SelectManagers\Email</a></td><td class="text-right">6806</td></tr>
+       <tr><td><a href="User.php.html#32">Espo\SelectManagers\User</a></td><td class="text-right">306</td></tr>
+       <tr><td><a href="EmailFilter.php.html#32">Espo\SelectManagers\EmailFilter</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Webhook.php.html#32">Espo\SelectManagers\Webhook</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="EmailAccount.php.html#32">Espo\SelectManagers\EmailAccount</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EmailFolder.php.html#32">Espo\SelectManagers\EmailFolder</a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Import.php.html#32">Espo\SelectManagers\Import</a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="ActionHistoryRecord.php.html#34"><abbr title="Espo\SelectManagers\ActionHistoryRecord::boolFilterOnlyMy">boolFilterOnlyMy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#34"><abbr title="Espo\SelectManagers\ScheduledJob::access">access</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#491"><abbr title="Espo\SelectManagers\Email::getWherePartIsNotReadIsTrue">getWherePartIsNotReadIsTrue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#502"><abbr title="Espo\SelectManagers\Email::getWherePartIsNotReadIsFalse">getWherePartIsNotReadIsFalse</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#509"><abbr title="Espo\SelectManagers\Email::getWherePartIsReadIsTrue">getWherePartIsReadIsTrue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#516"><abbr title="Espo\SelectManagers\Email::getWherePartIsReadIsFalse">getWherePartIsReadIsFalse</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#527"><abbr title="Espo\SelectManagers\Email::getWherePartIsImportantIsTrue">getWherePartIsImportantIsTrue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#534"><abbr title="Espo\SelectManagers\Email::getWherePartIsImportantIsFalse">getWherePartIsImportantIsFalse</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAccount.php.html#34"><abbr title="Espo\SelectManagers\EmailAccount::access">access</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailFilter.php.html#34"><abbr title="Espo\SelectManagers\EmailFilter::boolFilterOnlyMy">boolFilterOnlyMy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailFilter.php.html#65"><abbr title="Espo\SelectManagers\EmailFilter::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailFolder.php.html#34"><abbr title="Espo\SelectManagers\EmailFolder::access">access</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailTemplate.php.html#34"><abbr title="Espo\SelectManagers\EmailTemplate::filterActual">filterActual</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#34"><abbr title="Espo\SelectManagers\Import::access">access</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Team.php.html#34"><abbr title="Espo\SelectManagers\Team::boolFilterOnlyMy">boolFilterOnlyMy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#477"><abbr title="Espo\SelectManagers\Email::getWherePartIsNotRepliedIsTrue">getWherePartIsNotRepliedIsTrue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Team.php.html#44"><abbr title="Espo\SelectManagers\Team::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#34"><abbr title="Espo\SelectManagers\User::access">access</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#64"><abbr title="Espo\SelectManagers\User::filterActive">filterActive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#72"><abbr title="Espo\SelectManagers\User::filterActivePortal">filterActivePortal</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#80"><abbr title="Espo\SelectManagers\User::filterPortal">filterPortal</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#87"><abbr title="Espo\SelectManagers\User::filterApi">filterApi</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#94"><abbr title="Espo\SelectManagers\User::filterActiveApi">filterActiveApi</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#102"><abbr title="Espo\SelectManagers\User::filterInternal">filterInternal</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#109"><abbr title="Espo\SelectManagers\User::boolFilterOnlyMyTeam">boolFilterOnlyMyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#126"><abbr title="Espo\SelectManagers\User::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#143"><abbr title="Espo\SelectManagers\User::accessPortalOnlyOwn">accessPortalOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#150"><abbr title="Espo\SelectManagers\User::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#484"><abbr title="Espo\SelectManagers\Email::getWherePartIsNotRepliedIsFalse">getWherePartIsNotRepliedIsFalse</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#448"><abbr title="Espo\SelectManagers\Email::getWherePartToEquals">getWherePartToEquals</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionHistoryRecord.php.html#39"><abbr title="Espo\SelectManagers\ActionHistoryRecord::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#184"><abbr title="Espo\SelectManagers\Email::filterInbox">filterInbox</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#34"><abbr title="Espo\SelectManagers\Attachment::filterOrphan">filterOrphan</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AuthLogRecord.php.html#34"><abbr title="Espo\SelectManagers\AuthLogRecord::filterDenied">filterDenied</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AuthLogRecord.php.html#41"><abbr title="Espo\SelectManagers\AuthLogRecord::filterAccepted">filterAccepted</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AuthToken.php.html#34"><abbr title="Espo\SelectManagers\AuthToken::filterActive">filterActive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="AuthToken.php.html#41"><abbr title="Espo\SelectManagers\AuthToken::filterInactive">filterInactive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#43"><abbr title="Espo\SelectManagers\Email::applyAdditional">applyAdditional</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#104"><abbr title="Espo\SelectManagers\Email::applyFolder">applyFolder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#129"><abbr title="Espo\SelectManagers\Email::addUsersJoin">addUsersJoin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#142"><abbr title="Espo\SelectManagers\Email::applyEmailFolder">applyEmailFolder</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#151"><abbr title="Espo\SelectManagers\Email::filterOnlyMy">filterOnlyMy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#164"><abbr title="Espo\SelectManagers\Email::boolFilterOnlyMy">boolFilterOnlyMy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#174"><abbr title="Espo\SelectManagers\Email::addUsersColumns">addUsersColumns</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#217"><abbr title="Espo\SelectManagers\Email::filterImportant">filterImportant</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#431"><abbr title="Espo\SelectManagers\Email::getWherePartFromEquals">getWherePartFromEquals</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#223"><abbr title="Espo\SelectManagers\Email::filterSent">filterSent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#246"><abbr title="Espo\SelectManagers\Email::filterTrash">filterTrash</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#254"><abbr title="Espo\SelectManagers\Email::filterDrafts">filterDrafts</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#262"><abbr title="Espo\SelectManagers\Email::filterArchived">filterArchived</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#269"><abbr title="Espo\SelectManagers\Email::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#274"><abbr title="Espo\SelectManagers\Email::accessPortalOnlyOwn">accessPortalOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#279"><abbr title="Espo\SelectManagers\Email::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#297"><abbr title="Espo\SelectManagers\Email::accessPortalOnlyAccount">accessPortalOnlyAccount</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#324"><abbr title="Espo\SelectManagers\Email::accessPortalOnlyContact">accessPortalOnlyContact</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#346"><abbr title="Espo\SelectManagers\Email::applyAdditionalToTextFilterGroup">applyAdditionalToTextFilterGroup</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#367"><abbr title="Espo\SelectManagers\Email::getEmailAddressIdByValue">getEmailAddressIdByValue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#383"><abbr title="Espo\SelectManagers\Email::leftJoinEmailAddress">leftJoinEmailAddress</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#399"><abbr title="Espo\SelectManagers\Email::getWherePartEmailAddressEquals">getWherePartEmailAddressEquals</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Webhook.php.html#34"><abbr title="Espo\SelectManagers\Webhook::access">access</abbr></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Email.php.html#43"><abbr title="Espo\SelectManagers\Email::applyAdditional">applyAdditional</abbr></a></td><td class="text-right">380</td></tr>
+       <tr><td><a href="Email.php.html#104"><abbr title="Espo\SelectManagers\Email::applyFolder">applyFolder</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Email.php.html#346"><abbr title="Espo\SelectManagers\Email::applyAdditionalToTextFilterGroup">applyAdditionalToTextFilterGroup</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="User.php.html#34"><abbr title="Espo\SelectManagers\User::access">access</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Webhook.php.html#34"><abbr title="Espo\SelectManagers\Webhook::access">access</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Email.php.html#184"><abbr title="Espo\SelectManagers\Email::filterInbox">filterInbox</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#151"><abbr title="Espo\SelectManagers\Email::filterOnlyMy">filterOnlyMy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#129"><abbr title="Espo\SelectManagers\Email::addUsersJoin">addUsersJoin</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EmailFilter.php.html#34"><abbr title="Espo\SelectManagers\EmailFilter::boolFilterOnlyMy">boolFilterOnlyMy</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#431"><abbr title="Espo\SelectManagers\Email::getWherePartFromEquals">getWherePartFromEquals</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#399"><abbr title="Espo\SelectManagers\Email::getWherePartEmailAddressEquals">getWherePartEmailAddressEquals</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#448"><abbr title="Espo\SelectManagers\Email::getWherePartToEquals">getWherePartToEquals</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#279"><abbr title="Espo\SelectManagers\Email::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#297"><abbr title="Espo\SelectManagers\Email::accessPortalOnlyAccount">accessPortalOnlyAccount</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#367"><abbr title="Espo\SelectManagers\Email::getEmailAddressIdByValue">getEmailAddressIdByValue</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Email.php.html#174"><abbr title="Espo\SelectManagers\Email::addUsersColumns">addUsersColumns</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Email.php.html#324"><abbr title="Espo\SelectManagers\Email::accessPortalOnlyContact">accessPortalOnlyContact</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Email.php.html#223"><abbr title="Espo\SelectManagers\Email::filterSent">filterSent</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EmailAccount.php.html#34"><abbr title="Espo\SelectManagers\EmailAccount::access">access</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EmailFolder.php.html#34"><abbr title="Espo\SelectManagers\EmailFolder::access">access</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Import.php.html#34"><abbr title="Espo\SelectManagers\Import::access">access</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="User.php.html#109"><abbr title="Espo\SelectManagers\User::boolFilterOnlyMyTeam">boolFilterOnlyMyTeam</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="User.php.html#126"><abbr title="Espo\SelectManagers\User::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="User.php.html#150"><abbr title="Espo\SelectManagers\User::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Email.php.html#383"><abbr title="Espo\SelectManagers\Email::leftJoinEmailAddress">leftJoinEmailAddress</abbr></a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 7.0.10</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.26-1+ubuntu18.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.0</a> and <a href="https://phpunit.de/">PHPUnit 8.5.2</a> at Sun Jan 12 10:24:20 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([14,0,0,0,0,0,0,0,0,0,0,0], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([60,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,2,"<a href=\"ActionHistoryRecord.php.html#32\">Espo\\SelectManagers\\ActionHistoryRecord<\/a>"],[0,1,"<a href=\"Attachment.php.html#32\">Espo\\SelectManagers\\Attachment<\/a>"],[0,2,"<a href=\"AuthLogRecord.php.html#32\">Espo\\SelectManagers\\AuthLogRecord<\/a>"],[0,2,"<a href=\"AuthToken.php.html#32\">Espo\\SelectManagers\\AuthToken<\/a>"],[0,82,"<a href=\"Email.php.html#32\">Espo\\SelectManagers\\Email<\/a>"],[0,2,"<a href=\"EmailAccount.php.html#32\">Espo\\SelectManagers\\EmailAccount<\/a>"],[0,4,"<a href=\"EmailFilter.php.html#32\">Espo\\SelectManagers\\EmailFilter<\/a>"],[0,2,"<a href=\"EmailFolder.php.html#32\">Espo\\SelectManagers\\EmailFolder<\/a>"],[0,1,"<a href=\"EmailTemplate.php.html#32\">Espo\\SelectManagers\\EmailTemplate<\/a>"],[0,2,"<a href=\"Import.php.html#32\">Espo\\SelectManagers\\Import<\/a>"],[0,1,"<a href=\"ScheduledJob.php.html#32\">Espo\\SelectManagers\\ScheduledJob<\/a>"],[0,2,"<a href=\"Team.php.html#32\">Espo\\SelectManagers\\Team<\/a>"],[0,17,"<a href=\"User.php.html#32\">Espo\\SelectManagers\\User<\/a>"],[0,4,"<a href=\"Webhook.php.html#32\">Espo\\SelectManagers\\Webhook<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"ActionHistoryRecord.php.html#34\">Espo\\SelectManagers\\ActionHistoryRecord::boolFilterOnlyMy<\/a>"],[0,1,"<a href=\"ActionHistoryRecord.php.html#39\">Espo\\SelectManagers\\ActionHistoryRecord::accessOnlyOwn<\/a>"],[0,1,"<a href=\"Attachment.php.html#34\">Espo\\SelectManagers\\Attachment::filterOrphan<\/a>"],[0,1,"<a href=\"AuthLogRecord.php.html#34\">Espo\\SelectManagers\\AuthLogRecord::filterDenied<\/a>"],[0,1,"<a href=\"AuthLogRecord.php.html#41\">Espo\\SelectManagers\\AuthLogRecord::filterAccepted<\/a>"],[0,1,"<a href=\"AuthToken.php.html#34\">Espo\\SelectManagers\\AuthToken::filterActive<\/a>"],[0,1,"<a href=\"AuthToken.php.html#41\">Espo\\SelectManagers\\AuthToken::filterInactive<\/a>"],[0,19,"<a href=\"Email.php.html#43\">Espo\\SelectManagers\\Email::applyAdditional<\/a>"],[0,8,"<a href=\"Email.php.html#104\">Espo\\SelectManagers\\Email::applyFolder<\/a>"],[0,3,"<a href=\"Email.php.html#129\">Espo\\SelectManagers\\Email::addUsersJoin<\/a>"],[0,1,"<a href=\"Email.php.html#142\">Espo\\SelectManagers\\Email::applyEmailFolder<\/a>"],[0,3,"<a href=\"Email.php.html#151\">Espo\\SelectManagers\\Email::filterOnlyMy<\/a>"],[0,1,"<a href=\"Email.php.html#164\">Espo\\SelectManagers\\Email::boolFilterOnlyMy<\/a>"],[0,2,"<a href=\"Email.php.html#174\">Espo\\SelectManagers\\Email::addUsersColumns<\/a>"],[0,3,"<a href=\"Email.php.html#184\">Espo\\SelectManagers\\Email::filterInbox<\/a>"],[0,1,"<a href=\"Email.php.html#217\">Espo\\SelectManagers\\Email::filterImportant<\/a>"],[0,2,"<a href=\"Email.php.html#223\">Espo\\SelectManagers\\Email::filterSent<\/a>"],[0,1,"<a href=\"Email.php.html#246\">Espo\\SelectManagers\\Email::filterTrash<\/a>"],[0,1,"<a href=\"Email.php.html#254\">Espo\\SelectManagers\\Email::filterDrafts<\/a>"],[0,1,"<a href=\"Email.php.html#262\">Espo\\SelectManagers\\Email::filterArchived<\/a>"],[0,1,"<a href=\"Email.php.html#269\">Espo\\SelectManagers\\Email::accessOnlyOwn<\/a>"],[0,1,"<a href=\"Email.php.html#274\">Espo\\SelectManagers\\Email::accessPortalOnlyOwn<\/a>"],[0,3,"<a href=\"Email.php.html#279\">Espo\\SelectManagers\\Email::accessOnlyTeam<\/a>"],[0,3,"<a href=\"Email.php.html#297\">Espo\\SelectManagers\\Email::accessPortalOnlyAccount<\/a>"],[0,2,"<a href=\"Email.php.html#324\">Espo\\SelectManagers\\Email::accessPortalOnlyContact<\/a>"],[0,5,"<a href=\"Email.php.html#346\">Espo\\SelectManagers\\Email::applyAdditionalToTextFilterGroup<\/a>"],[0,2,"<a href=\"Email.php.html#367\">Espo\\SelectManagers\\Email::getEmailAddressIdByValue<\/a>"],[0,2,"<a href=\"Email.php.html#383\">Espo\\SelectManagers\\Email::leftJoinEmailAddress<\/a>"],[0,3,"<a href=\"Email.php.html#399\">Espo\\SelectManagers\\Email::getWherePartEmailAddressEquals<\/a>"],[0,3,"<a href=\"Email.php.html#431\">Espo\\SelectManagers\\Email::getWherePartFromEquals<\/a>"],[0,3,"<a href=\"Email.php.html#448\">Espo\\SelectManagers\\Email::getWherePartToEquals<\/a>"],[0,1,"<a href=\"Email.php.html#477\">Espo\\SelectManagers\\Email::getWherePartIsNotRepliedIsTrue<\/a>"],[0,1,"<a href=\"Email.php.html#484\">Espo\\SelectManagers\\Email::getWherePartIsNotRepliedIsFalse<\/a>"],[0,1,"<a href=\"Email.php.html#491\">Espo\\SelectManagers\\Email::getWherePartIsNotReadIsTrue<\/a>"],[0,1,"<a href=\"Email.php.html#502\">Espo\\SelectManagers\\Email::getWherePartIsNotReadIsFalse<\/a>"],[0,1,"<a href=\"Email.php.html#509\">Espo\\SelectManagers\\Email::getWherePartIsReadIsTrue<\/a>"],[0,1,"<a href=\"Email.php.html#516\">Espo\\SelectManagers\\Email::getWherePartIsReadIsFalse<\/a>"],[0,1,"<a href=\"Email.php.html#527\">Espo\\SelectManagers\\Email::getWherePartIsImportantIsTrue<\/a>"],[0,1,"<a href=\"Email.php.html#534\">Espo\\SelectManagers\\Email::getWherePartIsImportantIsFalse<\/a>"],[0,2,"<a href=\"EmailAccount.php.html#34\">Espo\\SelectManagers\\EmailAccount::access<\/a>"],[0,3,"<a href=\"EmailFilter.php.html#34\">Espo\\SelectManagers\\EmailFilter::boolFilterOnlyMy<\/a>"],[0,1,"<a href=\"EmailFilter.php.html#65\">Espo\\SelectManagers\\EmailFilter::accessOnlyOwn<\/a>"],[0,2,"<a href=\"EmailFolder.php.html#34\">Espo\\SelectManagers\\EmailFolder::access<\/a>"],[0,1,"<a href=\"EmailTemplate.php.html#34\">Espo\\SelectManagers\\EmailTemplate::filterActual<\/a>"],[0,2,"<a href=\"Import.php.html#34\">Espo\\SelectManagers\\Import::access<\/a>"],[0,1,"<a href=\"ScheduledJob.php.html#34\">Espo\\SelectManagers\\ScheduledJob::access<\/a>"],[0,1,"<a href=\"Team.php.html#34\">Espo\\SelectManagers\\Team::boolFilterOnlyMy<\/a>"],[0,1,"<a href=\"Team.php.html#44\">Espo\\SelectManagers\\Team::accessOnlyTeam<\/a>"],[0,4,"<a href=\"User.php.html#34\">Espo\\SelectManagers\\User::access<\/a>"],[0,1,"<a href=\"User.php.html#64\">Espo\\SelectManagers\\User::filterActive<\/a>"],[0,1,"<a href=\"User.php.html#72\">Espo\\SelectManagers\\User::filterActivePortal<\/a>"],[0,1,"<a href=\"User.php.html#80\">Espo\\SelectManagers\\User::filterPortal<\/a>"],[0,1,"<a href=\"User.php.html#87\">Espo\\SelectManagers\\User::filterApi<\/a>"],[0,1,"<a href=\"User.php.html#94\">Espo\\SelectManagers\\User::filterActiveApi<\/a>"],[0,1,"<a href=\"User.php.html#102\">Espo\\SelectManagers\\User::filterInternal<\/a>"],[0,2,"<a href=\"User.php.html#109\">Espo\\SelectManagers\\User::boolFilterOnlyMyTeam<\/a>"],[0,2,"<a href=\"User.php.html#126\">Espo\\SelectManagers\\User::accessOnlyOwn<\/a>"],[0,1,"<a href=\"User.php.html#143\">Espo\\SelectManagers\\User::accessPortalOnlyOwn<\/a>"],[0,2,"<a href=\"User.php.html#150\">Espo\\SelectManagers\\User::accessOnlyTeam<\/a>"],[0,4,"<a href=\"Webhook.php.html#34\">Espo\\SelectManagers\\Webhook::access<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

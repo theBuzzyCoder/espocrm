@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/karthik/espocrm/application/Espo/Core/Upgrades</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../index.html">/home/karthik/espocrm/application/Espo</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Core</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Upgrades</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="ActionManager.php.html#34">Espo\Core\Upgrades\ActionManager</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#38">Espo\Core\Upgrades\Actions\Base</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Delete.php.html#31">Espo\Core\Upgrades\Actions\Base\Delete</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#34">Espo\Core\Upgrades\Actions\Base\Install</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#35">Espo\Core\Upgrades\Actions\Base\Uninstall</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Upload.php.html#33">Espo\Core\Upgrades\Actions\Base\Upload</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Delete.php.html#33">Espo\Core\Upgrades\Actions\Extension\Delete</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#34">Espo\Core\Upgrades\Actions\Extension\Install</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Uninstall.php.html#33">Espo\Core\Upgrades\Actions\Extension\Uninstall</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Upload.php.html#32">Espo\Core\Upgrades\Actions\Extension\Upload</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Helper.php.html#33">Espo\Core\Upgrades\Actions\Helper</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Delete.php.html#34">Espo\Core\Upgrades\Actions\Upgrade\Delete</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Install.php.html#32">Espo\Core\Upgrades\Actions\Upgrade\Install</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Uninstall.php.html#34">Espo\Core\Upgrades\Actions\Upgrade\Uninstall</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#37">Espo\Core\Upgrades\Base</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Actions/Base.php.html#38">Espo\Core\Upgrades\Actions\Base</a></td><td class="text-right">18632</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#34">Espo\Core\Upgrades\Actions\Base\Install</a></td><td class="text-right">1190</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#35">Espo\Core\Upgrades\Actions\Base\Uninstall</a></td><td class="text-right">870</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#34">Espo\Core\Upgrades\Actions\Extension\Install</a></td><td class="text-right">552</td></tr>
+       <tr><td><a href="ActionManager.php.html#34">Espo\Core\Upgrades\ActionManager</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Base.php.html#37">Espo\Core\Upgrades\Base</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Actions/Helper.php.html#33">Espo\Core\Upgrades\Actions\Helper</a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Actions/Extension/Uninstall.php.html#33">Espo\Core\Upgrades\Actions\Extension\Uninstall</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Actions/Extension/Delete.php.html#33">Espo\Core\Upgrades\Actions\Extension\Delete</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Actions/Base/Delete.php.html#31">Espo\Core\Upgrades\Actions\Base\Delete</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base/Upload.php.html#33">Espo\Core\Upgrades\Actions\Base\Upload</a></td><td class="text-right">12</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="ActionManager.php.html#46"><abbr title="Espo\Core\Upgrades\ActionManager::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#127"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::copyFiles">copyFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#72"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::isNew">isNew</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#60"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::backupExistingFiles">backupExistingFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#50"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::afterRunAction">afterRunAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#38"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::beforeRunAction">beforeRunAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Delete.php.html#55"><abbr title="Espo\Core\Upgrades\Actions\Extension\Delete::afterRunAction">afterRunAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Delete.php.html#42"><abbr title="Espo\Core\Upgrades\Actions\Extension\Delete::getExtensionEntity">getExtensionEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Upload.php.html#41"><abbr title="Espo\Core\Upgrades\Actions\Base\Upload::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#192"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::getDeleteList">getDeleteList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#176"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::getRestoreFileList">getRestoreFileList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#164"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::getCopyFileList">getCopyFileList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#158"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::throwErrorAndRemovePackage">throwErrorAndRemovePackage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#150"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::deletePackageFiles">deletePackageFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#141"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::getPackagePath">getPackagePath</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#100"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::restoreFiles">restoreFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#107"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::getExtensionEntity">getExtensionEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#37"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#267"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::throwErrorAndRemovePackage">throwErrorAndRemovePackage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#240"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::restoreFiles">restoreFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#229"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepRevert">stepRevert</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#209"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepFinalize">stepFinalize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#195"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepAfterInstallScript">stepAfterInstallScript</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#181"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepCopyAfter">stepCopyAfter</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#166"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepRebuild">stepRebuild</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#143"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepCopy">stepCopy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#130"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepBeforeInstallScript">stepBeforeInstallScript</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#117"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepCopyBefore">stepCopyBefore</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#98"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepInit">stepInit</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#78"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::initPackage">initPackage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#42"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#88"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::getExtensionId">getExtensionId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#117"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::findExtension">findExtension</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Delete.php.html#33"><abbr title="Espo\Core\Upgrades\Actions\Base\Delete::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Install.php.html#39"><abbr title="Espo\Core\Upgrades\Actions\Upgrade\Install::stepAfterUpgradeScript">stepAfterUpgradeScript</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#111"><abbr title="Espo\Core\Upgrades\Base::runInstallStep">runInstallStep</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#104"><abbr title="Espo\Core\Upgrades\Base::delete">delete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#97"><abbr title="Espo\Core\Upgrades\Base::uninstall">uninstall</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#90"><abbr title="Espo\Core\Upgrades\Base::install">install</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#83"><abbr title="Espo\Core\Upgrades\Base::upload">upload</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#75"><abbr title="Espo\Core\Upgrades\Base::getManifestById">getManifestById</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#70"><abbr title="Espo\Core\Upgrades\Base::getManifest">getManifest</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#65"><abbr title="Espo\Core\Upgrades\Base::getActionManager">getActionManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#60"><abbr title="Espo\Core\Upgrades\Base::getContainer">getContainer</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#53"><abbr title="Espo\Core\Upgrades\Base::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Uninstall.php.html#36"><abbr title="Espo\Core\Upgrades\Actions\Upgrade\Uninstall::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Install.php.html#57"><abbr title="Espo\Core\Upgrades\Actions\Upgrade\Install::deletePackageFiles">deletePackageFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Install.php.html#44"><abbr title="Espo\Core\Upgrades\Actions\Upgrade\Install::finalize">finalize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Install.php.html#34"><abbr title="Espo\Core\Upgrades\Actions\Upgrade\Install::stepBeforeUpgradeScript">stepBeforeUpgradeScript</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#134"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::storeExtension">storeExtension</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Upgrade/Delete.php.html#36"><abbr title="Espo\Core\Upgrades\Actions\Upgrade\Delete::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Helper.php.html#61"><abbr title="Espo\Core\Upgrades\Actions\Helper::checkDependencies">checkDependencies</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Helper.php.html#49"><abbr title="Espo\Core\Upgrades\Actions\Helper::getActionObject">getActionObject</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Helper.php.html#44"><abbr title="Espo\Core\Upgrades\Actions\Helper::setActionObject">setActionObject</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Helper.php.html#37"><abbr title="Espo\Core\Upgrades\Actions\Helper::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Upload.php.html#34"><abbr title="Espo\Core\Upgrades\Actions\Extension\Upload::checkDependencies">checkDependencies</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Uninstall.php.html#64"><abbr title="Espo\Core\Upgrades\Actions\Extension\Uninstall::getRestoreFileList">getRestoreFileList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Uninstall.php.html#55"><abbr title="Espo\Core\Upgrades\Actions\Extension\Uninstall::afterRunAction">afterRunAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Uninstall.php.html#42"><abbr title="Espo\Core\Upgrades\Actions\Extension\Uninstall::getExtensionEntity">getExtensionEntity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#227"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::checkDependencies">checkDependencies</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#220"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::deleteExtension">deleteExtension</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#203"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::uninstallExtension">uninstallExtension</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#189"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::throwErrorAndRemovePackage">throwErrorAndRemovePackage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#169"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::compareVersion">compareVersion</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base/Delete.php.html#59"><abbr title="Espo\Core\Upgrades\Actions\Base\Delete::deletePackage">deletePackage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#872"><abbr title="Espo\Core\Upgrades\Actions\Base::isCli">isCli</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#55"><abbr title="Espo\Core\Upgrades\ActionManager::getManagerName">getManagerName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#131"><abbr title="Espo\Core\Upgrades\Actions\Base::getDatabaseHelper">getDatabaseHelper</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#303"><abbr title="Espo\Core\Upgrades\Actions\Base::runScript">runScript</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#293"><abbr title="Espo\Core\Upgrades\Actions\Base::checkDependencies">checkDependencies</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#282"><abbr title="Espo\Core\Upgrades\Actions\Base::getPackageType">getPackageType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#263"><abbr title="Espo\Core\Upgrades\Actions\Base::checkPackageType">checkPackageType</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#234"><abbr title="Espo\Core\Upgrades\Actions\Base::checkVersions">checkVersions</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#196"><abbr title="Espo\Core\Upgrades\Actions\Base::isAcceptable">isAcceptable</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#185"><abbr title="Espo\Core\Upgrades\Actions\Base::setProcessId">setProcessId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#176"><abbr title="Espo\Core\Upgrades\Actions\Base::getProcessId">getProcessId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#165"><abbr title="Espo\Core\Upgrades\Actions\Base::createProcessId">createProcessId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#155"><abbr title="Espo\Core\Upgrades\Actions\Base::throwErrorAndRemovePackage">throwErrorAndRemovePackage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#150"><abbr title="Espo\Core\Upgrades\Actions\Base::getEntityManager">getEntityManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#145"><abbr title="Espo\Core\Upgrades\Actions\Base::getConfig">getConfig</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#140"><abbr title="Espo\Core\Upgrades\Actions\Base::getFileManager">getFileManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#126"><abbr title="Espo\Core\Upgrades\Actions\Base::getZipUtil">getZipUtil</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#344"><abbr title="Espo\Core\Upgrades\Actions\Base::getPath">getPath</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#121"><abbr title="Espo\Core\Upgrades\Actions\Base::setParam">setParam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#112"><abbr title="Espo\Core\Upgrades\Actions\Base::getParams">getParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#107"><abbr title="Espo\Core\Upgrades\Actions\Base::getActionManager">getActionManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#102"><abbr title="Espo\Core\Upgrades\Actions\Base::getContainer">getContainer</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#96"><abbr title="Espo\Core\Upgrades\Actions\Base::__destruct">__destruct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#87"><abbr title="Espo\Core\Upgrades\Actions\Base::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#97"><abbr title="Espo\Core\Upgrades\ActionManager::getObject">getObject</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#92"><abbr title="Espo\Core\Upgrades\ActionManager::getManifest">getManifest</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#87"><abbr title="Espo\Core\Upgrades\ActionManager::getActionClass">getActionClass</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#80"><abbr title="Espo\Core\Upgrades\ActionManager::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#75"><abbr title="Espo\Core\Upgrades\ActionManager::getParams">getParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#70"><abbr title="Espo\Core\Upgrades\ActionManager::getAction">getAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#65"><abbr title="Espo\Core\Upgrades\ActionManager::setAction">setAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ActionManager.php.html#60"><abbr title="Espo\Core\Upgrades\ActionManager::getContainer">getContainer</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#322"><abbr title="Espo\Core\Upgrades\Actions\Base::getScriptPath">getScriptPath</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#354"><abbr title="Espo\Core\Upgrades\Actions\Base::getPackagePath">getPackagePath</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#867"><abbr title="Espo\Core\Upgrades\Actions\Base::getTemporaryConfigParamName">getTemporaryConfigParamName</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#684"><abbr title="Espo\Core\Upgrades\Actions\Base::deletePackageFiles">deletePackageFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#841"><abbr title="Espo\Core\Upgrades\Actions\Base::disableMaintenanceMode">disableMaintenanceMode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#806"><abbr title="Espo\Core\Upgrades\Actions\Base::enableMaintenanceMode">enableMaintenanceMode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#794"><abbr title="Espo\Core\Upgrades\Actions\Base::concatStringWithArray">concatStringWithArray</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#783"><abbr title="Espo\Core\Upgrades\Actions\Base::getHelper">getHelper</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#775"><abbr title="Espo\Core\Upgrades\Actions\Base::backupExistingFiles">backupExistingFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#761"><abbr title="Espo\Core\Upgrades\Actions\Base::checkIsWritable">checkIsWritable</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#756"><abbr title="Espo\Core\Upgrades\Actions\Base::clearCache">clearCache</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#751"><abbr title="Espo\Core\Upgrades\Actions\Base::afterRunAction">afterRunAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#746"><abbr title="Espo\Core\Upgrades\Actions\Base::beforeRunAction">beforeRunAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#741"><abbr title="Espo\Core\Upgrades\Actions\Base::finalize">finalize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#736"><abbr title="Espo\Core\Upgrades\Actions\Base::initialize">initialize</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#724"><abbr title="Espo\Core\Upgrades\Actions\Base::executeAction">executeAction</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#705"><abbr title="Espo\Core\Upgrades\Actions\Base::systemRebuild">systemRebuild</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#697"><abbr title="Espo\Core\Upgrades\Actions\Base::deletePackageArchive">deletePackageArchive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#664"><abbr title="Espo\Core\Upgrades\Actions\Base::unzipArchive">unzipArchive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#359"><abbr title="Espo\Core\Upgrades\Actions\Base::getDeleteList">getDeleteList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#648"><abbr title="Espo\Core\Upgrades\Actions\Base::getManifestParam">getManifestParam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#632"><abbr title="Espo\Core\Upgrades\Actions\Base::checkManifest">checkManifest</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#621"><abbr title="Espo\Core\Upgrades\Actions\Base::setManifest">setManifest</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#596"><abbr title="Espo\Core\Upgrades\Actions\Base::getManifest">getManifest</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#564"><abbr title="Espo\Core\Upgrades\Actions\Base::getVendorFileList">getVendorFileList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#533"><abbr title="Espo\Core\Upgrades\Actions\Base::getCopyFilesPath">getCopyFilesPath</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#511"><abbr title="Espo\Core\Upgrades\Actions\Base::copyFiles">copyFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#493"><abbr title="Espo\Core\Upgrades\Actions\Base::copy">copy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#472"><abbr title="Espo\Core\Upgrades\Actions\Base::getFileList">getFileList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#451"><abbr title="Espo\Core\Upgrades\Actions\Base::getFileDirs">getFileDirs</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#434"><abbr title="Espo\Core\Upgrades\Actions\Base::getRestoreFileList">getRestoreFileList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#424"><abbr title="Espo\Core\Upgrades\Actions\Base::getCopyFileList">getCopyFileList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#413"><abbr title="Espo\Core\Upgrades\Actions\Base::deleteFiles">deleteFiles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Actions/Base.php.html#384"><abbr title="Espo\Core\Upgrades\Actions\Base::getDeleteFileList">getDeleteFileList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Base.php.html#116"><abbr title="Espo\Core\Upgrades\Base::runActionStep">runActionStep</abbr></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#37"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::run">run</abbr></a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="Actions/Base.php.html#196"><abbr title="Espo\Core\Upgrades\Actions\Base::isAcceptable">isAcceptable</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Actions/Base.php.html#533"><abbr title="Espo\Core\Upgrades\Actions\Base::getCopyFilesPath">getCopyFilesPath</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Actions/Base.php.html#234"><abbr title="Espo\Core\Upgrades\Actions\Base::checkVersions">checkVersions</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Actions/Base.php.html#564"><abbr title="Espo\Core\Upgrades\Actions\Base::getVendorFileList">getVendorFileList</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Actions/Base.php.html#841"><abbr title="Espo\Core\Upgrades\Actions\Base::disableMaintenanceMode">disableMaintenanceMode</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Actions/Helper.php.html#61"><abbr title="Espo\Core\Upgrades\Actions\Helper::checkDependencies">checkDependencies</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#100"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::restoreFiles">restoreFiles</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#42"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::run">run</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Actions/Base.php.html#806"><abbr title="Espo\Core\Upgrades\Actions\Base::enableMaintenanceMode">enableMaintenanceMode</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Actions/Base.php.html#359"><abbr title="Espo\Core\Upgrades\Actions\Base::getDeleteList">getDeleteList</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Actions/Base.php.html#596"><abbr title="Espo\Core\Upgrades\Actions\Base::getManifest">getManifest</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Actions/Base.php.html#472"><abbr title="Espo\Core\Upgrades\Actions\Base::getFileList">getFileList</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#240"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::restoreFiles">restoreFiles</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#166"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepRebuild">stepRebuild</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Actions/Base.php.html#664"><abbr title="Espo\Core\Upgrades\Actions\Base::unzipArchive">unzipArchive</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="ActionManager.php.html#97"><abbr title="Espo\Core\Upgrades\ActionManager::getObject">getObject</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Actions/Base.php.html#384"><abbr title="Espo\Core\Upgrades\Actions\Base::getDeleteFileList">getDeleteFileList</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Actions/Base.php.html#263"><abbr title="Espo\Core\Upgrades\Actions\Base::checkPackageType">checkPackageType</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Actions/Base.php.html#451"><abbr title="Espo\Core\Upgrades\Actions\Base::getFileDirs">getFileDirs</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base.php.html#303"><abbr title="Espo\Core\Upgrades\Actions\Base::runScript">runScript</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Extension/Uninstall.php.html#42"><abbr title="Espo\Core\Upgrades\Actions\Extension\Uninstall::getExtensionEntity">getExtensionEntity</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#169"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::compareVersion">compareVersion</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#134"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::storeExtension">storeExtension</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#88"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::getExtensionId">getExtensionId</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#72"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::isNew">isNew</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Extension/Delete.php.html#42"><abbr title="Espo\Core\Upgrades\Actions\Extension\Delete::getExtensionEntity">getExtensionEntity</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base/Upload.php.html#41"><abbr title="Espo\Core\Upgrades\Actions\Base\Upload::run">run</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#176"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::getRestoreFileList">getRestoreFileList</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#195"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepAfterInstallScript">stepAfterInstallScript</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#130"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepBeforeInstallScript">stepBeforeInstallScript</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#78"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::initPackage">initPackage</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Base.php.html#116"><abbr title="Espo\Core\Upgrades\Base::runActionStep">runActionStep</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base.php.html#511"><abbr title="Espo\Core\Upgrades\Actions\Base::copyFiles">copyFiles</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base.php.html#322"><abbr title="Espo\Core\Upgrades\Actions\Base::getScriptPath">getScriptPath</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base.php.html#632"><abbr title="Espo\Core\Upgrades\Actions\Base::checkManifest">checkManifest</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base.php.html#794"><abbr title="Espo\Core\Upgrades\Actions\Base::concatStringWithArray">concatStringWithArray</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base.php.html#761"><abbr title="Espo\Core\Upgrades\Actions\Base::checkIsWritable">checkIsWritable</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Actions/Base.php.html#872"><abbr title="Espo\Core\Upgrades\Actions\Base::isCli">isCli</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#648"><abbr title="Espo\Core\Upgrades\Actions\Base::getManifestParam">getManifestParam</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#38"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::beforeRunAction">beforeRunAction</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#413"><abbr title="Espo\Core\Upgrades\Actions\Base::deleteFiles">deleteFiles</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Extension/Install.php.html#189"><abbr title="Espo\Core\Upgrades\Actions\Extension\Install::throwErrorAndRemovePackage">throwErrorAndRemovePackage</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#424"><abbr title="Espo\Core\Upgrades\Actions\Base::getCopyFileList">getCopyFileList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#192"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::getDeleteList">getDeleteList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#493"><abbr title="Espo\Core\Upgrades\Actions\Base::copy">copy</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Extension/Uninstall.php.html#64"><abbr title="Espo\Core\Upgrades\Actions\Extension\Uninstall::getRestoreFileList">getRestoreFileList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Helper.php.html#37"><abbr title="Espo\Core\Upgrades\Actions\Helper::__construct">__construct</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#131"><abbr title="Espo\Core\Upgrades\Actions\Base::getDatabaseHelper">getDatabaseHelper</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#344"><abbr title="Espo\Core\Upgrades\Actions\Base::getPath">getPath</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#164"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::getCopyFileList">getCopyFileList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#705"><abbr title="Espo\Core\Upgrades\Actions\Base::systemRebuild">systemRebuild</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Delete.php.html#33"><abbr title="Espo\Core\Upgrades\Actions\Base\Delete::run">run</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Uninstall.php.html#141"><abbr title="Espo\Core\Upgrades\Actions\Base\Uninstall::getPackagePath">getPackagePath</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#165"><abbr title="Espo\Core\Upgrades\Actions\Base::createProcessId">createProcessId</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#176"><abbr title="Espo\Core\Upgrades\Actions\Base::getProcessId">getProcessId</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#209"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepFinalize">stepFinalize</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#783"><abbr title="Espo\Core\Upgrades\Actions\Base::getHelper">getHelper</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#181"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepCopyAfter">stepCopyAfter</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#434"><abbr title="Espo\Core\Upgrades\Actions\Base::getRestoreFileList">getRestoreFileList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#143"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepCopy">stepCopy</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#117"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepCopyBefore">stepCopyBefore</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base/Install.php.html#98"><abbr title="Espo\Core\Upgrades\Actions\Base\Install::stepInit">stepInit</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#112"><abbr title="Espo\Core\Upgrades\Actions\Base::getParams">getParams</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Actions/Base.php.html#282"><abbr title="Espo\Core\Upgrades\Actions\Base::getPackageType">getPackageType</abbr></a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 7.0.10</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.26-1+ubuntu18.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.0</a> and <a href="https://phpunit.de/">PHPUnit 8.5.2</a> at Sun Jan 12 10:24:20 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([15,0,0,0,0,0,0,0,0,0,0,1], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([132,0,0,0,0,0,0,0,0,0,0,1], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,13,"<a href=\"ActionManager.php.html#34\">Espo\\Core\\Upgrades\\ActionManager<\/a>"],[0,136,"<a href=\"Actions\/Base.php.html#38\">Espo\\Core\\Upgrades\\Actions\\Base<\/a>"],[0,3,"<a href=\"Actions\/Base\/Delete.php.html#31\">Espo\\Core\\Upgrades\\Actions\\Base\\Delete<\/a>"],[0,34,"<a href=\"Actions\/Base\/Install.php.html#34\">Espo\\Core\\Upgrades\\Actions\\Base\\Install<\/a>"],[0,29,"<a href=\"Actions\/Base\/Uninstall.php.html#35\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall<\/a>"],[0,3,"<a href=\"Actions\/Base\/Upload.php.html#33\">Espo\\Core\\Upgrades\\Actions\\Base\\Upload<\/a>"],[0,4,"<a href=\"Actions\/Extension\/Delete.php.html#33\">Espo\\Core\\Upgrades\\Actions\\Extension\\Delete<\/a>"],[0,23,"<a href=\"Actions\/Extension\/Install.php.html#34\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install<\/a>"],[0,6,"<a href=\"Actions\/Extension\/Uninstall.php.html#33\">Espo\\Core\\Upgrades\\Actions\\Extension\\Uninstall<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Upload.php.html#32\">Espo\\Core\\Upgrades\\Actions\\Extension\\Upload<\/a>"],[0,9,"<a href=\"Actions\/Helper.php.html#33\">Espo\\Core\\Upgrades\\Actions\\Helper<\/a>"],[0,1,"<a href=\"Actions\/Upgrade\/Delete.php.html#34\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Delete<\/a>"],[0,4,"<a href=\"Actions\/Upgrade\/Install.php.html#32\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Install<\/a>"],[0,1,"<a href=\"Actions\/Upgrade\/Uninstall.php.html#34\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Uninstall<\/a>"],[100,0,"<a href=\"Actions\/Upgrade\/Upload.php.html#32\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Upload<\/a>"],[0,13,"<a href=\"Base.php.html#37\">Espo\\Core\\Upgrades\\Base<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"ActionManager.php.html#46\">Espo\\Core\\Upgrades\\ActionManager::__construct<\/a>"],[0,1,"<a href=\"ActionManager.php.html#55\">Espo\\Core\\Upgrades\\ActionManager::getManagerName<\/a>"],[0,1,"<a href=\"ActionManager.php.html#60\">Espo\\Core\\Upgrades\\ActionManager::getContainer<\/a>"],[0,1,"<a href=\"ActionManager.php.html#65\">Espo\\Core\\Upgrades\\ActionManager::setAction<\/a>"],[0,1,"<a href=\"ActionManager.php.html#70\">Espo\\Core\\Upgrades\\ActionManager::getAction<\/a>"],[0,1,"<a href=\"ActionManager.php.html#75\">Espo\\Core\\Upgrades\\ActionManager::getParams<\/a>"],[0,1,"<a href=\"ActionManager.php.html#80\">Espo\\Core\\Upgrades\\ActionManager::run<\/a>"],[0,1,"<a href=\"ActionManager.php.html#87\">Espo\\Core\\Upgrades\\ActionManager::getActionClass<\/a>"],[0,1,"<a href=\"ActionManager.php.html#92\">Espo\\Core\\Upgrades\\ActionManager::getManifest<\/a>"],[0,4,"<a href=\"ActionManager.php.html#97\">Espo\\Core\\Upgrades\\ActionManager::getObject<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#87\">Espo\\Core\\Upgrades\\Actions\\Base::__construct<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#96\">Espo\\Core\\Upgrades\\Actions\\Base::__destruct<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#102\">Espo\\Core\\Upgrades\\Actions\\Base::getContainer<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#107\">Espo\\Core\\Upgrades\\Actions\\Base::getActionManager<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#112\">Espo\\Core\\Upgrades\\Actions\\Base::getParams<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#121\">Espo\\Core\\Upgrades\\Actions\\Base::setParam<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#126\">Espo\\Core\\Upgrades\\Actions\\Base::getZipUtil<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#131\">Espo\\Core\\Upgrades\\Actions\\Base::getDatabaseHelper<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#140\">Espo\\Core\\Upgrades\\Actions\\Base::getFileManager<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#145\">Espo\\Core\\Upgrades\\Actions\\Base::getConfig<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#150\">Espo\\Core\\Upgrades\\Actions\\Base::getEntityManager<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#155\">Espo\\Core\\Upgrades\\Actions\\Base::throwErrorAndRemovePackage<\/a>"],[100,1,"<a href=\"Actions\/Base.php.html#163\">Espo\\Core\\Upgrades\\Actions\\Base::run<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#165\">Espo\\Core\\Upgrades\\Actions\\Base::createProcessId<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#176\">Espo\\Core\\Upgrades\\Actions\\Base::getProcessId<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#185\">Espo\\Core\\Upgrades\\Actions\\Base::setProcessId<\/a>"],[0,7,"<a href=\"Actions\/Base.php.html#196\">Espo\\Core\\Upgrades\\Actions\\Base::isAcceptable<\/a>"],[0,6,"<a href=\"Actions\/Base.php.html#234\">Espo\\Core\\Upgrades\\Actions\\Base::checkVersions<\/a>"],[0,4,"<a href=\"Actions\/Base.php.html#263\">Espo\\Core\\Upgrades\\Actions\\Base::checkPackageType<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#282\">Espo\\Core\\Upgrades\\Actions\\Base::getPackageType<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#293\">Espo\\Core\\Upgrades\\Actions\\Base::checkDependencies<\/a>"],[0,3,"<a href=\"Actions\/Base.php.html#303\">Espo\\Core\\Upgrades\\Actions\\Base::runScript<\/a>"],[0,3,"<a href=\"Actions\/Base.php.html#322\">Espo\\Core\\Upgrades\\Actions\\Base::getScriptPath<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#344\">Espo\\Core\\Upgrades\\Actions\\Base::getPath<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#354\">Espo\\Core\\Upgrades\\Actions\\Base::getPackagePath<\/a>"],[0,5,"<a href=\"Actions\/Base.php.html#359\">Espo\\Core\\Upgrades\\Actions\\Base::getDeleteList<\/a>"],[0,4,"<a href=\"Actions\/Base.php.html#384\">Espo\\Core\\Upgrades\\Actions\\Base::getDeleteFileList<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#413\">Espo\\Core\\Upgrades\\Actions\\Base::deleteFiles<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#424\">Espo\\Core\\Upgrades\\Actions\\Base::getCopyFileList<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#434\">Espo\\Core\\Upgrades\\Actions\\Base::getRestoreFileList<\/a>"],[0,3,"<a href=\"Actions\/Base.php.html#451\">Espo\\Core\\Upgrades\\Actions\\Base::getFileDirs<\/a>"],[0,4,"<a href=\"Actions\/Base.php.html#472\">Espo\\Core\\Upgrades\\Actions\\Base::getFileList<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#493\">Espo\\Core\\Upgrades\\Actions\\Base::copy<\/a>"],[0,3,"<a href=\"Actions\/Base.php.html#511\">Espo\\Core\\Upgrades\\Actions\\Base::copyFiles<\/a>"],[0,7,"<a href=\"Actions\/Base.php.html#533\">Espo\\Core\\Upgrades\\Actions\\Base::getCopyFilesPath<\/a>"],[0,6,"<a href=\"Actions\/Base.php.html#564\">Espo\\Core\\Upgrades\\Actions\\Base::getVendorFileList<\/a>"],[0,5,"<a href=\"Actions\/Base.php.html#596\">Espo\\Core\\Upgrades\\Actions\\Base::getManifest<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#621\">Espo\\Core\\Upgrades\\Actions\\Base::setManifest<\/a>"],[0,3,"<a href=\"Actions\/Base.php.html#632\">Espo\\Core\\Upgrades\\Actions\\Base::checkManifest<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#648\">Espo\\Core\\Upgrades\\Actions\\Base::getManifestParam<\/a>"],[0,4,"<a href=\"Actions\/Base.php.html#664\">Espo\\Core\\Upgrades\\Actions\\Base::unzipArchive<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#684\">Espo\\Core\\Upgrades\\Actions\\Base::deletePackageFiles<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#697\">Espo\\Core\\Upgrades\\Actions\\Base::deletePackageArchive<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#705\">Espo\\Core\\Upgrades\\Actions\\Base::systemRebuild<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#724\">Espo\\Core\\Upgrades\\Actions\\Base::executeAction<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#736\">Espo\\Core\\Upgrades\\Actions\\Base::initialize<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#741\">Espo\\Core\\Upgrades\\Actions\\Base::finalize<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#746\">Espo\\Core\\Upgrades\\Actions\\Base::beforeRunAction<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#751\">Espo\\Core\\Upgrades\\Actions\\Base::afterRunAction<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#756\">Espo\\Core\\Upgrades\\Actions\\Base::clearCache<\/a>"],[0,3,"<a href=\"Actions\/Base.php.html#761\">Espo\\Core\\Upgrades\\Actions\\Base::checkIsWritable<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#775\">Espo\\Core\\Upgrades\\Actions\\Base::backupExistingFiles<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#783\">Espo\\Core\\Upgrades\\Actions\\Base::getHelper<\/a>"],[0,3,"<a href=\"Actions\/Base.php.html#794\">Espo\\Core\\Upgrades\\Actions\\Base::concatStringWithArray<\/a>"],[0,5,"<a href=\"Actions\/Base.php.html#806\">Espo\\Core\\Upgrades\\Actions\\Base::enableMaintenanceMode<\/a>"],[0,5,"<a href=\"Actions\/Base.php.html#841\">Espo\\Core\\Upgrades\\Actions\\Base::disableMaintenanceMode<\/a>"],[0,1,"<a href=\"Actions\/Base.php.html#867\">Espo\\Core\\Upgrades\\Actions\\Base::getTemporaryConfigParamName<\/a>"],[0,2,"<a href=\"Actions\/Base.php.html#872\">Espo\\Core\\Upgrades\\Actions\\Base::isCli<\/a>"],[0,2,"<a href=\"Actions\/Base\/Delete.php.html#33\">Espo\\Core\\Upgrades\\Actions\\Base\\Delete::run<\/a>"],[0,1,"<a href=\"Actions\/Base\/Delete.php.html#59\">Espo\\Core\\Upgrades\\Actions\\Base\\Delete::deletePackage<\/a>"],[0,5,"<a href=\"Actions\/Base\/Install.php.html#42\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::run<\/a>"],[0,3,"<a href=\"Actions\/Base\/Install.php.html#78\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::initPackage<\/a>"],[0,2,"<a href=\"Actions\/Base\/Install.php.html#98\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepInit<\/a>"],[0,2,"<a href=\"Actions\/Base\/Install.php.html#117\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepCopyBefore<\/a>"],[0,3,"<a href=\"Actions\/Base\/Install.php.html#130\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepBeforeInstallScript<\/a>"],[0,2,"<a href=\"Actions\/Base\/Install.php.html#143\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepCopy<\/a>"],[0,4,"<a href=\"Actions\/Base\/Install.php.html#166\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepRebuild<\/a>"],[0,2,"<a href=\"Actions\/Base\/Install.php.html#181\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepCopyAfter<\/a>"],[0,3,"<a href=\"Actions\/Base\/Install.php.html#195\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepAfterInstallScript<\/a>"],[0,2,"<a href=\"Actions\/Base\/Install.php.html#209\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepFinalize<\/a>"],[0,1,"<a href=\"Actions\/Base\/Install.php.html#229\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::stepRevert<\/a>"],[0,4,"<a href=\"Actions\/Base\/Install.php.html#240\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::restoreFiles<\/a>"],[0,1,"<a href=\"Actions\/Base\/Install.php.html#267\">Espo\\Core\\Upgrades\\Actions\\Base\\Install::throwErrorAndRemovePackage<\/a>"],[0,12,"<a href=\"Actions\/Base\/Uninstall.php.html#37\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::run<\/a>"],[0,5,"<a href=\"Actions\/Base\/Uninstall.php.html#100\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::restoreFiles<\/a>"],[0,1,"<a href=\"Actions\/Base\/Uninstall.php.html#127\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::copyFiles<\/a>"],[0,2,"<a href=\"Actions\/Base\/Uninstall.php.html#141\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::getPackagePath<\/a>"],[0,1,"<a href=\"Actions\/Base\/Uninstall.php.html#150\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::deletePackageFiles<\/a>"],[0,1,"<a href=\"Actions\/Base\/Uninstall.php.html#158\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::throwErrorAndRemovePackage<\/a>"],[0,2,"<a href=\"Actions\/Base\/Uninstall.php.html#164\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::getCopyFileList<\/a>"],[0,3,"<a href=\"Actions\/Base\/Uninstall.php.html#176\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::getRestoreFileList<\/a>"],[0,2,"<a href=\"Actions\/Base\/Uninstall.php.html#192\">Espo\\Core\\Upgrades\\Actions\\Base\\Uninstall::getDeleteList<\/a>"],[0,3,"<a href=\"Actions\/Base\/Upload.php.html#41\">Espo\\Core\\Upgrades\\Actions\\Base\\Upload::run<\/a>"],[0,3,"<a href=\"Actions\/Extension\/Delete.php.html#42\">Espo\\Core\\Upgrades\\Actions\\Extension\\Delete::getExtensionEntity<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Delete.php.html#55\">Espo\\Core\\Upgrades\\Actions\\Extension\\Delete::afterRunAction<\/a>"],[0,2,"<a href=\"Actions\/Extension\/Install.php.html#38\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::beforeRunAction<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Install.php.html#50\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::afterRunAction<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Install.php.html#60\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::backupExistingFiles<\/a>"],[0,3,"<a href=\"Actions\/Extension\/Install.php.html#72\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::isNew<\/a>"],[0,3,"<a href=\"Actions\/Extension\/Install.php.html#88\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::getExtensionId<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Install.php.html#107\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::getExtensionEntity<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Install.php.html#117\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::findExtension<\/a>"],[0,3,"<a href=\"Actions\/Extension\/Install.php.html#134\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::storeExtension<\/a>"],[0,3,"<a href=\"Actions\/Extension\/Install.php.html#169\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::compareVersion<\/a>"],[0,2,"<a href=\"Actions\/Extension\/Install.php.html#189\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::throwErrorAndRemovePackage<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Install.php.html#203\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::uninstallExtension<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Install.php.html#220\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::deleteExtension<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Install.php.html#227\">Espo\\Core\\Upgrades\\Actions\\Extension\\Install::checkDependencies<\/a>"],[0,3,"<a href=\"Actions\/Extension\/Uninstall.php.html#42\">Espo\\Core\\Upgrades\\Actions\\Extension\\Uninstall::getExtensionEntity<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Uninstall.php.html#55\">Espo\\Core\\Upgrades\\Actions\\Extension\\Uninstall::afterRunAction<\/a>"],[0,2,"<a href=\"Actions\/Extension\/Uninstall.php.html#64\">Espo\\Core\\Upgrades\\Actions\\Extension\\Uninstall::getRestoreFileList<\/a>"],[0,1,"<a href=\"Actions\/Extension\/Upload.php.html#34\">Espo\\Core\\Upgrades\\Actions\\Extension\\Upload::checkDependencies<\/a>"],[0,2,"<a href=\"Actions\/Helper.php.html#37\">Espo\\Core\\Upgrades\\Actions\\Helper::__construct<\/a>"],[0,1,"<a href=\"Actions\/Helper.php.html#44\">Espo\\Core\\Upgrades\\Actions\\Helper::setActionObject<\/a>"],[0,1,"<a href=\"Actions\/Helper.php.html#49\">Espo\\Core\\Upgrades\\Actions\\Helper::getActionObject<\/a>"],[0,5,"<a href=\"Actions\/Helper.php.html#61\">Espo\\Core\\Upgrades\\Actions\\Helper::checkDependencies<\/a>"],[0,1,"<a href=\"Actions\/Upgrade\/Delete.php.html#36\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Delete::run<\/a>"],[0,1,"<a href=\"Actions\/Upgrade\/Install.php.html#34\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Install::stepBeforeUpgradeScript<\/a>"],[0,1,"<a href=\"Actions\/Upgrade\/Install.php.html#39\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Install::stepAfterUpgradeScript<\/a>"],[0,1,"<a href=\"Actions\/Upgrade\/Install.php.html#44\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Install::finalize<\/a>"],[0,1,"<a href=\"Actions\/Upgrade\/Install.php.html#57\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Install::deletePackageFiles<\/a>"],[0,1,"<a href=\"Actions\/Upgrade\/Uninstall.php.html#36\">Espo\\Core\\Upgrades\\Actions\\Upgrade\\Uninstall::run<\/a>"],[0,1,"<a href=\"Base.php.html#53\">Espo\\Core\\Upgrades\\Base::__construct<\/a>"],[0,1,"<a href=\"Base.php.html#60\">Espo\\Core\\Upgrades\\Base::getContainer<\/a>"],[0,1,"<a href=\"Base.php.html#65\">Espo\\Core\\Upgrades\\Base::getActionManager<\/a>"],[0,1,"<a href=\"Base.php.html#70\">Espo\\Core\\Upgrades\\Base::getManifest<\/a>"],[0,1,"<a href=\"Base.php.html#75\">Espo\\Core\\Upgrades\\Base::getManifestById<\/a>"],[0,1,"<a href=\"Base.php.html#83\">Espo\\Core\\Upgrades\\Base::upload<\/a>"],[0,1,"<a href=\"Base.php.html#90\">Espo\\Core\\Upgrades\\Base::install<\/a>"],[0,1,"<a href=\"Base.php.html#97\">Espo\\Core\\Upgrades\\Base::uninstall<\/a>"],[0,1,"<a href=\"Base.php.html#104\">Espo\\Core\\Upgrades\\Base::delete<\/a>"],[0,1,"<a href=\"Base.php.html#111\">Espo\\Core\\Upgrades\\Base::runInstallStep<\/a>"],[0,3,"<a href=\"Base.php.html#116\">Espo\\Core\\Upgrades\\Base::runActionStep<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

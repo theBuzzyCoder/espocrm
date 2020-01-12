@@ -1,0 +1,72 @@
+{
+    "id": "5e1ae70981f4db343",
+    "name": "Karthik Bhat",
+    "deleted": false,
+    "salutationName": "Mr.",
+    "firstName": "Karthik",
+    "lastName": "Bhat",
+    "title": "Developer",
+    "status": "New",
+    "source": "Email",
+    "industry": "Creative",
+    "opportunityAmount": 100,
+    "website": null,
+    "addressStreet": "",
+    "addressCity": "",
+    "addressState": "",
+    "addressCountry": "",
+    "addressPostalCode": "",
+    "emailAddress": "karthikb@unicourt.com",
+    "phoneNumber": "7892805158",
+    "doNotCall": false,
+    "description": null,
+    "convertedAt": null,
+    "createdAt": "2020-01-12 09:29:45",
+    "modifiedAt": "2020-01-12 09:29:45",
+    "accountName": "UniCourt",
+    "opportunityAmountCurrency": "USD",
+    "emailAddressIsOptedOut": true,
+    "phoneNumberIsOptedOut": true,
+    "opportunityAmountConverted": 100,
+    "emailAddressData": [
+        {
+            "emailAddress": "karthikb@unicourt.com",
+            "lower": "karthikb@unicourt.com",
+            "primary": true,
+            "optOut": true,
+            "invalid": false
+        }
+    ],
+    "phoneNumberData": [
+        {
+            "phoneNumber": "7892805158",
+            "primary": true,
+            "type": "Mobile",
+            "optOut": true,
+            "invalid": false
+        }
+    ],
+    "createdById": "1",
+    "createdByName": "Admin",
+    "modifiedById": null,
+    "modifiedByName": null,
+    "assignedUserId": "1",
+    "assignedUserName": "Admin",
+    "teamsIds": [],
+    "teamsNames": {},
+    "campaignId": null,
+    "campaignName": null,
+    "createdAccountId": null,
+    "createdAccountName": null,
+    "createdContactId": null,
+    "createdContactName": null,
+    "createdOpportunityId": null,
+    "createdOpportunityName": null,
+    "isFollowed": true,
+    "followersIds": [
+        "1"
+    ],
+    "followersNames": {
+        "1": "Admin"
+    }
+}
