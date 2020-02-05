@@ -29,13 +29,12 @@
 
 namespace Espo\Services;
 
-use \Espo\Core\Exceptions\Forbidden;
-use \Espo\Core\Exceptions\NotFound;
-use \Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
 
 use Espo\ORM\Entity;
-
-use \Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\Htmlizer\Htmlizer;
 
 class Pdf extends \Espo\Core\Services\Base
 {
@@ -78,7 +77,8 @@ class Pdf extends \Espo\Core\Services\Base
         return $this->getInjection('fileManager');
     }
 
-    protected function printEntity(Entity $entity, Entity $template, Htmlizer $htmlizer, \Espo\Core\Pdf\Tcpdf $pdf)
+    protected function printEntity(Entity $entity, Entity $template, Htmlizer $htmlizer, \Espo\Core\Pdf\Tcpdf $pdf,
+        ?array $additionalData = null)
     {
         $fontFace = $this->getConfig()->get('pdfFontFace', $this->fontFace);
         if ($template->get('fontFace')) {
@@ -93,7 +93,7 @@ class Pdf extends \Espo\Core\Services\Base
         $pdf->setMargins($template->get('leftMargin'), $template->get('topMargin'), $template->get('rightMargin'));
 
         if ($template->get('printFooter')) {
-            $htmlFooter = $htmlizer->render($entity, $template->get('footer'));
+            $htmlFooter = $htmlizer->render($entity, $template->get('footer'), null, $additionalData);
             $pdf->setFooterFont([$fontFace, '', $this->fontSize]);
             $pdf->setFooterPosition($template->get('footerPosition'));
             $pdf->setFooterHtml($htmlFooter);
@@ -119,10 +119,10 @@ class Pdf extends \Espo\Core\Services\Base
 
         $pdf->addPage($pageOrientationCode, $pageFormat);
 
-        $htmlHeader = $htmlizer->render($entity, $template->get('header'));
+        $htmlHeader = $htmlizer->render($entity, $template->get('header'), null, $additionalData);
         $pdf->writeHTML($htmlHeader, true, false, true, false, '');
 
-        $htmlBody = $htmlizer->render($entity, $template->get('body'));
+        $htmlBody = $htmlizer->render($entity, $template->get('body'), null, $additionalData);
         $pdf->writeHTML($htmlBody, true, false, true, false, '');
     }
 
@@ -257,7 +257,7 @@ class Pdf extends \Espo\Core\Services\Base
         $this->getEntityManager()->removeEntity($attachment);
     }
 
-    public function buildFromTemplate(Entity $entity, Entity $template, $displayInline = false)
+    public function buildFromTemplate(Entity $entity, Entity $template, $displayInline = false, ?array $additionalData = null)
     {
         $entityType = $entity->getEntityType();
 
@@ -284,7 +284,7 @@ class Pdf extends \Espo\Core\Services\Base
         $htmlizer = $this->createHtmlizer();
         $pdf = new \Espo\Core\Pdf\Tcpdf();
 
-        $this->printEntity($entity, $template, $htmlizer, $pdf);
+        $this->printEntity($entity, $template, $htmlizer, $pdf, $additionalData);
 
         if ($displayInline) {
             $name = $entity->get('name');
@@ -308,7 +308,8 @@ class Pdf extends \Espo\Core\Services\Base
             $this->getInjection('entityManager'),
             $this->getInjection('metadata'),
             $this->getInjection('defaultLanguage'),
-            $this->getInjection('config')
+            $this->getInjection('config'),
+            $this->getInjection('serviceFactory')
         );
     }
 }

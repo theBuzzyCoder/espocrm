@@ -45,6 +45,7 @@ class App extends \Espo\Core\Services\Base
         $this->addDependency('entityManager');
         $this->addDependency('metadata');
         $this->addDependency('selectManagerFactory');
+        $this->addDependency('injectableFactory');
     }
 
     protected function getPreferences()
@@ -96,6 +97,25 @@ class App extends \Espo\Core\Services\Base
 
         $language = \Espo\Core\Utils\Language::detectLanguage($this->getConfig(), $this->getPreferences());
 
+        $appParams = [
+            'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
+            'isRestrictedMode' => $this->getConfig()->get('restrictedMode'),
+            'passwordChangeForNonAdminDisabled' => $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo',
+            'timeZoneList' => $this->getMetadata()->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
+        ];
+
+        foreach (($this->getMetadata()->get(['app', 'appParams']) ?? []) as $paramKey => $item) {
+            $className = $item['className'] ?? null;
+            if (!$className) continue;
+            try {
+                $itemParams = $this->getInjection('injectableFactory')->createByClassName($className)->get();
+            } catch (\Throwable $e) {
+                $GLOBALS['log']->error("appParam {$paramKey}: " . $e->getMessage());
+                continue;
+            }
+            $appParams[$paramKey] = $itemParams;
+        }
+
         return [
             'user' => $this->getUserDataForFrontend(),
             'acl' => $this->getAclDataForFrontend(),
@@ -103,13 +123,7 @@ class App extends \Espo\Core\Services\Base
             'token' => $this->getUser()->get('token'),
             'settings' => $settings,
             'language' => $language,
-            'appParams' => [
-                'maxUploadSize' => $this->getMaxUploadSize() / 1024.0 / 1024.0,
-                'templateEntityTypeList' => $this->getTemplateEntityTypeList(),
-                'isRestrictedMode' => $this->getConfig()->get('restrictedMode'),
-                'passwordChangeForNonAdminDisabled' => $this->getConfig()->get('authenticationMethod', 'Espo') !== 'Espo',
-                'timeZoneList' => $this->getMetadata()->get(['entityDefs', 'Settings', 'fields', 'timeZone', 'options'], []),
-            ]
+            'appParams' => $appParams,
         ];
     }
 

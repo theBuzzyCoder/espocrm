@@ -32,7 +32,11 @@
       "number",
       "bool",
       "email",
-      "phone"
+      "phone",
+      "array",
+      "multiEnum",
+      "checklist",
+      "currencyConverted"
    ],
    "fieldTypeViewMap": {
       "varchar": "views/fields/foreign-varchar",
@@ -48,7 +52,11 @@
       "number": "views/fields/foreign-varchar",
       "bool": "views/fields/foreign-bool",
       "email": "views/fields/foreign-email",
-      "phone": "views/fields/foreign-phone"
+      "phone": "views/fields/foreign-phone",
+      "array": "views/fields/foreign-array",
+      "checklist": "views/fields/foreign-checklist",
+      "multiEnum": "views/fields/foreign-multi-enum",
+      "currencyConverted": "views/fields/foreign-currency-converted"
    },
    "filter": true,
    "notCreatable": false,

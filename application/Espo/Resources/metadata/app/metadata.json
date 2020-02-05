@@ -10,8 +10,9 @@
         ["app", "fileStorage", "implementationClassNameMap"],
         ["app", "emailNotifications", "handlerClassNameMap"],
         ["app", "client"],
-        ["app", "language"],
+        ["app", "language", "aclDependencies"],
         ["app", "templateHelpers"],
+        ["app", "appParams"],
         ["app", "auth2FAMethods", "__ANY__", "implementationClassName"],
         ["app", "auth2FAMethods", "__ANY__", "implementationUserClassName"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]

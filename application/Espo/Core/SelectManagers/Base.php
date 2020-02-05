@@ -437,7 +437,7 @@ class Base
     {
         if (isset($params['q']) && $params['q'] !== '') {
             $textFilter = $params['q'];
-            $this->textFilter($textFilter, $result);
+            $this->textFilter($textFilter, $result, true);
         }
     }
 
@@ -1753,9 +1753,16 @@ class Base
                     $arrayEntityType = $this->getEntityType();
                     $idPart = 'id';
 
-                    if (strpos($attribute, '.') > 0) {
-                        list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
-                        $seed = $this->getSeed();
+                    $seed = $this->getSeed();
+
+                    if (strpos($attribute, '.') > 0 || $seed->getAttributeType($attribute) === 'foreign') {
+                        if ($seed->getAttributeType($attribute) === 'foreign') {
+                            $arrayAttributeLink = $seed->getAttributeParam($attribute, 'relation');
+                            $arrayAttribute = $seed->getAttributeParam($attribute, 'foreign');
+                        } else {
+                            list($arrayAttributeLink, $arrayAttribute) = explode('.', $attribute);
+                        }
+
                         $arrayEntityType = $seed->getRelationParam($arrayAttributeLink, 'entity');
 
                         $arrayLinkAlias = $arrayAttributeLink . 'Filter' . strval(rand(10000, 99999));
@@ -2129,6 +2136,13 @@ class Base
             if (!count($fullTextSearchFieldList)) {
                 $useFullTextSearch = false;
             }
+
+            if (substr_count($textFilter, '\'') % 2 != 0) {
+                $useFullTextSearch = false;
+            }
+            if (substr_count($textFilter, '"') % 2 != 0) {
+                $useFullTextSearch = false;
+            }
         }
 
         if (empty($fullTextSearchColumnList)) {
@@ -2193,7 +2207,7 @@ class Base
         return $result;
     }
 
-    protected function textFilter($textFilter, array &$result)
+    protected function textFilter($textFilter, array &$result, $noFullText = false)
     {
         $fieldDefs = $this->getSeed()->getAttributes();
         $fieldList = $this->getTextFilterFieldList();
@@ -2236,6 +2250,8 @@ class Base
                 $skipFullTextSearch = true;
             }
         }
+
+        if ($noFullText) $skipFullTextSearch = true;
 
         $fullTextSearchData = null;
         if (!$skipFullTextSearch) {

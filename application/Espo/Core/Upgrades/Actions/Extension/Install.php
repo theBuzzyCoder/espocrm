@@ -28,8 +28,9 @@
  ************************************************************************/
 
 namespace Espo\Core\Upgrades\Actions\Extension;
-use Espo\Core\Exceptions\Error,
-    Espo\Core\ExtensionManager;
+
+use Espo\Core\Exceptions\Error;
+use Espo\Core\ExtensionManager;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
@@ -43,12 +44,15 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
             $this->compareVersion();
             $this->uninstallExtension();
-            $this->deleteExtension();
         }
     }
 
     protected function afterRunAction()
     {
+        if (!$this->isNew()) {
+            $this->deleteExtension();
+        }
+
         $this->storeExtension();
     }
 
@@ -158,7 +162,12 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
         $extensionEntity->set($data);
 
-        return $entityManager->saveEntity($extensionEntity);
+        try {
+            $entityManager->saveEntity($extensionEntity);
+        } catch (\Throwable $e) {
+            $GLOBALS['log']->error('Error saving Extension entity. The error occurred by existing Hook, more details: ' . $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine());
+            $this->throwErrorAndRemovePackage('Error saving Extension entity. Check logs for details.', false);
+        }
     }
 
     /**
@@ -180,22 +189,6 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Throw an exception and remove package files.
-     * Redeclared to prevent of deleting a package of installed extension.
-     *
-     * @param  string $errorMessage
-     * @return void
-     */
-    public function throwErrorAndRemovePackage($errorMessage = '')
-    {
-        if (!$this->isNew()) {
-            throw new Error($errorMessage);
-        }
-
-        return parent::throwErrorAndRemovePackage($errorMessage);
-    }
-
-    /**
      * If extension already installed, uninstall an old version
      *
      * @return void
@@ -208,6 +201,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
                 'id' => $extensionEntity->get('id'),
                 'skipSystemRebuild' => true,
                 'skipAfterScript' => true,
+                'parentProcessId' => $this->getProcessId(),
             )
         );
     }
@@ -221,7 +215,10 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     {
         $extensionEntity = $this->getExtensionEntity();
 
-        $this->executeAction(ExtensionManager::DELETE, array('id' => $extensionEntity->get('id')));
+        $this->executeAction(ExtensionManager::DELETE, array(
+            'id' => $extensionEntity->get('id'),
+            'parentProcessId' => $this->getProcessId(),
+        ));
     }
 
     protected function checkDependencies($dependencyList)
