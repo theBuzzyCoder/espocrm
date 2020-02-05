@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/karthik/espocrm/application/Espo/Repositories</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../index.html">/home/karthik/espocrm/application/Espo</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Repositories</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="ArrayValue.php.html#36">Espo\Repositories\ArrayValue</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#34">Espo\Repositories\PhoneNumber</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UserData.php.html#34">Espo\Repositories\UserData</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#37">Espo\Repositories\User</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UniqueId.php.html#34">Espo\Repositories\UniqueId</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#34">Espo\Repositories\ScheduledJob</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#35">Espo\Repositories\Preferences</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Portal.php.html#36">Espo\Repositories\Portal</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#34">Espo\Repositories\Job</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#36">Espo\Repositories\Attachment</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Integration.php.html#34">Espo\Repositories\Integration</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#34">Espo\Repositories\Import</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ExternalAccount.php.html#34">Espo\Repositories\ExternalAccount</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailFolder.php.html#36">Espo\Repositories\EmailFolder</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#34">Espo\Repositories\EmailAddress</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#34">Espo\Repositories\Email</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Webhook.php.html#34">Espo\Repositories\Webhook</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="EmailAddress.php.html#34">Espo\Repositories\EmailAddress</a></td><td class="text-right">14762</td></tr>
+       <tr><td><a href="Email.php.html#34">Espo\Repositories\Email</a></td><td class="text-right">13110</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#34">Espo\Repositories\PhoneNumber</a></td><td class="text-right">11342</td></tr>
+       <tr><td><a href="User.php.html#37">Espo\Repositories\User</a></td><td class="text-right">2450</td></tr>
+       <tr><td><a href="Preferences.php.html#35">Espo\Repositories\Preferences</a></td><td class="text-right">1722</td></tr>
+       <tr><td><a href="Attachment.php.html#36">Espo\Repositories\Attachment</a></td><td class="text-right">702</td></tr>
+       <tr><td><a href="ArrayValue.php.html#36">Espo\Repositories\ArrayValue</a></td><td class="text-right">306</td></tr>
+       <tr><td><a href="Portal.php.html#36">Espo\Repositories\Portal</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Import.php.html#34">Espo\Repositories\Import</a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Webhook.php.html#34">Espo\Repositories\Webhook</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Job.php.html#34">Espo\Repositories\Job</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Integration.php.html#34">Espo\Repositories\Integration</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="ExternalAccount.php.html#34">Espo\Repositories\ExternalAccount</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="UserData.php.html#34">Espo\Repositories\UserData</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#34">Espo\Repositories\ScheduledJob</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EmailFolder.php.html#36">Espo\Repositories\EmailFolder</a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="UniqueId.php.html#34">Espo\Repositories\UniqueId</a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="ArrayValue.php.html#46"><abbr title="Espo\Repositories\ArrayValue::storeEntityAttribute">storeEntityAttribute</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#452"><abbr title="Espo\Repositories\PhoneNumber::storeEntityPhoneNumberPrimary">storeEntityPhoneNumberPrimary</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#48"><abbr title="Espo\Repositories\Preferences::init">init</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Portal.php.html#77"><abbr title="Espo\Repositories\Portal::afterSave">afterSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Portal.php.html#49"><abbr title="Espo\Repositories\Portal::loadUrlField">loadUrlField</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Portal.php.html#44"><abbr title="Espo\Repositories\Portal::getConfig">getConfig</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Portal.php.html#38"><abbr title="Espo\Repositories\Portal::init">init</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#564"><abbr title="Espo\Repositories\PhoneNumber::markNumberOptedOut">markNumberOptedOut</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#549"><abbr title="Espo\Repositories\PhoneNumber::beforeSave">beforeSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#544"><abbr title="Espo\Repositories\PhoneNumber::checkChangeIsForbidden">checkChangeIsForbidden</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#530"><abbr title="Espo\Repositories\PhoneNumber::storeEntityPhoneNumber">storeEntityPhoneNumber</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#200"><abbr title="Espo\Repositories\PhoneNumber::storeEntityPhoneNumberData">storeEntityPhoneNumberData</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#64"><abbr title="Espo\Repositories\Preferences::getEntityManger">getEntityManger</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#164"><abbr title="Espo\Repositories\PhoneNumber::getEntityByPhoneNumberId">getEntityByPhoneNumberId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#128"><abbr title="Espo\Repositories\PhoneNumber::getEntityListByPhoneNumberId">getEntityListByPhoneNumberId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#123"><abbr title="Espo\Repositories\PhoneNumber::getByNumber">getByNumber</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#90"><abbr title="Espo\Repositories\PhoneNumber::getPhoneNumberData">getPhoneNumberData</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#57"><abbr title="Espo\Repositories\PhoneNumber::getIds">getIds</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#52"><abbr title="Espo\Repositories\PhoneNumber::getAcl">getAcl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#44"><abbr title="Espo\Repositories\PhoneNumber::init">init</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#55"><abbr title="Espo\Repositories\Job::beforeSave">beforeSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#50"><abbr title="Espo\Repositories\Job::getConfig">getConfig</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#59"><abbr title="Espo\Repositories\Preferences::getFileManager">getFileManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#69"><abbr title="Espo\Repositories\Preferences::getMetadata">getMetadata</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Integration.php.html#36"><abbr title="Espo\Repositories\Integration::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#45"><abbr title="Espo\Repositories\ScheduledJob::afterSave">afterSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Webhook.php.html#53"><abbr title="Espo\Repositories\Webhook::fillSecretKey">fillSecretKey</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Webhook.php.html#44"><abbr title="Espo\Repositories\Webhook::beforeSave">beforeSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UserData.php.html#36"><abbr title="Espo\Repositories\UserData::getByUserId">getByUserId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#208"><abbr title="Espo\Repositories\User::handleSelectParams">handleSelectParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#183"><abbr title="Espo\Repositories\User::checkBelongsToAnyOfTeams">checkBelongsToAnyOfTeams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#168"><abbr title="Espo\Repositories\User::afterRemove">afterRemove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#142"><abbr title="Espo\Repositories\User::afterSave">afterSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="User.php.html#39"><abbr title="Espo\Repositories\User::beforeSave">beforeSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="UniqueId.php.html#44"><abbr title="Espo\Repositories\UniqueId::getNew">getNew</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#271"><abbr title="Espo\Repositories\Preferences::count">count</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#74"><abbr title="Espo\Repositories\Preferences::getConfig">getConfig</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#267"><abbr title="Espo\Repositories\Preferences::getAll">getAll</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#263"><abbr title="Espo\Repositories\Preferences::findOne">findOne</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#259"><abbr title="Espo\Repositories\Preferences::find">find</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#248"><abbr title="Espo\Repositories\Preferences::resetToDefaults">resetToDefaults</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#239"><abbr title="Espo\Repositories\Preferences::remove">remove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#232"><abbr title="Espo\Repositories\Preferences::deleteFromDb">deleteFromDb</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#198"><abbr title="Espo\Repositories\Preferences::save">save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#165"><abbr title="Espo\Repositories\Preferences::storeAutoFollowEntityTypeList">storeAutoFollowEntityTypeList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#144"><abbr title="Espo\Repositories\Preferences::fetchAutoFollowEntityTypeList">fetchAutoFollowEntityTypeList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Preferences.php.html#79"><abbr title="Espo\Repositories\Preferences::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Job.php.html#44"><abbr title="Espo\Repositories\Job::init">init</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#91"><abbr title="Espo\Repositories\Import::afterRemove">afterRemove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ArrayValue.php.html#98"><abbr title="Espo\Repositories\ArrayValue::deleteEntityAttribute">deleteEntityAttribute</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#175"><abbr title="Espo\Repositories\Attachment::getFilePath">getFilePath</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#133"><abbr title="Espo\Repositories\Email::loadBccField">loadBccField</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#120"><abbr title="Espo\Repositories\Email::loadCcField">loadCcField</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#107"><abbr title="Espo\Repositories\Email::loadToField">loadToField</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#86"><abbr title="Espo\Repositories\Email::loadFromField">loadFromField</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#74"><abbr title="Espo\Repositories\Email::addUserByEmailAddressId">addUserByEmailAddressId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#42"><abbr title="Espo\Repositories\Email::prepareAddressess">prepareAddressess</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#36"><abbr title="Espo\Repositories\Email::init">init</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#185"><abbr title="Espo\Repositories\Attachment::getDownloadUrl">getDownloadUrl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#180"><abbr title="Espo\Repositories\Attachment::hasDownloadUrl">hasDownloadUrl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#170"><abbr title="Espo\Repositories\Attachment::getContents">getContents</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#159"><abbr title="Espo\Repositories\Email::loadNameHash">loadNameHash</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#149"><abbr title="Espo\Repositories\Attachment::getCopiedAttachment">getCopiedAttachment</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#139"><abbr title="Espo\Repositories\Attachment::removeImageThumbs">removeImageThumbs</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#115"><abbr title="Espo\Repositories\Attachment::afterRemove">afterRemove</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#94"><abbr title="Espo\Repositories\Attachment::save">save</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#78"><abbr title="Espo\Repositories\Attachment::beforeSave">beforeSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#73"><abbr title="Espo\Repositories\Attachment::getConfig">getConfig</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#68"><abbr title="Espo\Repositories\Attachment::getFileStorageManager">getFileStorageManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#63"><abbr title="Espo\Repositories\Attachment::getFileManager">getFileManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Attachment.php.html#56"><abbr title="Espo\Repositories\Attachment::init">init</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#146"><abbr title="Espo\Repositories\Email::loadReplyToField">loadReplyToField</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#229"><abbr title="Espo\Repositories\Email::beforeSave">beforeSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#79"><abbr title="Espo\Repositories\Import::countRelated">countRelated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#246"><abbr title="Espo\Repositories\EmailAddress::getEntityByAddress">getEntityByAddress</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#48"><abbr title="Espo\Repositories\Import::getRelatedJoin">getRelatedJoin</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Import.php.html#36"><abbr title="Espo\Repositories\Import::findRelated">findRelated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ExternalAccount.php.html#36"><abbr title="Espo\Repositories\ExternalAccount::get">get</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailFolder.php.html#38"><abbr title="Espo\Repositories\EmailFolder::beforeSave">beforeSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#628"><abbr title="Espo\Repositories\EmailAddress::markAddressOptedOut">markAddressOptedOut</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#623"><abbr title="Espo\Repositories\EmailAddress::checkChangeIsForbidden">checkChangeIsForbidden</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#609"><abbr title="Espo\Repositories\EmailAddress::storeEntityEmailAddress">storeEntityEmailAddress</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#530"><abbr title="Espo\Repositories\EmailAddress::storeEntityEmailAddressPrimary">storeEntityEmailAddressPrimary</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#285"><abbr title="Espo\Repositories\EmailAddress::storeEntityEmailAddressData">storeEntityEmailAddressData</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#195"><abbr title="Espo\Repositories\EmailAddress::getEntityByAddressId">getEntityByAddressId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#310"><abbr title="Espo\Repositories\Email::fillAccount">fillAccount</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#134"><abbr title="Espo\Repositories\EmailAddress::getEntityListByAddressId">getEntityListByAddressId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#129"><abbr title="Espo\Repositories\EmailAddress::getByAddress">getByAddress</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#97"><abbr title="Espo\Repositories\EmailAddress::getEmailAddressData">getEmailAddressData</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#60"><abbr title="Espo\Repositories\EmailAddress::getIds">getIds</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#55"><abbr title="Espo\Repositories\EmailAddress::getIdListFormAddressList">getIdListFormAddressList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#50"><abbr title="Espo\Repositories\EmailAddress::getAcl">getAcl</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailAddress.php.html#42"><abbr title="Espo\Repositories\EmailAddress::init">init</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#400"><abbr title="Espo\Repositories\Email::getEmailFilterManager">getEmailFilterManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#361"><abbr title="Espo\Repositories\Email::afterSave">afterSave</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Email.php.html#339"><abbr title="Espo\Repositories\Email::applyUsersFilters">applyUsersFilters</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Webhook.php.html#59"><abbr title="Espo\Repositories\Webhook::processSettingAdditionalFields">processSettingAdditionalFields</abbr></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="PhoneNumber.php.html#200"><abbr title="Espo\Repositories\PhoneNumber::storeEntityPhoneNumberData">storeEntityPhoneNumberData</abbr></a></td><td class="text-right">2652</td></tr>
+       <tr><td><a href="EmailAddress.php.html#285"><abbr title="Espo\Repositories\EmailAddress::storeEntityEmailAddressData">storeEntityEmailAddressData</abbr></a></td><td class="text-right">2550</td></tr>
+       <tr><td><a href="Email.php.html#229"><abbr title="Espo\Repositories\Email::beforeSave">beforeSave</abbr></a></td><td class="text-right">870</td></tr>
+       <tr><td><a href="User.php.html#39"><abbr title="Espo\Repositories\User::beforeSave">beforeSave</abbr></a></td><td class="text-right">756</td></tr>
+       <tr><td><a href="Email.php.html#159"><abbr title="Espo\Repositories\Email::loadNameHash">loadNameHash</abbr></a></td><td class="text-right">462</td></tr>
+       <tr><td><a href="Email.php.html#361"><abbr title="Espo\Repositories\Email::afterSave">afterSave</abbr></a></td><td class="text-right">306</td></tr>
+       <tr><td><a href="EmailAddress.php.html#530"><abbr title="Espo\Repositories\EmailAddress::storeEntityEmailAddressPrimary">storeEntityEmailAddressPrimary</abbr></a></td><td class="text-right">272</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#452"><abbr title="Espo\Repositories\PhoneNumber::storeEntityPhoneNumberPrimary">storeEntityPhoneNumberPrimary</abbr></a></td><td class="text-right">240</td></tr>
+       <tr><td><a href="ArrayValue.php.html#46"><abbr title="Espo\Repositories\ArrayValue::storeEntityAttribute">storeEntityAttribute</abbr></a></td><td class="text-right">210</td></tr>
+       <tr><td><a href="EmailAddress.php.html#134"><abbr title="Espo\Repositories\EmailAddress::getEntityListByAddressId">getEntityListByAddressId</abbr></a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="EmailAddress.php.html#195"><abbr title="Espo\Repositories\EmailAddress::getEntityByAddressId">getEntityByAddressId</abbr></a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Email.php.html#310"><abbr title="Espo\Repositories\Email::fillAccount">fillAccount</abbr></a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Preferences.php.html#79"><abbr title="Espo\Repositories\Preferences::get">get</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Email.php.html#339"><abbr title="Espo\Repositories\Email::applyUsersFilters">applyUsersFilters</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="User.php.html#142"><abbr title="Espo\Repositories\User::afterSave">afterSave</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="EmailAddress.php.html#60"><abbr title="Espo\Repositories\EmailAddress::getIds">getIds</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#128"><abbr title="Espo\Repositories\PhoneNumber::getEntityListByPhoneNumberId">getEntityListByPhoneNumberId</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#164"><abbr title="Espo\Repositories\PhoneNumber::getEntityByPhoneNumberId">getEntityByPhoneNumberId</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="EmailAddress.php.html#246"><abbr title="Espo\Repositories\EmailAddress::getEntityByAddress">getEntityByAddress</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Preferences.php.html#165"><abbr title="Espo\Repositories\Preferences::storeAutoFollowEntityTypeList">storeAutoFollowEntityTypeList</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Webhook.php.html#59"><abbr title="Espo\Repositories\Webhook::processSettingAdditionalFields">processSettingAdditionalFields</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="EmailAddress.php.html#97"><abbr title="Espo\Repositories\EmailAddress::getEmailAddressData">getEmailAddressData</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#90"><abbr title="Espo\Repositories\PhoneNumber::getPhoneNumberData">getPhoneNumberData</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Preferences.php.html#198"><abbr title="Espo\Repositories\Preferences::save">save</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Portal.php.html#77"><abbr title="Espo\Repositories\Portal::afterSave">afterSave</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#57"><abbr title="Espo\Repositories\PhoneNumber::getIds">getIds</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="User.php.html#208"><abbr title="Espo\Repositories\User::handleSelectParams">handleSelectParams</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Attachment.php.html#78"><abbr title="Espo\Repositories\Attachment::beforeSave">beforeSave</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Attachment.php.html#94"><abbr title="Espo\Repositories\Attachment::save">save</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Portal.php.html#49"><abbr title="Espo\Repositories\Portal::loadUrlField">loadUrlField</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Email.php.html#42"><abbr title="Espo\Repositories\Email::prepareAddressess">prepareAddressess</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Email.php.html#86"><abbr title="Espo\Repositories\Email::loadFromField">loadFromField</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Job.php.html#55"><abbr title="Espo\Repositories\Job::beforeSave">beforeSave</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="UserData.php.html#36"><abbr title="Espo\Repositories\UserData::getByUserId">getByUserId</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="User.php.html#183"><abbr title="Espo\Repositories\User::checkBelongsToAnyOfTeams">checkBelongsToAnyOfTeams</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="User.php.html#168"><abbr title="Espo\Repositories\User::afterRemove">afterRemove</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#549"><abbr title="Espo\Repositories\PhoneNumber::beforeSave">beforeSave</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#530"><abbr title="Espo\Repositories\PhoneNumber::storeEntityPhoneNumber">storeEntityPhoneNumber</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Integration.php.html#36"><abbr title="Espo\Repositories\Integration::get">get</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="EmailAddress.php.html#609"><abbr title="Espo\Repositories\EmailAddress::storeEntityEmailAddress">storeEntityEmailAddress</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="ExternalAccount.php.html#36"><abbr title="Espo\Repositories\ExternalAccount::get">get</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Import.php.html#48"><abbr title="Espo\Repositories\Import::getRelatedJoin">getRelatedJoin</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Preferences.php.html#239"><abbr title="Espo\Repositories\Preferences::remove">remove</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#133"><abbr title="Espo\Repositories\Email::loadBccField">loadBccField</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#120"><abbr title="Espo\Repositories\Email::loadCcField">loadCcField</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#107"><abbr title="Espo\Repositories\Email::loadToField">loadToField</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Import.php.html#91"><abbr title="Espo\Repositories\Import::afterRemove">afterRemove</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="EmailFolder.php.html#38"><abbr title="Espo\Repositories\EmailFolder::beforeSave">beforeSave</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="ScheduledJob.php.html#45"><abbr title="Espo\Repositories\ScheduledJob::afterSave">afterSave</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#146"><abbr title="Espo\Repositories\Email::loadReplyToField">loadReplyToField</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Preferences.php.html#248"><abbr title="Espo\Repositories\Preferences::resetToDefaults">resetToDefaults</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Email.php.html#74"><abbr title="Espo\Repositories\Email::addUserByEmailAddressId">addUserByEmailAddressId</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Attachment.php.html#115"><abbr title="Espo\Repositories\Attachment::afterRemove">afterRemove</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Attachment.php.html#139"><abbr title="Espo\Repositories\Attachment::removeImageThumbs">removeImageThumbs</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="ArrayValue.php.html#98"><abbr title="Espo\Repositories\ArrayValue::deleteEntityAttribute">deleteEntityAttribute</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Preferences.php.html#144"><abbr title="Espo\Repositories\Preferences::fetchAutoFollowEntityTypeList">fetchAutoFollowEntityTypeList</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="UniqueId.php.html#44"><abbr title="Espo\Repositories\UniqueId::getNew">getNew</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="EmailAddress.php.html#628"><abbr title="Espo\Repositories\EmailAddress::markAddressOptedOut">markAddressOptedOut</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Import.php.html#36"><abbr title="Espo\Repositories\Import::findRelated">findRelated</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="PhoneNumber.php.html#564"><abbr title="Espo\Repositories\PhoneNumber::markNumberOptedOut">markNumberOptedOut</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Import.php.html#79"><abbr title="Espo\Repositories\Import::countRelated">countRelated</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Webhook.php.html#44"><abbr title="Espo\Repositories\Webhook::beforeSave">beforeSave</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Attachment.php.html#149"><abbr title="Espo\Repositories\Attachment::getCopiedAttachment">getCopiedAttachment</abbr></a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 7.0.10</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.26-1+ubuntu18.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.0</a> and <a href="https://phpunit.de/">PHPUnit 8.5.2</a> at Sun Jan 12 10:24:20 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([17,0,0,0,0,0,0,0,0,0,0,7], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([97,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[100,0,"<a href=\"ActionHistoryRecord.php.html#34\">Espo\\Repositories\\ActionHistoryRecord<\/a>"],[0,17,"<a href=\"ArrayValue.php.html#36\">Espo\\Repositories\\ArrayValue<\/a>"],[0,26,"<a href=\"Attachment.php.html#36\">Espo\\Repositories\\Attachment<\/a>"],[100,0,"<a href=\"AuthFailLogRecord.php.html#34\">Espo\\Repositories\\AuthFailLogRecord<\/a>"],[100,0,"<a href=\"AuthLogRecord.php.html#34\">Espo\\Repositories\\AuthLogRecord<\/a>"],[100,0,"<a href=\"AuthToken.php.html#34\">Espo\\Repositories\\AuthToken<\/a>"],[0,114,"<a href=\"Email.php.html#34\">Espo\\Repositories\\Email<\/a>"],[0,121,"<a href=\"EmailAddress.php.html#34\">Espo\\Repositories\\EmailAddress<\/a>"],[0,3,"<a href=\"EmailFolder.php.html#36\">Espo\\Repositories\\EmailFolder<\/a>"],[100,0,"<a href=\"EmailTemplateCategory.php.html#32\">Espo\\Repositories\\EmailTemplateCategory<\/a>"],[0,4,"<a href=\"ExternalAccount.php.html#34\">Espo\\Repositories\\ExternalAccount<\/a>"],[0,11,"<a href=\"Import.php.html#34\">Espo\\Repositories\\Import<\/a>"],[0,4,"<a href=\"Integration.php.html#34\">Espo\\Repositories\\Integration<\/a>"],[0,7,"<a href=\"Job.php.html#34\">Espo\\Repositories\\Job<\/a>"],[100,0,"<a href=\"NextNumber.php.html#34\">Espo\\Repositories\\NextNumber<\/a>"],[100,0,"<a href=\"NoteAclQueue.php.html#34\">Espo\\Repositories\\NoteAclQueue<\/a>"],[0,106,"<a href=\"PhoneNumber.php.html#34\">Espo\\Repositories\\PhoneNumber<\/a>"],[0,13,"<a href=\"Portal.php.html#36\">Espo\\Repositories\\Portal<\/a>"],[0,41,"<a href=\"Preferences.php.html#35\">Espo\\Repositories\\Preferences<\/a>"],[0,3,"<a href=\"ScheduledJob.php.html#34\">Espo\\Repositories\\ScheduledJob<\/a>"],[0,2,"<a href=\"UniqueId.php.html#34\">Espo\\Repositories\\UniqueId<\/a>"],[0,49,"<a href=\"User.php.html#37\">Espo\\Repositories\\User<\/a>"],[0,4,"<a href=\"UserData.php.html#34\">Espo\\Repositories\\UserData<\/a>"],[0,10,"<a href=\"Webhook.php.html#34\">Espo\\Repositories\\Webhook<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,14,"<a href=\"ArrayValue.php.html#46\">Espo\\Repositories\\ArrayValue::storeEntityAttribute<\/a>"],[0,3,"<a href=\"ArrayValue.php.html#98\">Espo\\Repositories\\ArrayValue::deleteEntityAttribute<\/a>"],[0,1,"<a href=\"Attachment.php.html#56\">Espo\\Repositories\\Attachment::init<\/a>"],[0,1,"<a href=\"Attachment.php.html#63\">Espo\\Repositories\\Attachment::getFileManager<\/a>"],[0,1,"<a href=\"Attachment.php.html#68\">Espo\\Repositories\\Attachment::getFileStorageManager<\/a>"],[0,1,"<a href=\"Attachment.php.html#73\">Espo\\Repositories\\Attachment::getConfig<\/a>"],[0,5,"<a href=\"Attachment.php.html#78\">Espo\\Repositories\\Attachment::beforeSave<\/a>"],[0,5,"<a href=\"Attachment.php.html#94\">Espo\\Repositories\\Attachment::save<\/a>"],[0,3,"<a href=\"Attachment.php.html#115\">Espo\\Repositories\\Attachment::afterRemove<\/a>"],[0,3,"<a href=\"Attachment.php.html#139\">Espo\\Repositories\\Attachment::removeImageThumbs<\/a>"],[0,2,"<a href=\"Attachment.php.html#149\">Espo\\Repositories\\Attachment::getCopiedAttachment<\/a>"],[0,1,"<a href=\"Attachment.php.html#170\">Espo\\Repositories\\Attachment::getContents<\/a>"],[0,1,"<a href=\"Attachment.php.html#175\">Espo\\Repositories\\Attachment::getFilePath<\/a>"],[0,1,"<a href=\"Attachment.php.html#180\">Espo\\Repositories\\Attachment::hasDownloadUrl<\/a>"],[0,1,"<a href=\"Attachment.php.html#185\">Espo\\Repositories\\Attachment::getDownloadUrl<\/a>"],[0,1,"<a href=\"Email.php.html#36\">Espo\\Repositories\\Email::init<\/a>"],[0,5,"<a href=\"Email.php.html#42\">Espo\\Repositories\\Email::prepareAddressess<\/a>"],[0,3,"<a href=\"Email.php.html#74\">Espo\\Repositories\\Email::addUserByEmailAddressId<\/a>"],[0,5,"<a href=\"Email.php.html#86\">Espo\\Repositories\\Email::loadFromField<\/a>"],[0,3,"<a href=\"Email.php.html#107\">Espo\\Repositories\\Email::loadToField<\/a>"],[0,3,"<a href=\"Email.php.html#120\">Espo\\Repositories\\Email::loadCcField<\/a>"],[0,3,"<a href=\"Email.php.html#133\">Espo\\Repositories\\Email::loadBccField<\/a>"],[0,3,"<a href=\"Email.php.html#146\">Espo\\Repositories\\Email::loadReplyToField<\/a>"],[0,21,"<a href=\"Email.php.html#159\">Espo\\Repositories\\Email::loadNameHash<\/a>"],[0,29,"<a href=\"Email.php.html#229\">Espo\\Repositories\\Email::beforeSave<\/a>"],[0,11,"<a href=\"Email.php.html#310\">Espo\\Repositories\\Email::fillAccount<\/a>"],[0,9,"<a href=\"Email.php.html#339\">Espo\\Repositories\\Email::applyUsersFilters<\/a>"],[0,17,"<a href=\"Email.php.html#361\">Espo\\Repositories\\Email::afterSave<\/a>"],[0,1,"<a href=\"Email.php.html#400\">Espo\\Repositories\\Email::getEmailFilterManager<\/a>"],[0,1,"<a href=\"EmailAddress.php.html#42\">Espo\\Repositories\\EmailAddress::init<\/a>"],[0,1,"<a href=\"EmailAddress.php.html#50\">Espo\\Repositories\\EmailAddress::getAcl<\/a>"],[0,1,"<a href=\"EmailAddress.php.html#55\">Espo\\Repositories\\EmailAddress::getIdListFormAddressList<\/a>"],[0,8,"<a href=\"EmailAddress.php.html#60\">Espo\\Repositories\\EmailAddress::getIds<\/a>"],[0,6,"<a href=\"EmailAddress.php.html#97\">Espo\\Repositories\\EmailAddress::getEmailAddressData<\/a>"],[0,1,"<a href=\"EmailAddress.php.html#129\">Espo\\Repositories\\EmailAddress::getByAddress<\/a>"],[0,12,"<a href=\"EmailAddress.php.html#134\">Espo\\Repositories\\EmailAddress::getEntityListByAddressId<\/a>"],[0,11,"<a href=\"EmailAddress.php.html#195\">Espo\\Repositories\\EmailAddress::getEntityByAddressId<\/a>"],[0,7,"<a href=\"EmailAddress.php.html#246\">Espo\\Repositories\\EmailAddress::getEntityByAddress<\/a>"],[0,50,"<a href=\"EmailAddress.php.html#285\">Espo\\Repositories\\EmailAddress::storeEntityEmailAddressData<\/a>"],[0,16,"<a href=\"EmailAddress.php.html#530\">Espo\\Repositories\\EmailAddress::storeEntityEmailAddressPrimary<\/a>"],[0,4,"<a href=\"EmailAddress.php.html#609\">Espo\\Repositories\\EmailAddress::storeEntityEmailAddress<\/a>"],[0,1,"<a href=\"EmailAddress.php.html#623\">Espo\\Repositories\\EmailAddress::checkChangeIsForbidden<\/a>"],[0,2,"<a href=\"EmailAddress.php.html#628\">Espo\\Repositories\\EmailAddress::markAddressOptedOut<\/a>"],[0,3,"<a href=\"EmailFolder.php.html#38\">Espo\\Repositories\\EmailFolder::beforeSave<\/a>"],[0,4,"<a href=\"ExternalAccount.php.html#36\">Espo\\Repositories\\ExternalAccount::get<\/a>"],[0,2,"<a href=\"Import.php.html#36\">Espo\\Repositories\\Import::findRelated<\/a>"],[0,4,"<a href=\"Import.php.html#48\">Espo\\Repositories\\Import::getRelatedJoin<\/a>"],[0,2,"<a href=\"Import.php.html#79\">Espo\\Repositories\\Import::countRelated<\/a>"],[0,3,"<a href=\"Import.php.html#91\">Espo\\Repositories\\Import::afterRemove<\/a>"],[0,4,"<a href=\"Integration.php.html#36\">Espo\\Repositories\\Integration::get<\/a>"],[0,1,"<a href=\"Job.php.html#44\">Espo\\Repositories\\Job::init<\/a>"],[0,1,"<a href=\"Job.php.html#50\">Espo\\Repositories\\Job::getConfig<\/a>"],[0,5,"<a href=\"Job.php.html#55\">Espo\\Repositories\\Job::beforeSave<\/a>"],[0,1,"<a href=\"PhoneNumber.php.html#44\">Espo\\Repositories\\PhoneNumber::init<\/a>"],[0,1,"<a href=\"PhoneNumber.php.html#52\">Espo\\Repositories\\PhoneNumber::getAcl<\/a>"],[0,6,"<a href=\"PhoneNumber.php.html#57\">Espo\\Repositories\\PhoneNumber::getIds<\/a>"],[0,6,"<a href=\"PhoneNumber.php.html#90\">Espo\\Repositories\\PhoneNumber::getPhoneNumberData<\/a>"],[0,1,"<a href=\"PhoneNumber.php.html#123\">Espo\\Repositories\\PhoneNumber::getByNumber<\/a>"],[0,7,"<a href=\"PhoneNumber.php.html#128\">Espo\\Repositories\\PhoneNumber::getEntityListByPhoneNumberId<\/a>"],[0,7,"<a href=\"PhoneNumber.php.html#164\">Espo\\Repositories\\PhoneNumber::getEntityByPhoneNumberId<\/a>"],[0,51,"<a href=\"PhoneNumber.php.html#200\">Espo\\Repositories\\PhoneNumber::storeEntityPhoneNumberData<\/a>"],[0,15,"<a href=\"PhoneNumber.php.html#452\">Espo\\Repositories\\PhoneNumber::storeEntityPhoneNumberPrimary<\/a>"],[0,4,"<a href=\"PhoneNumber.php.html#530\">Espo\\Repositories\\PhoneNumber::storeEntityPhoneNumber<\/a>"],[0,1,"<a href=\"PhoneNumber.php.html#544\">Espo\\Repositories\\PhoneNumber::checkChangeIsForbidden<\/a>"],[0,4,"<a href=\"PhoneNumber.php.html#549\">Espo\\Repositories\\PhoneNumber::beforeSave<\/a>"],[0,2,"<a href=\"PhoneNumber.php.html#564\">Espo\\Repositories\\PhoneNumber::markNumberOptedOut<\/a>"],[0,1,"<a href=\"Portal.php.html#38\">Espo\\Repositories\\Portal::init<\/a>"],[0,1,"<a href=\"Portal.php.html#44\">Espo\\Repositories\\Portal::getConfig<\/a>"],[0,5,"<a href=\"Portal.php.html#49\">Espo\\Repositories\\Portal::loadUrlField<\/a>"],[0,6,"<a href=\"Portal.php.html#77\">Espo\\Repositories\\Portal::afterSave<\/a>"],[0,1,"<a href=\"Preferences.php.html#48\">Espo\\Repositories\\Preferences::init<\/a>"],[0,1,"<a href=\"Preferences.php.html#59\">Espo\\Repositories\\Preferences::getFileManager<\/a>"],[0,1,"<a href=\"Preferences.php.html#64\">Espo\\Repositories\\Preferences::getEntityManger<\/a>"],[0,1,"<a href=\"Preferences.php.html#69\">Espo\\Repositories\\Preferences::getMetadata<\/a>"],[0,1,"<a href=\"Preferences.php.html#74\">Espo\\Repositories\\Preferences::getConfig<\/a>"],[0,10,"<a href=\"Preferences.php.html#79\">Espo\\Repositories\\Preferences::get<\/a>"],[0,2,"<a href=\"Preferences.php.html#144\">Espo\\Repositories\\Preferences::fetchAutoFollowEntityTypeList<\/a>"],[0,7,"<a href=\"Preferences.php.html#165\">Espo\\Repositories\\Preferences::storeAutoFollowEntityTypeList<\/a>"],[0,6,"<a href=\"Preferences.php.html#198\">Espo\\Repositories\\Preferences::save<\/a>"],[0,1,"<a href=\"Preferences.php.html#232\">Espo\\Repositories\\Preferences::deleteFromDb<\/a>"],[0,3,"<a href=\"Preferences.php.html#239\">Espo\\Repositories\\Preferences::remove<\/a>"],[0,3,"<a href=\"Preferences.php.html#248\">Espo\\Repositories\\Preferences::resetToDefaults<\/a>"],[0,1,"<a href=\"Preferences.php.html#259\">Espo\\Repositories\\Preferences::find<\/a>"],[0,1,"<a href=\"Preferences.php.html#263\">Espo\\Repositories\\Preferences::findOne<\/a>"],[0,1,"<a href=\"Preferences.php.html#267\">Espo\\Repositories\\Preferences::getAll<\/a>"],[0,1,"<a href=\"Preferences.php.html#271\">Espo\\Repositories\\Preferences::count<\/a>"],[0,3,"<a href=\"ScheduledJob.php.html#45\">Espo\\Repositories\\ScheduledJob::afterSave<\/a>"],[0,2,"<a href=\"UniqueId.php.html#44\">Espo\\Repositories\\UniqueId::getNew<\/a>"],[0,27,"<a href=\"User.php.html#39\">Espo\\Repositories\\User::beforeSave<\/a>"],[0,9,"<a href=\"User.php.html#142\">Espo\\Repositories\\User::afterSave<\/a>"],[0,4,"<a href=\"User.php.html#168\">Espo\\Repositories\\User::afterRemove<\/a>"],[0,4,"<a href=\"User.php.html#183\">Espo\\Repositories\\User::checkBelongsToAnyOfTeams<\/a>"],[0,5,"<a href=\"User.php.html#208\">Espo\\Repositories\\User::handleSelectParams<\/a>"],[0,4,"<a href=\"UserData.php.html#36\">Espo\\Repositories\\UserData::getByUserId<\/a>"],[0,2,"<a href=\"Webhook.php.html#44\">Espo\\Repositories\\Webhook::beforeSave<\/a>"],[0,1,"<a href=\"Webhook.php.html#53\">Espo\\Repositories\\Webhook::fillSecretKey<\/a>"],[0,7,"<a href=\"Webhook.php.html#59\">Espo\\Repositories\\Webhook::processSettingAdditionalFields<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/karthik/espocrm/application/Espo/EntryPoints</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../index.html">/home/karthik/espocrm/application/Espo</a></li>
+         <li class="breadcrumb-item"><a href="index.html">EntryPoints</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Attachment.php.html#36">Espo\EntryPoints\Attachment</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Avatar.php.html#37">Espo\EntryPoints\Avatar</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ChangePassword.php.html#36">Espo\EntryPoints\ChangePassword</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ConfirmOptIn.php.html#37">Espo\EntryPoints\ConfirmOptIn</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Download.php.html#36">Espo\EntryPoints\Download</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Image.php.html#38">Espo\EntryPoints\Image</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="LogoImage.php.html#37">Espo\EntryPoints\LogoImage</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="OauthCallback.php.html#36">Espo\EntryPoints\OauthCallback</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Pdf.php.html#36">Espo\EntryPoints\Pdf</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Portal.php.html#36">Espo\EntryPoints\Portal</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Image.php.html#38">Espo\EntryPoints\Image</a></td><td class="text-right">1560</td></tr>
+       <tr><td><a href="Avatar.php.html#37">Espo\EntryPoints\Avatar</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Download.php.html#36">Espo\EntryPoints\Download</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Attachment.php.html#36">Espo\EntryPoints\Attachment</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Pdf.php.html#36">Espo\EntryPoints\Pdf</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Portal.php.html#36">Espo\EntryPoints\Portal</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="ChangePassword.php.html#36">Espo\EntryPoints\ChangePassword</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="ConfirmOptIn.php.html#37">Espo\EntryPoints\ConfirmOptIn</a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="LogoImage.php.html#37">Espo\EntryPoints\LogoImage</a></td><td class="text-right">20</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Attachment.php.html#47"><abbr title="Espo\EntryPoints\Attachment::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Avatar.php.html#57"><abbr title="Espo\EntryPoints\Avatar::getColor">getColor</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Avatar.php.html#70"><abbr title="Espo\EntryPoints\Avatar::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ChangePassword.php.html#40"><abbr title="Espo\EntryPoints\ChangePassword::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ChangePassword.php.html#76"><abbr title="Espo\EntryPoints\ChangePassword::getThemeManager">getThemeManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="ConfirmOptIn.php.html#41"><abbr title="Espo\EntryPoints\ConfirmOptIn::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Download.php.html#51"><abbr title="Espo\EntryPoints\Download::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Image.php.html#68"><abbr title="Espo\EntryPoints\Image::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Image.php.html#83"><abbr title="Espo\EntryPoints\Image::show">show</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Image.php.html#174"><abbr title="Espo\EntryPoints\Image::getThumbImage">getThumbImage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Image.php.html#235"><abbr title="Espo\EntryPoints\Image::getOrientation">getOrientation</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Image.php.html#244"><abbr title="Espo\EntryPoints\Image::fixOrientation">fixOrientation</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="LogoImage.php.html#45"><abbr title="Espo\EntryPoints\LogoImage::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="OauthCallback.php.html#40"><abbr title="Espo\EntryPoints\OauthCallback::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Pdf.php.html#40"><abbr title="Espo\EntryPoints\Pdf::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Portal.php.html#40"><abbr title="Espo\EntryPoints\Portal::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Image.php.html#83"><abbr title="Espo\EntryPoints\Image::show">show</abbr></a></td><td class="text-right">420</td></tr>
+       <tr><td><a href="Image.php.html#174"><abbr title="Espo\EntryPoints\Image::getThumbImage">getThumbImage</abbr></a></td><td class="text-right">156</td></tr>
+       <tr><td><a href="Avatar.php.html#70"><abbr title="Espo\EntryPoints\Avatar::run">run</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Download.php.html#51"><abbr title="Espo\EntryPoints\Download::run">run</abbr></a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Attachment.php.html#47"><abbr title="Espo\EntryPoints\Attachment::run">run</abbr></a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Pdf.php.html#40"><abbr title="Espo\EntryPoints\Pdf::run">run</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Portal.php.html#40"><abbr title="Espo\EntryPoints\Portal::run">run</abbr></a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="ConfirmOptIn.php.html#41"><abbr title="Espo\EntryPoints\ConfirmOptIn::run">run</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="LogoImage.php.html#45"><abbr title="Espo\EntryPoints\LogoImage::run">run</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="ChangePassword.php.html#40"><abbr title="Espo\EntryPoints\ChangePassword::run">run</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Image.php.html#68"><abbr title="Espo\EntryPoints\Image::run">run</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Avatar.php.html#57"><abbr title="Espo\EntryPoints\Avatar::getColor">getColor</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Image.php.html#235"><abbr title="Espo\EntryPoints\Image::getOrientation">getOrientation</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Image.php.html#244"><abbr title="Espo\EntryPoints\Image::fixOrientation">fixOrientation</abbr></a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 7.0.10</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.26-1+ubuntu18.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.0</a> and <a href="https://phpunit.de/">PHPUnit 8.5.2</a> at Sun Jan 12 10:24:20 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([10,0,0,0,0,0,0,0,0,0,0,0], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([16,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,7,"<a href=\"Attachment.php.html#36\">Espo\\EntryPoints\\Attachment<\/a>"],[0,10,"<a href=\"Avatar.php.html#37\">Espo\\EntryPoints\\Avatar<\/a>"],[0,4,"<a href=\"ChangePassword.php.html#36\">Espo\\EntryPoints\\ChangePassword<\/a>"],[0,4,"<a href=\"ConfirmOptIn.php.html#37\">Espo\\EntryPoints\\ConfirmOptIn<\/a>"],[0,8,"<a href=\"Download.php.html#36\">Espo\\EntryPoints\\Download<\/a>"],[0,39,"<a href=\"Image.php.html#38\">Espo\\EntryPoints\\Image<\/a>"],[0,4,"<a href=\"LogoImage.php.html#37\">Espo\\EntryPoints\\LogoImage<\/a>"],[0,1,"<a href=\"OauthCallback.php.html#36\">Espo\\EntryPoints\\OauthCallback<\/a>"],[0,6,"<a href=\"Pdf.php.html#36\">Espo\\EntryPoints\\Pdf<\/a>"],[0,6,"<a href=\"Portal.php.html#36\">Espo\\EntryPoints\\Portal<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,7,"<a href=\"Attachment.php.html#47\">Espo\\EntryPoints\\Attachment::run<\/a>"],[0,2,"<a href=\"Avatar.php.html#57\">Espo\\EntryPoints\\Avatar::getColor<\/a>"],[0,8,"<a href=\"Avatar.php.html#70\">Espo\\EntryPoints\\Avatar::run<\/a>"],[0,3,"<a href=\"ChangePassword.php.html#40\">Espo\\EntryPoints\\ChangePassword::run<\/a>"],[0,1,"<a href=\"ChangePassword.php.html#76\">Espo\\EntryPoints\\ChangePassword::getThemeManager<\/a>"],[0,4,"<a href=\"ConfirmOptIn.php.html#41\">Espo\\EntryPoints\\ConfirmOptIn::run<\/a>"],[0,8,"<a href=\"Download.php.html#51\">Espo\\EntryPoints\\Download::run<\/a>"],[0,3,"<a href=\"Image.php.html#68\">Espo\\EntryPoints\\Image::run<\/a>"],[0,20,"<a href=\"Image.php.html#83\">Espo\\EntryPoints\\Image::show<\/a>"],[0,12,"<a href=\"Image.php.html#174\">Espo\\EntryPoints\\Image::getThumbImage<\/a>"],[0,2,"<a href=\"Image.php.html#235\">Espo\\EntryPoints\\Image::getOrientation<\/a>"],[0,2,"<a href=\"Image.php.html#244\">Espo\\EntryPoints\\Image::fixOrientation<\/a>"],[0,4,"<a href=\"LogoImage.php.html#45\">Espo\\EntryPoints\\LogoImage::run<\/a>"],[0,1,"<a href=\"OauthCallback.php.html#40\">Espo\\EntryPoints\\OauthCallback::run<\/a>"],[0,6,"<a href=\"Pdf.php.html#40\">Espo\\EntryPoints\\Pdf::run<\/a>"],[0,6,"<a href=\"Portal.php.html#40\">Espo\\EntryPoints\\Portal::run<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/karthik/espocrm/application/Espo/Modules/Crm/SelectManagers</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../../../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../../../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../../index.html">/home/karthik/espocrm/application/Espo</a></li>
+         <li class="breadcrumb-item"><a href="../../index.html">Modules</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Crm</a></li>
+         <li class="breadcrumb-item"><a href="index.html">SelectManagers</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Account.php.html#32">Espo\Modules\Crm\SelectManagers\Account</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Call.php.html#32">Espo\Modules\Crm\SelectManagers\Call</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Campaign.php.html#32">Espo\Modules\Crm\SelectManagers\Campaign</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#32">Espo\Modules\Crm\SelectManagers\CampaignLogRecord</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignTrackingUrl.php.html#32">Espo\Modules\Crm\SelectManagers\CampaignTrackingUrl</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CaseObj.php.html#32">Espo\Modules\Crm\SelectManagers\CaseObj</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Contact.php.html#32">Espo\Modules\Crm\SelectManagers\Contact</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Document.php.html#32">Espo\Modules\Crm\SelectManagers\Document</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailQueueItem.php.html#32">Espo\Modules\Crm\SelectManagers\EmailQueueItem</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="KnowledgeBaseArticle.php.html#32">Espo\Modules\Crm\SelectManagers\KnowledgeBaseArticle</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Lead.php.html#32">Espo\Modules\Crm\SelectManagers\Lead</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MassEmail.php.html#32">Espo\Modules\Crm\SelectManagers\MassEmail</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Meeting.php.html#32">Espo\Modules\Crm\SelectManagers\Meeting</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Opportunity.php.html#32">Espo\Modules\Crm\SelectManagers\Opportunity</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#32">Espo\Modules\Crm\SelectManagers\Task</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Task.php.html#32">Espo\Modules\Crm\SelectManagers\Task</a></td><td class="text-right">756</td></tr>
+       <tr><td><a href="Meeting.php.html#32">Espo\Modules\Crm\SelectManagers\Meeting</a></td><td class="text-right">552</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#32">Espo\Modules\Crm\SelectManagers\CampaignLogRecord</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Opportunity.php.html#32">Espo\Modules\Crm\SelectManagers\Opportunity</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="MassEmail.php.html#32">Espo\Modules\Crm\SelectManagers\MassEmail</a></td><td class="text-right">72</td></tr>
+       <tr><td><a href="Account.php.html#32">Espo\Modules\Crm\SelectManagers\Account</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="CampaignTrackingUrl.php.html#32">Espo\Modules\Crm\SelectManagers\CampaignTrackingUrl</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="Contact.php.html#32">Espo\Modules\Crm\SelectManagers\Contact</a></td><td class="text-right">42</td></tr>
+       <tr><td><a href="KnowledgeBaseArticle.php.html#32">Espo\Modules\Crm\SelectManagers\KnowledgeBaseArticle</a></td><td class="text-right">12</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Account.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\Account::filterPartners">filterPartners</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Meeting.php.html#80"><abbr title="Espo\Modules\Crm\SelectManagers\Meeting::filterHeld">filterHeld</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="KnowledgeBaseArticle.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\KnowledgeBaseArticle::filterPublished">filterPublished</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="KnowledgeBaseArticle.php.html#41"><abbr title="Espo\Modules\Crm\SelectManagers\KnowledgeBaseArticle::access">access</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Lead.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\Lead::filterActive">filterActive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Lead.php.html#41"><abbr title="Espo\Modules\Crm\SelectManagers\Lead::filterActual">filterActual</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Lead.php.html#48"><abbr title="Espo\Modules\Crm\SelectManagers\Lead::filterConverted">filterConverted</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MassEmail.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\MassEmail::filterActual">filterActual</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MassEmail.php.html#41"><abbr title="Espo\Modules\Crm\SelectManagers\MassEmail::filterComplete">filterComplete</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MassEmail.php.html#48"><abbr title="Espo\Modules\Crm\SelectManagers\MassEmail::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="MassEmail.php.html#57"><abbr title="Espo\Modules\Crm\SelectManagers\MassEmail::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Meeting.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\Meeting::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Meeting.php.html#46"><abbr title="Espo\Modules\Crm\SelectManagers\Meeting::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Meeting.php.html#61"><abbr title="Espo\Modules\Crm\SelectManagers\Meeting::boolFilterOnlyMy">boolFilterOnlyMy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Meeting.php.html#73"><abbr title="Espo\Modules\Crm\SelectManagers\Meeting::filterPlanned">filterPlanned</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Meeting.php.html#87"><abbr title="Espo\Modules\Crm\SelectManagers\Meeting::filterTodays">filterTodays</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailQueueItem.php.html#42"><abbr title="Espo\Modules\Crm\SelectManagers\EmailQueueItem::filterSent">filterSent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Meeting.php.html#96"><abbr title="Espo\Modules\Crm\SelectManagers\Meeting::transformDateTimeWhereItem">transformDateTimeWhereItem</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Opportunity.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\Opportunity::filterOpen">filterOpen</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Opportunity.php.html#41"><abbr title="Espo\Modules\Crm\SelectManagers\Opportunity::filterWon">filterWon</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Opportunity.php.html#48"><abbr title="Espo\Modules\Crm\SelectManagers\Opportunity::filterLost">filterLost</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Opportunity.php.html#55"><abbr title="Espo\Modules\Crm\SelectManagers\Opportunity::getLostStageList">getLostStageList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Opportunity.php.html#68"><abbr title="Espo\Modules\Crm\SelectManagers\Opportunity::getWonStageList">getWonStageList</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#38"><abbr title="Espo\Modules\Crm\SelectManagers\Task::boolFilterActual">boolFilterActual</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#45"><abbr title="Espo\Modules\Crm\SelectManagers\Task::boolFilterCompleted">boolFilterCompleted</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#50"><abbr title="Espo\Modules\Crm\SelectManagers\Task::filterActual">filterActual</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#57"><abbr title="Espo\Modules\Crm\SelectManagers\Task::filterDeferred">filterDeferred</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#64"><abbr title="Espo\Modules\Crm\SelectManagers\Task::filterActualStartingNotInFuture">filterActualStartingNotInFuture</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#95"><abbr title="Espo\Modules\Crm\SelectManagers\Task::filterCompleted">filterCompleted</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#102"><abbr title="Espo\Modules\Crm\SelectManagers\Task::filterOverdue">filterOverdue</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#126"><abbr title="Espo\Modules\Crm\SelectManagers\Task::filterTodays">filterTodays</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailQueueItem.php.html#49"><abbr title="Espo\Modules\Crm\SelectManagers\EmailQueueItem::filterFailed">filterFailed</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="EmailQueueItem.php.html#35"><abbr title="Espo\Modules\Crm\SelectManagers\EmailQueueItem::filterPending">filterPending</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Account.php.html#41"><abbr title="Espo\Modules\Crm\SelectManagers\Account::filterCustomers">filterCustomers</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#82"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::filterSent">filterSent</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Account.php.html#48"><abbr title="Espo\Modules\Crm\SelectManagers\Account::filterResellers">filterResellers</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Account.php.html#55"><abbr title="Espo\Modules\Crm\SelectManagers\Account::filterRecentlyCreated">filterRecentlyCreated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Account.php.html#65"><abbr title="Espo\Modules\Crm\SelectManagers\Account::accessPortalOnlyAccount">accessPortalOnlyAccount</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Call.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\Call::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Call.php.html#46"><abbr title="Espo\Modules\Crm\SelectManagers\Call::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Call.php.html#61"><abbr title="Espo\Modules\Crm\SelectManagers\Call::boolFilterOnlyMy">boolFilterOnlyMy</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Call.php.html#73"><abbr title="Espo\Modules\Crm\SelectManagers\Call::filterPlanned">filterPlanned</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Call.php.html#80"><abbr title="Espo\Modules\Crm\SelectManagers\Call::filterHeld">filterHeld</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Call.php.html#87"><abbr title="Espo\Modules\Crm\SelectManagers\Call::filterTodays">filterTodays</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Campaign.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\Campaign::filterActive">filterActive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#43"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#75"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::filterOpened">filterOpened</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#89"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::filterClicked">filterClicked</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Document.php.html#41"><abbr title="Espo\Modules\Crm\SelectManagers\Document::filterDraft">filterDraft</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#96"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::filterOptedOut">filterOptedOut</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#103"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::filterOptedIn">filterOptedIn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#110"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::filterBounced">filterBounced</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#117"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::filterLeadCreated">filterLeadCreated</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignTrackingUrl.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignTrackingUrl::accessOnlyOwn">accessOnlyOwn</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CampaignTrackingUrl.php.html#43"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignTrackingUrl::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CaseObj.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\CaseObj::boolFilterOpen">boolFilterOpen</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CaseObj.php.html#41"><abbr title="Espo\Modules\Crm\SelectManagers\CaseObj::filterOpen">filterOpen</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CaseObj.php.html#48"><abbr title="Espo\Modules\Crm\SelectManagers\CaseObj::filterClosed">filterClosed</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Contact.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\Contact::filterPortalUsers">filterPortalUsers</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Contact.php.html#39"><abbr title="Espo\Modules\Crm\SelectManagers\Contact::filterNotPortalUsers">filterNotPortalUsers</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Contact.php.html#47"><abbr title="Espo\Modules\Crm\SelectManagers\Contact::accessPortalOnlyContact">accessPortalOnlyContact</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Contact.php.html#64"><abbr title="Espo\Modules\Crm\SelectManagers\Contact::filterAccountActive">filterAccountActive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Document.php.html#34"><abbr title="Espo\Modules\Crm\SelectManagers\Document::filterActive">filterActive</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Task.php.html#135"><abbr title="Espo\Modules\Crm\SelectManagers\Task::transformDateTimeWhereItem">transformDateTimeWhereItem</abbr></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Meeting.php.html#96"><abbr title="Espo\Modules\Crm\SelectManagers\Meeting::transformDateTimeWhereItem">transformDateTimeWhereItem</abbr></a></td><td class="text-right">306</td></tr>
+       <tr><td><a href="Task.php.html#135"><abbr title="Espo\Modules\Crm\SelectManagers\Task::transformDateTimeWhereItem">transformDateTimeWhereItem</abbr></a></td><td class="text-right">306</td></tr>
+       <tr><td><a href="CampaignLogRecord.php.html#43"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignLogRecord::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="CampaignTrackingUrl.php.html#43"><abbr title="Espo\Modules\Crm\SelectManagers\CampaignTrackingUrl::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="MassEmail.php.html#57"><abbr title="Espo\Modules\Crm\SelectManagers\MassEmail::accessOnlyTeam">accessOnlyTeam</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Opportunity.php.html#68"><abbr title="Espo\Modules\Crm\SelectManagers\Opportunity::getWonStageList">getWonStageList</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Opportunity.php.html#55"><abbr title="Espo\Modules\Crm\SelectManagers\Opportunity::getLostStageList">getLostStageList</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Task.php.html#102"><abbr title="Espo\Modules\Crm\SelectManagers\Task::filterOverdue">filterOverdue</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Account.php.html#65"><abbr title="Espo\Modules\Crm\SelectManagers\Account::accessPortalOnlyAccount">accessPortalOnlyAccount</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Contact.php.html#47"><abbr title="Espo\Modules\Crm\SelectManagers\Contact::accessPortalOnlyContact">accessPortalOnlyContact</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Contact.php.html#64"><abbr title="Espo\Modules\Crm\SelectManagers\Contact::filterAccountActive">filterAccountActive</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="KnowledgeBaseArticle.php.html#41"><abbr title="Espo\Modules\Crm\SelectManagers\KnowledgeBaseArticle::access">access</abbr></a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 7.0.10</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.26-1+ubuntu18.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.0</a> and <a href="https://phpunit.de/">PHPUnit 8.5.2</a> at Sun Jan 12 10:24:20 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../../../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([15,0,0,0,0,0,0,0,0,0,0,0], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([65,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,6,"<a href=\"Account.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Account<\/a>"],[0,6,"<a href=\"Call.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Call<\/a>"],[0,1,"<a href=\"Campaign.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Campaign<\/a>"],[0,13,"<a href=\"CampaignLogRecord.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord<\/a>"],[0,6,"<a href=\"CampaignTrackingUrl.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\CampaignTrackingUrl<\/a>"],[0,3,"<a href=\"CaseObj.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\CaseObj<\/a>"],[0,6,"<a href=\"Contact.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Contact<\/a>"],[0,2,"<a href=\"Document.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Document<\/a>"],[0,3,"<a href=\"EmailQueueItem.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\EmailQueueItem<\/a>"],[0,3,"<a href=\"KnowledgeBaseArticle.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\KnowledgeBaseArticle<\/a>"],[0,3,"<a href=\"Lead.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Lead<\/a>"],[0,8,"<a href=\"MassEmail.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\MassEmail<\/a>"],[0,23,"<a href=\"Meeting.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Meeting<\/a>"],[0,10,"<a href=\"Opportunity.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Opportunity<\/a>"],[0,27,"<a href=\"Task.php.html#32\">Espo\\Modules\\Crm\\SelectManagers\\Task<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"Account.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\Account::filterPartners<\/a>"],[0,1,"<a href=\"Account.php.html#41\">Espo\\Modules\\Crm\\SelectManagers\\Account::filterCustomers<\/a>"],[0,1,"<a href=\"Account.php.html#48\">Espo\\Modules\\Crm\\SelectManagers\\Account::filterResellers<\/a>"],[0,1,"<a href=\"Account.php.html#55\">Espo\\Modules\\Crm\\SelectManagers\\Account::filterRecentlyCreated<\/a>"],[0,2,"<a href=\"Account.php.html#65\">Espo\\Modules\\Crm\\SelectManagers\\Account::accessPortalOnlyAccount<\/a>"],[0,1,"<a href=\"Call.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\Call::accessOnlyOwn<\/a>"],[0,1,"<a href=\"Call.php.html#46\">Espo\\Modules\\Crm\\SelectManagers\\Call::accessOnlyTeam<\/a>"],[0,1,"<a href=\"Call.php.html#61\">Espo\\Modules\\Crm\\SelectManagers\\Call::boolFilterOnlyMy<\/a>"],[0,1,"<a href=\"Call.php.html#73\">Espo\\Modules\\Crm\\SelectManagers\\Call::filterPlanned<\/a>"],[0,1,"<a href=\"Call.php.html#80\">Espo\\Modules\\Crm\\SelectManagers\\Call::filterHeld<\/a>"],[0,1,"<a href=\"Call.php.html#87\">Espo\\Modules\\Crm\\SelectManagers\\Call::filterTodays<\/a>"],[0,1,"<a href=\"Campaign.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\Campaign::filterActive<\/a>"],[0,1,"<a href=\"CampaignLogRecord.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::accessOnlyOwn<\/a>"],[0,5,"<a href=\"CampaignLogRecord.php.html#43\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::accessOnlyTeam<\/a>"],[0,1,"<a href=\"CampaignLogRecord.php.html#75\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::filterOpened<\/a>"],[0,1,"<a href=\"CampaignLogRecord.php.html#82\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::filterSent<\/a>"],[0,1,"<a href=\"CampaignLogRecord.php.html#89\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::filterClicked<\/a>"],[0,1,"<a href=\"CampaignLogRecord.php.html#96\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::filterOptedOut<\/a>"],[0,1,"<a href=\"CampaignLogRecord.php.html#103\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::filterOptedIn<\/a>"],[0,1,"<a href=\"CampaignLogRecord.php.html#110\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::filterBounced<\/a>"],[0,1,"<a href=\"CampaignLogRecord.php.html#117\">Espo\\Modules\\Crm\\SelectManagers\\CampaignLogRecord::filterLeadCreated<\/a>"],[0,1,"<a href=\"CampaignTrackingUrl.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\CampaignTrackingUrl::accessOnlyOwn<\/a>"],[0,5,"<a href=\"CampaignTrackingUrl.php.html#43\">Espo\\Modules\\Crm\\SelectManagers\\CampaignTrackingUrl::accessOnlyTeam<\/a>"],[0,1,"<a href=\"CaseObj.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\CaseObj::boolFilterOpen<\/a>"],[0,1,"<a href=\"CaseObj.php.html#41\">Espo\\Modules\\Crm\\SelectManagers\\CaseObj::filterOpen<\/a>"],[0,1,"<a href=\"CaseObj.php.html#48\">Espo\\Modules\\Crm\\SelectManagers\\CaseObj::filterClosed<\/a>"],[0,1,"<a href=\"Contact.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\Contact::filterPortalUsers<\/a>"],[0,1,"<a href=\"Contact.php.html#39\">Espo\\Modules\\Crm\\SelectManagers\\Contact::filterNotPortalUsers<\/a>"],[0,2,"<a href=\"Contact.php.html#47\">Espo\\Modules\\Crm\\SelectManagers\\Contact::accessPortalOnlyContact<\/a>"],[0,2,"<a href=\"Contact.php.html#64\">Espo\\Modules\\Crm\\SelectManagers\\Contact::filterAccountActive<\/a>"],[0,1,"<a href=\"Document.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\Document::filterActive<\/a>"],[0,1,"<a href=\"Document.php.html#41\">Espo\\Modules\\Crm\\SelectManagers\\Document::filterDraft<\/a>"],[0,1,"<a href=\"EmailQueueItem.php.html#35\">Espo\\Modules\\Crm\\SelectManagers\\EmailQueueItem::filterPending<\/a>"],[0,1,"<a href=\"EmailQueueItem.php.html#42\">Espo\\Modules\\Crm\\SelectManagers\\EmailQueueItem::filterSent<\/a>"],[0,1,"<a href=\"EmailQueueItem.php.html#49\">Espo\\Modules\\Crm\\SelectManagers\\EmailQueueItem::filterFailed<\/a>"],[0,1,"<a href=\"KnowledgeBaseArticle.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\KnowledgeBaseArticle::filterPublished<\/a>"],[0,2,"<a href=\"KnowledgeBaseArticle.php.html#41\">Espo\\Modules\\Crm\\SelectManagers\\KnowledgeBaseArticle::access<\/a>"],[0,1,"<a href=\"Lead.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\Lead::filterActive<\/a>"],[0,1,"<a href=\"Lead.php.html#41\">Espo\\Modules\\Crm\\SelectManagers\\Lead::filterActual<\/a>"],[0,1,"<a href=\"Lead.php.html#48\">Espo\\Modules\\Crm\\SelectManagers\\Lead::filterConverted<\/a>"],[0,1,"<a href=\"MassEmail.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\MassEmail::filterActual<\/a>"],[0,1,"<a href=\"MassEmail.php.html#41\">Espo\\Modules\\Crm\\SelectManagers\\MassEmail::filterComplete<\/a>"],[0,1,"<a href=\"MassEmail.php.html#48\">Espo\\Modules\\Crm\\SelectManagers\\MassEmail::accessOnlyOwn<\/a>"],[0,5,"<a href=\"MassEmail.php.html#57\">Espo\\Modules\\Crm\\SelectManagers\\MassEmail::accessOnlyTeam<\/a>"],[0,1,"<a href=\"Meeting.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\Meeting::accessOnlyOwn<\/a>"],[0,1,"<a href=\"Meeting.php.html#46\">Espo\\Modules\\Crm\\SelectManagers\\Meeting::accessOnlyTeam<\/a>"],[0,1,"<a href=\"Meeting.php.html#61\">Espo\\Modules\\Crm\\SelectManagers\\Meeting::boolFilterOnlyMy<\/a>"],[0,1,"<a href=\"Meeting.php.html#73\">Espo\\Modules\\Crm\\SelectManagers\\Meeting::filterPlanned<\/a>"],[0,1,"<a href=\"Meeting.php.html#80\">Espo\\Modules\\Crm\\SelectManagers\\Meeting::filterHeld<\/a>"],[0,1,"<a href=\"Meeting.php.html#87\">Espo\\Modules\\Crm\\SelectManagers\\Meeting::filterTodays<\/a>"],[0,17,"<a href=\"Meeting.php.html#96\">Espo\\Modules\\Crm\\SelectManagers\\Meeting::transformDateTimeWhereItem<\/a>"],[0,1,"<a href=\"Opportunity.php.html#34\">Espo\\Modules\\Crm\\SelectManagers\\Opportunity::filterOpen<\/a>"],[0,1,"<a href=\"Opportunity.php.html#41\">Espo\\Modules\\Crm\\SelectManagers\\Opportunity::filterWon<\/a>"],[0,1,"<a href=\"Opportunity.php.html#48\">Espo\\Modules\\Crm\\SelectManagers\\Opportunity::filterLost<\/a>"],[0,3,"<a href=\"Opportunity.php.html#55\">Espo\\Modules\\Crm\\SelectManagers\\Opportunity::getLostStageList<\/a>"],[0,4,"<a href=\"Opportunity.php.html#68\">Espo\\Modules\\Crm\\SelectManagers\\Opportunity::getWonStageList<\/a>"],[0,1,"<a href=\"Task.php.html#38\">Espo\\Modules\\Crm\\SelectManagers\\Task::boolFilterActual<\/a>"],[0,1,"<a href=\"Task.php.html#45\">Espo\\Modules\\Crm\\SelectManagers\\Task::boolFilterCompleted<\/a>"],[0,1,"<a href=\"Task.php.html#50\">Espo\\Modules\\Crm\\SelectManagers\\Task::filterActual<\/a>"],[0,1,"<a href=\"Task.php.html#57\">Espo\\Modules\\Crm\\SelectManagers\\Task::filterDeferred<\/a>"],[0,1,"<a href=\"Task.php.html#64\">Espo\\Modules\\Crm\\SelectManagers\\Task::filterActualStartingNotInFuture<\/a>"],[0,1,"<a href=\"Task.php.html#95\">Espo\\Modules\\Crm\\SelectManagers\\Task::filterCompleted<\/a>"],[0,3,"<a href=\"Task.php.html#102\">Espo\\Modules\\Crm\\SelectManagers\\Task::filterOverdue<\/a>"],[0,1,"<a href=\"Task.php.html#126\">Espo\\Modules\\Crm\\SelectManagers\\Task::filterTodays<\/a>"],[0,17,"<a href=\"Task.php.html#135\">Espo\\Modules\\Crm\\SelectManagers\\Task::transformDateTimeWhereItem<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>

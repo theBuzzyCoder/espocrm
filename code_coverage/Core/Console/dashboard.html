@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/karthik/espocrm/application/Espo/Core/Console</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../../_css/bootstrap.min.css" rel="stylesheet" type="text/css">
+  <link href="../../_css/nv.d3.min.css" rel="stylesheet" type="text/css">
+  <link href="../../_css/style.css" rel="stylesheet" type="text/css">
+  <link href="../../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../../index.html">/home/karthik/espocrm/application/Espo</a></li>
+         <li class="breadcrumb-item"><a href="../index.html">Core</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Console</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="CommandManager.php.html#32">Espo\Core\Console\CommandManager</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/AclCheck.php.html#32">Espo\Core\Console\Commands\AclCheck</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/AuthTokenCheck.php.html#32">Espo\Core\Console\Commands\AuthTokenCheck</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Base.php.html#32">Espo\Core\Console\Commands\Base</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/ClearCache.php.html#32">Espo\Core\Console\Commands\ClearCache</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Rebuild.php.html#32">Espo\Core\Console\Commands\Rebuild</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/RunJob.php.html#32">Espo\Core\Console\Commands\RunJob</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#34">Espo\Core\Console\Commands\Upgrade</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/UpgradeStep.php.html#32">Espo\Core\Console\Commands\UpgradeStep</a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Commands/Upgrade.php.html#34">Espo\Core\Console\Commands\Upgrade</a></td><td class="text-right">4160</td></tr>
+       <tr><td><a href="Commands/AclCheck.php.html#32">Espo\Core\Console\Commands\AclCheck</a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="CommandManager.php.html#32">Espo\Core\Console\CommandManager</a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="Commands/UpgradeStep.php.html#32">Espo\Core\Console\Commands\UpgradeStep</a></td><td class="text-right">56</td></tr>
+       <tr><td><a href="Commands/AuthTokenCheck.php.html#32">Espo\Core\Console\Commands\AuthTokenCheck</a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Commands/RunJob.php.html#32">Espo\Core\Console\Commands\RunJob</a></td><td class="text-right">30</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="CommandManager.php.html#36"><abbr title="Espo\Core\Console\CommandManager::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#243"><abbr title="Espo\Core\Console\Commands\Upgrade::runUpgradeProcess">runUpgradeProcess</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/UpgradeStep.php.html#34"><abbr title="Espo\Core\Console\Commands\UpgradeStep::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#393"><abbr title="Espo\Core\Console\Commands\Upgrade::isShellEnabled">isShellEnabled</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#364"><abbr title="Espo\Core\Console\Commands\Upgrade::downloadFile">downloadFile</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#336"><abbr title="Espo\Core\Console\Commands\Upgrade::getVersionInfo">getVersionInfo</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#325"><abbr title="Espo\Core\Console\Commands\Upgrade::getPhpExecutablePath">getPhpExecutablePath</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#313"><abbr title="Espo\Core\Console\Commands\Upgrade::getUpgradeManager">getUpgradeManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#308"><abbr title="Espo\Core\Console\Commands\Upgrade::getFileManager">getFileManager</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#303"><abbr title="Espo\Core\Console\Commands\Upgrade::getConfig">getConfig</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#292"><abbr title="Espo\Core\Console\Commands\Upgrade::confirm">confirm</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#275"><abbr title="Espo\Core\Console\Commands\Upgrade::runSteps">runSteps</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#258"><abbr title="Espo\Core\Console\Commands\Upgrade::runStepsInSingleProcess">runStepsInSingleProcess</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#230"><abbr title="Espo\Core\Console\Commands\Upgrade::upload">upload</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="CommandManager.php.html#41"><abbr title="Espo\Core\Console\CommandManager::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#162"><abbr title="Espo\Core\Console\Commands\Upgrade::runRemoteUpgrade">runRemoteUpgrade</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#106"><abbr title="Espo\Core\Console\Commands\Upgrade::runLocalUpgrade">runLocalUpgrade</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#78"><abbr title="Espo\Core\Console\Commands\Upgrade::normalizeParams">normalizeParams</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#51"><abbr title="Espo\Core\Console\Commands\Upgrade::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/RunJob.php.html#34"><abbr title="Espo\Core\Console\Commands\RunJob::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Rebuild.php.html#34"><abbr title="Espo\Core\Console\Commands\Rebuild::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/ClearCache.php.html#34"><abbr title="Espo\Core\Console\Commands\ClearCache::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Base.php.html#41"><abbr title="Espo\Core\Console\Commands\Base::getContainer">getContainer</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/Base.php.html#36"><abbr title="Espo\Core\Console\Commands\Base::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/AuthTokenCheck.php.html#34"><abbr title="Espo\Core\Console\Commands\AuthTokenCheck::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/AclCheck.php.html#74"><abbr title="Espo\Core\Console\Commands\AclCheck::check">check</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/AclCheck.php.html#34"><abbr title="Espo\Core\Console\Commands\AclCheck::run">run</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Commands/UpgradeStep.php.html#52"><abbr title="Espo\Core\Console\Commands\UpgradeStep::runUpgradeStep">runUpgradeStep</abbr></a></td><td class="text-right">0%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Commands/Upgrade.php.html#162"><abbr title="Espo\Core\Console\Commands\Upgrade::runRemoteUpgrade">runRemoteUpgrade</abbr></a></td><td class="text-right">182</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#106"><abbr title="Espo\Core\Console\Commands\Upgrade::runLocalUpgrade">runLocalUpgrade</abbr></a></td><td class="text-right">132</td></tr>
+       <tr><td><a href="Commands/AclCheck.php.html#34"><abbr title="Espo\Core\Console\Commands\AclCheck::run">run</abbr></a></td><td class="text-right">110</td></tr>
+       <tr><td><a href="CommandManager.php.html#41"><abbr title="Espo\Core\Console\CommandManager::run">run</abbr></a></td><td class="text-right">90</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#78"><abbr title="Espo\Core\Console\Commands\Upgrade::normalizeParams">normalizeParams</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#243"><abbr title="Espo\Core\Console\Commands\Upgrade::runUpgradeProcess">runUpgradeProcess</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Commands/RunJob.php.html#34"><abbr title="Espo\Core\Console\Commands\RunJob::run">run</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Commands/AuthTokenCheck.php.html#34"><abbr title="Espo\Core\Console\Commands\AuthTokenCheck::run">run</abbr></a></td><td class="text-right">30</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#393"><abbr title="Espo\Core\Console\Commands\Upgrade::isShellEnabled">isShellEnabled</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Commands/UpgradeStep.php.html#52"><abbr title="Espo\Core\Console\Commands\UpgradeStep::runUpgradeStep">runUpgradeStep</abbr></a></td><td class="text-right">20</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#51"><abbr title="Espo\Core\Console\Commands\Upgrade::run">run</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Commands/AclCheck.php.html#74"><abbr title="Espo\Core\Console\Commands\AclCheck::check">check</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#258"><abbr title="Espo\Core\Console\Commands\Upgrade::runStepsInSingleProcess">runStepsInSingleProcess</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#275"><abbr title="Espo\Core\Console\Commands\Upgrade::runSteps">runSteps</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#313"><abbr title="Espo\Core\Console\Commands\Upgrade::getUpgradeManager">getUpgradeManager</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#336"><abbr title="Espo\Core\Console\Commands\Upgrade::getVersionInfo">getVersionInfo</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#364"><abbr title="Espo\Core\Console\Commands\Upgrade::downloadFile">downloadFile</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Commands/UpgradeStep.php.html#34"><abbr title="Espo\Core\Console\Commands\UpgradeStep::run">run</abbr></a></td><td class="text-right">12</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#230"><abbr title="Espo\Core\Console\Commands\Upgrade::upload">upload</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#292"><abbr title="Espo\Core\Console\Commands\Upgrade::confirm">confirm</abbr></a></td><td class="text-right">6</td></tr>
+       <tr><td><a href="Commands/Upgrade.php.html#325"><abbr title="Espo\Core\Console\Commands\Upgrade::getPhpExecutablePath">getPhpExecutablePath</abbr></a></td><td class="text-right">6</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 7.0.10</a> using <a href="https://secure.php.net/" target="_top">PHP 7.2.26-1+ubuntu18.04.1+deb.sury.org+1</a> with <a href="https://xdebug.org/">Xdebug 2.9.0</a> and <a href="https://phpunit.de/">PHPUnit 8.5.2</a> at Sun Jan 12 10:24:20 UTC 2020.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="../../_js/jquery.min.js" type="text/javascript"></script>
+  <script src="../../_js/d3.min.js" type="text/javascript"></script>
+  <script src="../../_js/nv.d3.min.js" type="text/javascript"></script>
+  <script type="text/javascript">
+$(document).ready(function() {
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#classCoverageDistribution svg')
+      .datum(getCoverageDistributionData([9,0,0,0,0,0,0,0,0,0,0,0], "Class Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.tooltips(false)
+      .showControls(false)
+      .showLegend(false)
+      .reduceXTicks(false)
+      .staggerLabels(true)
+      .yAxis.tickFormat(d3.format('d'));
+
+    d3.select('#methodCoverageDistribution svg')
+      .datum(getCoverageDistributionData([28,0,0,0,0,0,0,0,0,0,0,0], "Method Coverage"))
+      .transition().duration(500).call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getCoverageDistributionData(data, label) {
+    var labels = [
+      '0%',
+      '0-10%',
+      '10-20%',
+      '20-30%',
+      '30-40%',
+      '40-50%',
+      '50-60%',
+      '60-70%',
+      '70-80%',
+      '80-90%',
+      '90-100%',
+      '100%'
+    ];
+    var values = [];
+    $.each(labels, function(key) {
+      values.push({x: labels[key], y: data[key]});
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Cyclomatic Complexity');
+
+    d3.select('#classComplexity svg')
+      .datum(getComplexityData([[0,10,"<a href=\"CommandManager.php.html#32\">Espo\\Core\\Console\\CommandManager<\/a>"],[0,13,"<a href=\"Commands\/AclCheck.php.html#32\">Espo\\Core\\Console\\Commands\\AclCheck<\/a>"],[0,5,"<a href=\"Commands\/AuthTokenCheck.php.html#32\">Espo\\Core\\Console\\Commands\\AuthTokenCheck<\/a>"],[0,2,"<a href=\"Commands\/Base.php.html#32\">Espo\\Core\\Console\\Commands\\Base<\/a>"],[0,1,"<a href=\"Commands\/ClearCache.php.html#32\">Espo\\Core\\Console\\Commands\\ClearCache<\/a>"],[0,1,"<a href=\"Commands\/Rebuild.php.html#32\">Espo\\Core\\Console\\Commands\\Rebuild<\/a>"],[0,5,"<a href=\"Commands\/RunJob.php.html#32\">Espo\\Core\\Console\\Commands\\RunJob<\/a>"],[0,64,"<a href=\"Commands\/Upgrade.php.html#34\">Espo\\Core\\Console\\Commands\\Upgrade<\/a>"],[0,7,"<a href=\"Commands\/UpgradeStep.php.html#32\">Espo\\Core\\Console\\Commands\\UpgradeStep<\/a>"]], 'Class Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  nv.addGraph(function() {
+    var chart = nv.models.scatterChart()
+      .showDistX(true)
+      .showDistY(true)
+      .showLegend(false)
+      .forceX([0, 100]);
+    chart.tooltipContent(function(graph) {
+      return '<p>' + graph.point.class + '</p>';
+    });
+
+    chart.xAxis.axisLabel('Code Coverage (in percent)');
+    chart.yAxis.axisLabel('Method Complexity');
+
+    d3.select('#methodComplexity svg')
+      .datum(getComplexityData([[0,1,"<a href=\"CommandManager.php.html#36\">Espo\\Core\\Console\\CommandManager::__construct<\/a>"],[0,9,"<a href=\"CommandManager.php.html#41\">Espo\\Core\\Console\\CommandManager::run<\/a>"],[0,10,"<a href=\"Commands\/AclCheck.php.html#34\">Espo\\Core\\Console\\Commands\\AclCheck::run<\/a>"],[0,3,"<a href=\"Commands\/AclCheck.php.html#74\">Espo\\Core\\Console\\Commands\\AclCheck::check<\/a>"],[0,5,"<a href=\"Commands\/AuthTokenCheck.php.html#34\">Espo\\Core\\Console\\Commands\\AuthTokenCheck::run<\/a>"],[0,1,"<a href=\"Commands\/Base.php.html#36\">Espo\\Core\\Console\\Commands\\Base::__construct<\/a>"],[0,1,"<a href=\"Commands\/Base.php.html#41\">Espo\\Core\\Console\\Commands\\Base::getContainer<\/a>"],[0,1,"<a href=\"Commands\/ClearCache.php.html#34\">Espo\\Core\\Console\\Commands\\ClearCache::run<\/a>"],[0,1,"<a href=\"Commands\/Rebuild.php.html#34\">Espo\\Core\\Console\\Commands\\Rebuild::run<\/a>"],[0,5,"<a href=\"Commands\/RunJob.php.html#34\">Espo\\Core\\Console\\Commands\\RunJob::run<\/a>"],[0,3,"<a href=\"Commands\/Upgrade.php.html#51\">Espo\\Core\\Console\\Commands\\Upgrade::run<\/a>"],[0,5,"<a href=\"Commands\/Upgrade.php.html#78\">Espo\\Core\\Console\\Commands\\Upgrade::normalizeParams<\/a>"],[0,11,"<a href=\"Commands\/Upgrade.php.html#106\">Espo\\Core\\Console\\Commands\\Upgrade::runLocalUpgrade<\/a>"],[0,13,"<a href=\"Commands\/Upgrade.php.html#162\">Espo\\Core\\Console\\Commands\\Upgrade::runRemoteUpgrade<\/a>"],[0,2,"<a href=\"Commands\/Upgrade.php.html#230\">Espo\\Core\\Console\\Commands\\Upgrade::upload<\/a>"],[0,5,"<a href=\"Commands\/Upgrade.php.html#243\">Espo\\Core\\Console\\Commands\\Upgrade::runUpgradeProcess<\/a>"],[0,3,"<a href=\"Commands\/Upgrade.php.html#258\">Espo\\Core\\Console\\Commands\\Upgrade::runStepsInSingleProcess<\/a>"],[0,3,"<a href=\"Commands\/Upgrade.php.html#275\">Espo\\Core\\Console\\Commands\\Upgrade::runSteps<\/a>"],[0,2,"<a href=\"Commands\/Upgrade.php.html#292\">Espo\\Core\\Console\\Commands\\Upgrade::confirm<\/a>"],[0,1,"<a href=\"Commands\/Upgrade.php.html#303\">Espo\\Core\\Console\\Commands\\Upgrade::getConfig<\/a>"],[0,1,"<a href=\"Commands\/Upgrade.php.html#308\">Espo\\Core\\Console\\Commands\\Upgrade::getFileManager<\/a>"],[0,3,"<a href=\"Commands\/Upgrade.php.html#313\">Espo\\Core\\Console\\Commands\\Upgrade::getUpgradeManager<\/a>"],[0,2,"<a href=\"Commands\/Upgrade.php.html#325\">Espo\\Core\\Console\\Commands\\Upgrade::getPhpExecutablePath<\/a>"],[0,3,"<a href=\"Commands\/Upgrade.php.html#336\">Espo\\Core\\Console\\Commands\\Upgrade::getVersionInfo<\/a>"],[0,3,"<a href=\"Commands\/Upgrade.php.html#364\">Espo\\Core\\Console\\Commands\\Upgrade::downloadFile<\/a>"],[0,4,"<a href=\"Commands\/Upgrade.php.html#393\">Espo\\Core\\Console\\Commands\\Upgrade::isShellEnabled<\/a>"],[0,3,"<a href=\"Commands\/UpgradeStep.php.html#34\">Espo\\Core\\Console\\Commands\\UpgradeStep::run<\/a>"],[0,4,"<a href=\"Commands\/UpgradeStep.php.html#52\">Espo\\Core\\Console\\Commands\\UpgradeStep::runUpgradeStep<\/a>"]], 'Method Complexity'))
+      .transition()
+      .duration(500)
+      .call(chart);
+
+    nv.utils.windowResize(chart.update);
+
+    return chart;
+  });
+
+  function getComplexityData(data, label) {
+    var values = [];
+    $.each(data, function(key) {
+      var value = Math.round(data[key][0]*100) / 100;
+      values.push({
+        x: value,
+        y: data[key][1],
+        class: data[key][2],
+        size: 0.05,
+        shape: 'diamond'
+      });
+    });
+
+    return [
+      {
+        key: label,
+        values: values,
+        color: "#4572A7"
+      }
+    ];
+  }
+});
+  </script>
+ </body>
+</html>
